@@ -45,7 +45,8 @@ fun Comunities(
     title: String,
     description: String,
     id: String,
-    partOfCommunity: Boolean
+    partOfCommunity: Boolean,
+    bigCommunity: Boolean = true
 ){
     //TODO: make the view Model do the take care of the searchText
 
@@ -110,10 +111,14 @@ fun Comunities(
 
                     }
                 }
-                CommunitiesColumns(
-                    modifier = Modifier.weight(0.65f) ,
-                    communities =  generateRandomCommunities(10), //TODO: change for the function from firebase
-                    title = "Communities")
+                    CommunitiesColumns(
+                        modifier = Modifier.weight(0.65f),
+                        // Use the correct function depending on the screen
+                        communities = if (bigCommunity) generateRandomCommunities(10) else { generateRandomCommunities(10)  //this will change to the thing above
+                             }, // Replace with Firebase functions
+                        title = if (bigCommunity) "Communities" else "All Users"
+                    )
+
             }
         }
     )
@@ -124,7 +129,7 @@ fun Comunities(
 
 @Preview(showBackground = true)
 @Composable
-fun CommPreview() {
+fun CommRedirectCommPreview() {
     HobbyLobbyTheme {
         val item = generateRandomCommunities(1)[0]
         Comunities(
@@ -134,6 +139,24 @@ fun CommPreview() {
             description = item.description,
             id = item.id,
             partOfCommunity = item.partOfCommunity
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun CommRedirectUsersPreview() {
+    HobbyLobbyTheme {
+        val item = generateRandomCommunities(1)[0]
+        Comunities(
+            navController = rememberNavController(),
+            image = item.image,
+            title = item.title,
+            description = item.description,
+            id = item.id,
+            partOfCommunity = item.partOfCommunity,
+            bigCommunity = false
         )
     }
 }

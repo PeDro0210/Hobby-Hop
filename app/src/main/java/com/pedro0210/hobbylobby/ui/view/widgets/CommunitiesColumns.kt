@@ -28,6 +28,8 @@ fun CommunitiesColumns(
             .fillMaxWidth()
     ) {
         Text(
+            modifier = Modifier
+                .padding(start = 16.dp),
             text = title,
             style = MaterialTheme.typography.titleLarge,
         )
