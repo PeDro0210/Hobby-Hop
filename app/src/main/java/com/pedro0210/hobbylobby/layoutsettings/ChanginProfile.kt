@@ -1,5 +1,6 @@
 package com.pedro0210.hobbylobby.layoutsettings
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,8 +39,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.pedro0210.hobbylobby.R
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 
 @Composable
@@ -143,11 +146,15 @@ fun ElementsScreen(modifier: Modifier = Modifier,
                         .clip(CircleShape),
                     contentAlignment = androidx.compose.ui.Alignment.Center
                 ) {
-                    IconButton(onClick = onPictureChange) {
+                    Image(painter = painterResource(id = R.drawable.pfp), contentDescription = "PFP")
+                    IconButton(onClick = onPictureChange,
+                        modifier = Modifier.size(100.dp)
+
+                    ) {
                         Icon(
                             Icons.Default.Face,
                             contentDescription = "Picture",
-                            modifier = Modifier.size(200.dp)
+                            modifier = Modifier.size(100.dp)
 
                         )
 
@@ -222,8 +229,8 @@ fun AddSocial(
     onAddClick: () -> Unit = {}
 ){
     Row (modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onAddClick() },
+        .fillMaxWidth()
+        .clickable { onAddClick() },
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
         ){
