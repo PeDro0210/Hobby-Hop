@@ -28,7 +28,7 @@ fun CommunityButton(
     image: String,
     name: String,
     description: String,
-    partOfCommunity: Boolean
+    partOfCommunity: Boolean,
 ){
 
     Row(

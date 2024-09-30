@@ -116,7 +116,8 @@ fun Comunities(
                         // Use the correct function depending on the screen
                         communities = if (bigCommunity) generateRandomCommunities(10) else { generateRandomCommunities(10)  //this will change to the thing above
                              }, // Replace with Firebase functions
-                        title = if (bigCommunity) "Communities" else "All Users"
+                        title = if (bigCommunity) "Communities" else "All Users",
+                        partOfCommunity = partOfCommunity
                     )
 
             }

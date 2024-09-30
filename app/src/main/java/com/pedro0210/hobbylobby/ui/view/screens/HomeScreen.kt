@@ -42,12 +42,14 @@ fun Home(
                 CommunitiesColumns(
                     modifier = Modifier.weight(0.5f),
                     communities = generateRandomCommunities(10),
-                    title =  "Countries"
+                    title =  "Countries",
+                    partOfCommunity = true
                 )
                 CommunitiesColumns(
                     modifier = Modifier.weight(0.5f),
                     communities = generateRandomCommunities(10),
-                    title = "My Communities"
+                    title = "My Communities",
+                    partOfCommunity = true
                 )
             }
         }
