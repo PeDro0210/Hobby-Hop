@@ -48,10 +48,9 @@ import com.pedro0210.hobbylobby.ui.view.widgets.buttons.LoginButton
 fun Login(
     navController: NavController
 ){
-
     Scaffold (
         content = { paddingValues ->
-            var buttonText by remember { mutableStateOf("Login") }
+            var buttonText by remember { mutableStateOf("Login") } //TODO: make the view model to take care of this
 
             Column(
                 modifier = Modifier
@@ -98,7 +97,7 @@ fun Login(
                     ) {
                         Checkbox(
                             checked = false,
-                            onCheckedChange = { checked ->
+                            onCheckedChange = { checked -> //TODO: also make that the view modle takes care of this
                                 buttonText = if (checked) {
                                     "Join Us"
                                 } else {
@@ -148,6 +147,8 @@ fun Login(
                     )
                 }
 
+
+
                 Spacer(modifier = Modifier.height(24.dp))
 
 
@@ -161,23 +162,24 @@ fun Login(
                         .padding(16.dp)
                 ) {
 
-                LoginButton(description = "Google", image = R.drawable.google ) {
-                   //TODO: add the login
-                }
+                    val logos: List<Int> = listOf(
+                        R.drawable.google,
+                        R.drawable.meta,
+                        R.drawable.x
+                    )
 
-                LoginButton(description = "Meta", image = R.drawable.meta ) {
-                    //TODO: add the login
+                    for (logo in logos) {
+                        LoginButton(description = "Google", image = logo) {
+                            //TODO: add the login
+                        }
+                    }
                 }
-
-                LoginButton(description = "X", image = R.drawable.x ) {
-                    //TODO: add the login
-                }
-                }
-
             }
         }
     )
+
 }
+
 
 @Preview(showBackground = true)
 @Composable

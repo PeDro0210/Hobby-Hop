@@ -1,5 +1,6 @@
 package com.pedro0210.hobbylobby.ui.view.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,10 +12,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,7 +34,10 @@ import com.pedro0210.hobbylobby.controller.util.Community
 import com.pedro0210.hobbylobby.controller.util.generateRandomCommunities
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 import com.pedro0210.hobbylobby.ui.view.widgets.CommunitiesColumns
+import com.pedro0210.hobbylobby.ui.view.widgets.SearchTopBar
 
+@SuppressLint("UnrememberedMutableState")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Comunities(
     navController: NavController,
@@ -40,7 +47,16 @@ fun Comunities(
     id: String,
     partOfCommunity: Boolean
 ){
+    //TODO: make the view Model do the take care of the searchText
+
     Scaffold (
+        topBar = {
+            SearchTopBar(
+                navController = navController ,
+                searchText = mutableStateOf(""),
+                homeScreen = false
+            )
+        },
         content = {innerPadding ->
             Column(
                 modifier = Modifier
@@ -103,6 +119,9 @@ fun Comunities(
     )
 
 }
+
+
+
 @Preview(showBackground = true)
 @Composable
 fun CommPreview() {

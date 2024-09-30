@@ -6,8 +6,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -31,8 +35,9 @@ fun CommunityButton(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Column {
             Button(
+                modifier = Modifier
+                    .weight(0.9f),
                 onClick = { /*TODO: create instance of community with all attributes*/ },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
             ) {
@@ -45,7 +50,7 @@ fun CommunityButton(
                         .clip(RoundedCornerShape(8.dp))
                 )
                 Column(
-                    modifier = Modifier.padding(start = 8.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
                     Text(
                         text = name,
@@ -61,8 +66,15 @@ fun CommunityButton(
 
                 }
             }
-
+        IconButton (
+            modifier = Modifier
+                .weight(0.1f),
+            onClick = { /*TODO: Show popup to exit*/ },
+        ){
+            Icon(
+                imageVector = Icons.Default.MoreVert ,
+                contentDescription =  "For going to settings"
+            )
         }
-
     }
 }
