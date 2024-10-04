@@ -21,7 +21,8 @@ import com.pedro0210.hobbylobby.ui.view.widgets.SearchTopBar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Home(
-    navController: NavController
+    navController: NavController,
+
 ){
     //TODO: make the view Model do the take care of the searchText
 
@@ -29,8 +30,9 @@ fun Home(
         topBar = {
             SearchTopBar(
                 navController = navController ,
-                searchText = mutableStateOf(""),
-                homeScreen = false
+                searchText = "",
+                homeScreen = false,
+                onValueChange = {} //TODO: add the view model
             )
         },
         content = {innerPadding ->

@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,24 +15,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,17 +31,20 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.pedro0210.hobbylobby.R
+import com.pedro0210.hobbylobby.model.LoginState
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 import com.pedro0210.hobbylobby.ui.view.widgets.buttons.LoginButton
 
 @Composable
 fun Login(
-    navController: NavController
-){
+    navController: NavController,
+    state: LoginState,
+    onPasswordChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
+    onLoginClick: () -> Unit
+){ //TODO: add all states from the loginState somehow
     Scaffold (
         content = { paddingValues ->
-            var buttonText by remember { mutableStateOf("Login") } //TODO: make the view model to take care of this
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -73,8 +66,8 @@ fun Login(
                         .padding(16.dp)
                 ) {
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
+                        value = state.email,
+                        onValueChange = { onEmailChange(it)  },
                         label = { Text("Email") },
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -82,8 +75,8 @@ fun Login(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
+                        value = state.password,
+                        onValueChange = { onPasswordChange(it) },
                         label = { Text("Password") },
                         modifier = Modifier.fillMaxWidth(),
                         visualTransformation = PasswordVisualTransformation()
@@ -98,7 +91,7 @@ fun Login(
                         Checkbox(
                             checked = false,
                             onCheckedChange = { checked -> //TODO: also make that the view modle takes care of this
-                                buttonText = if (checked) {
+                                state.buttonText = if (checked) {
                                     "Join Us"
                                 } else {
                                     "Welcome Back"
@@ -111,7 +104,7 @@ fun Login(
                         Spacer(modifier = Modifier.weight(1f))
 
                         Button(onClick = { /* TODO: Handle login */ }) {
-                            Text(buttonText)
+                            Text(state.buttonText)
                         }
                     }
                 }
@@ -185,6 +178,13 @@ fun Login(
 @Composable
 fun LoginPreview() {
     HobbyLobbyTheme {
-        Login(navController = rememberNavController())
+        Login(
+            navController = rememberNavController(),
+            state = LoginState(),
+            ///TODO: add the view model
+            onPasswordChange = {},
+            onLoginClick = {},
+            onEmailChange = {}
+        )
     }
 }

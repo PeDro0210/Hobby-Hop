@@ -27,8 +27,9 @@ import androidx.navigation.NavController
 @Composable
 fun SearchTopBar(
     navController: NavController,
-    searchText: MutableState<String>,
-    homeScreen:Boolean
+    searchText: String,
+    homeScreen:Boolean,
+    onValueChange: (String) -> Unit
 ) {
     TopAppBar(
         navigationIcon = {
@@ -57,8 +58,8 @@ fun SearchTopBar(
                     modifier = Modifier
                         .height(32.dp) //for squishing the bar
                         .padding(start = 8.dp),
-                    value = searchText.value,
-                    onValueChange = { searchText.value = it },
+                    value = searchText,
+                    onValueChange = onValueChange,
                     colors = TextFieldDefaults.textFieldColors(
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,

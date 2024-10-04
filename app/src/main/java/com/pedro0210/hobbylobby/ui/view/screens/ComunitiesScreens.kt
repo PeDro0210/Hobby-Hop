@@ -32,6 +32,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.pedro0210.hobbylobby.controller.util.Community
 import com.pedro0210.hobbylobby.controller.util.generateRandomCommunities
+import com.pedro0210.hobbylobby.model.ComunitiesState
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 import com.pedro0210.hobbylobby.ui.view.widgets.CommunitiesColumns
 import com.pedro0210.hobbylobby.ui.view.widgets.SearchTopBar
@@ -41,12 +42,7 @@ import com.pedro0210.hobbylobby.ui.view.widgets.SearchTopBar
 @Composable
 fun Comunities(
     navController: NavController,
-    image: String,
-    title: String,
-    description: String,
-    id: String,
-    partOfCommunity: Boolean,
-    bigCommunity: Boolean = true
+    state: ComunitiesState
 ){
     //TODO: make the view Model do the take care of the searchText
 
@@ -54,7 +50,7 @@ fun Comunities(
         topBar = {
             SearchTopBar(
                 navController = navController ,
-                searchText = mutableStateOf(""),
+                searchText = state.searchText,
                 homeScreen = false
             )
         },
@@ -72,7 +68,7 @@ fun Comunities(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                    AsyncImage(
-                        model = image,
+                        model = state.image,
                         contentDescription = null,
                         modifier = Modifier
                             .size(128.dp)
@@ -85,14 +81,14 @@ fun Comunities(
                         Text(
                             modifier = Modifier
                                 .padding(bottom = 8.dp),
-                            text = title,
+                            text = state.title,
                             style = MaterialTheme.typography.titleLarge
                         )
                         Text (
-                            text = description,
+                            text = state.description,
                             style = MaterialTheme.typography.bodyMedium
                         )
-                        if (partOfCommunity){
+                        if (state.partOfCommunity){
                             Button(
                                 onClick = {/*TODO: exit the community*/},
                                 colors = ButtonDefaults.buttonColors(containerColor = Color.Red)                            )
@@ -114,10 +110,10 @@ fun Comunities(
                     CommunitiesColumns(
                         modifier = Modifier.weight(0.65f),
                         // Use the correct function depending on the screen
-                        communities = if (bigCommunity) generateRandomCommunities(10) else { generateRandomCommunities(10)  //this will change to the thing above
+                        communities = if (state.bigCommunity) generateRandomCommunities(10) else { generateRandomCommunities(10)  //this will change to the thing above
                              }, // Replace with Firebase functions
-                        title = if (bigCommunity) "Communities" else "All Users",
-                        partOfCommunity = partOfCommunity
+                        title = if (state.bigCommunity) "Communities" else "All Users",
+                        partOfCommunity = state.partOfCommunity
                     )
 
             }
@@ -135,11 +131,13 @@ fun CommRedirectCommPreview() {
         val item = generateRandomCommunities(1)[0]
         Comunities(
             navController = rememberNavController(),
-            image = item.image,
-            title = item.title,
-            description = item.description,
-            id = item.id,
-            partOfCommunity = item.partOfCommunity
+            state = ComunitiesState(
+                image = item.image,
+                title = item.title,
+                description = item.description,
+                id = item.id,
+                partOfCommunity = item.partOfCommunity,
+            )
         )
     }
 }
@@ -152,12 +150,14 @@ fun CommRedirectUsersPreview() {
         val item = generateRandomCommunities(1)[0]
         Comunities(
             navController = rememberNavController(),
-            image = item.image,
-            title = item.title,
-            description = item.description,
-            id = item.id,
-            partOfCommunity = item.partOfCommunity,
-            bigCommunity = false
-        )
+            state = ComunitiesState(
+                image = item.image,
+                title = item.title,
+                description = item.description,
+                id = item.id,
+                partOfCommunity = item.partOfCommunity,
+                bigCommunity = false
+                )
+            )
+        }
     }
-}
