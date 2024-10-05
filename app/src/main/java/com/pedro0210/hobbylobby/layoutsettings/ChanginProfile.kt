@@ -151,12 +151,7 @@ fun ElementsScreen(modifier: Modifier = Modifier,
                         modifier = Modifier.size(100.dp)
 
                     ) {
-                        Icon(
-                            Icons.Default.Face,
-                            contentDescription = "Picture",
-                            modifier = Modifier.size(100.dp)
 
-                        )
 
                     }
 
