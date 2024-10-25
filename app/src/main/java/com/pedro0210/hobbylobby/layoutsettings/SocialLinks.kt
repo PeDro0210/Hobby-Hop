@@ -1,5 +1,7 @@
 package com.pedro0210.hobbylobby.layoutsettings
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,29 +9,98 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
+
+@Composable
+fun SocialLinksData(modifier: Modifier = Modifier) {
+    var socialName = "Nombre"
+    var socialLink = "Link"
+    AddingLinksScreen(
+        modifier = modifier,
+        socialName = socialName,
+        onSocialNameChange = { socialName = it },
+        socialLink = socialLink,
+        onSocialLinkChange = { socialLink = it },
+        onBackClick = {},
+        ondoneClick = {},
+        onClearNameClick = {},
+        onClearLinkClick = {},
+        onPictureChange = {}
+    )
+
+}
+
+@Composable
+fun AddingLinksScreen(modifier: Modifier = Modifier,
+                        socialName: String,
+                        onSocialNameChange: (String) -> Unit,
+                        socialLink: String,
+                        onSocialLinkChange: (String) -> Unit,
+                         onBackClick: () -> Unit = {},
+                         ondoneClick: () -> Unit = {},
+                        onClearNameClick: () -> Unit = {},
+                        onClearLinkClick: () -> Unit = {},
+                        onPictureChange: () -> Unit = {}
+){
+    Scaffold (
+        floatingActionButton = {
+            FloatingActionButton(onClick = {
+                ondoneClick()
+            }) {
+                Icon(Icons.Default.Check, contentDescription = null)
+            }
+        }
+    ){
+        AddSocialLinksScreen(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(it),
+            socialName = socialName,
+            onSocialNameChange = onSocialNameChange,
+            onClearNameClick = onClearNameClick,
+            socialLink = socialLink,
+            onSocialLinkChange = onSocialLinkChange,
+            onClearLinkClick = onClearLinkClick,
+            onBackClick = onBackClick,
+            onPictureChange = onPictureChange
+        )
+    }
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddSocialLinksScreen(modifier: Modifier = Modifier, onbackClick: () -> Unit,
-                         socialName: String, onsocialNameChange: (String) -> Unit,
-                         socialLink: String, onsocialLinkChange: (String) -> Unit) {
+fun AddSocialLinksScreen(modifier: Modifier = Modifier, onBackClick: () -> Unit, onPictureChange: () -> Unit,
+                         socialName: String, onSocialNameChange: (String) -> Unit, onClearNameClick: () -> Unit,
+                         socialLink: String, onSocialLinkChange: (String) -> Unit, onClearLinkClick: () -> Unit
+) {
     Column(modifier = Modifier.fillMaxSize()){
         TopAppBar(title = {
             Row (modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
             ){
-                IconButton(onClick = {onbackClick()}) {
+                IconButton(onClick = {onBackClick()}) {
                     Icon(
                         Icons.Default.ArrowBack,
                         contentDescription = "Back"
@@ -41,13 +112,62 @@ fun AddSocialLinksScreen(modifier: Modifier = Modifier, onbackClick: () -> Unit,
 
         })
 
-        Column (modifier = Modifier.fillMaxSize()){
-            Box(modifier = Modifier) {
+        Column (modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+
+        ){
+            Box(modifier = Modifier
+                .size(200.dp)
+                .background(color = MaterialTheme.colorScheme.primary),
+                contentAlignment = androidx.compose.ui.Alignment.Center
+            ) {
+                IconButton(onClick = onPictureChange) {
+                    Icon(
+                        Icons.Default.Add,
+                        contentDescription = "Picture",
+                        modifier = Modifier.size(200.dp)
+
+                    )
+
+                }
+
             }
-            OutlinedTextField(value = socialName, onValueChange = onsocialNameChange)
-            OutlinedTextField(value = socialLink, onValueChange = onsocialLinkChange)
+            Spacer(modifier = Modifier.padding(16.dp))
+            OutlinedTextField(
+                value = socialName,
+                modifier = Modifier.fillMaxWidth(0.87f),
+                onValueChange = onSocialNameChange,
+                trailingIcon = {
+                    IconButton(onClick = onClearNameClick) {
+                        Icon(Icons.Default.Clear, contentDescription = "Add")
+                    }
+                }
+            )
+            Spacer(modifier = Modifier.padding(8.dp))
+            OutlinedTextField(
+                value = socialLink,
+                modifier = Modifier.fillMaxWidth(0.87f),
+                onValueChange = onSocialLinkChange,
+                trailingIcon = {
+                    IconButton(onClick = onClearLinkClick) {
+                        Icon(Icons.Default.Clear, contentDescription = "Add")
+                    }
+                }
+            )
         }
     }
 
 
+}
+
+@Preview
+@Composable
+private fun PreviewChanginProfileScreen() {
+    HobbyLobbyTheme {
+        Surface {
+            SocialLinksData(
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+    }
 }

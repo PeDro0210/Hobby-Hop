@@ -1,12 +1,12 @@
 package com.pedro0210.hobbylobby.layoutsettings
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,14 +14,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,49 +36,43 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Face
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.pedro0210.hobbylobby.R
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 
+
 @Composable
-fun ChanginProfileData(modifier: Modifier = Modifier) {
-    var description = "Descripcion"
+fun CommunitiesCreatorData(modifier: Modifier = Modifier) {
     var name = "Nombre"
-    ChanginProfileScreen(
-        modifier = modifier,
-        description = description,
-        ondescriptionChange = { description = it },
+    var description = "Descripcion"
+    CommunitiesCreatorScreen(
         name = name,
         onNameChange = { name = it },
-        onBackClick = {},
-        ondoneClick = {},
-        onClearClick = {},
-        onPictureChange = {},
+        description = description,
+        ondescriptionChange = { description = it },
+        onDeleteSubC = {},
         onAddClick = {}
     )
 
 }
 
 @Composable
-fun ChanginProfileScreen(modifier: Modifier = Modifier,
-                         description: String,
-                         ondescriptionChange: (String) -> Unit,
-                         name: String,
-                         onNameChange: (String) -> Unit,
-                         onBackClick: () -> Unit = {},
-                         ondoneClick: () -> Unit = {},
-                         onClearClick: () -> Unit = {},
-                         onPictureChange: () -> Unit = {},
-                         onAddClick: () -> Unit = {}
-                         ){
+fun CommunitiesCreatorScreen(
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit = {},
+    onPictureChange: () -> Unit = {},
+    name: String,
+    onNameChange: (String) -> Unit = {},
+    onClearClick: () -> Unit = {},
+    description: String,
+    ondescriptionChange: (String) -> Unit = {},
+    ondoneClick: () -> Unit = {},
+    onDeleteSubC: () -> Unit = {},
+    onAddClick: () -> Unit = {}
+
+
+){
     Scaffold (
         floatingActionButton = {
             FloatingActionButton(onClick = {
@@ -85,76 +82,75 @@ fun ChanginProfileScreen(modifier: Modifier = Modifier,
             }
         }
     ){
-        ElementsScreen(
+        CommunitiesCreator(
             modifier = modifier
                 .fillMaxSize()
                 .padding(it),
-            description = description,
-            ondescriptionChange = ondescriptionChange,
+            onBackClick = onBackClick,
+            onPictureChange = onPictureChange,
             name = name,
             onNameChange = onNameChange,
-            onBackClick = onBackClick,
             onClearClick = onClearClick,
-            onPictureChange = onPictureChange,
+            description = description,
+            ondescriptionChange = ondescriptionChange,
+            onDeleteSubC = onDeleteSubC,
             onAddClick = onAddClick
         )
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
-
 @Composable
-fun ElementsScreen(modifier: Modifier = Modifier,
-                   description: String,
-                   ondescriptionChange: (String) -> Unit,
-                   name: String,
-                   onNameChange: (String) -> Unit,
-                   onBackClick: () -> Unit = {},
-                   onClearClick: () -> Unit = {},
-                   onPictureChange: () -> Unit = {},
-                   onAddClick: () -> Unit = {}
+fun CommunitiesCreator(
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit = {},
+    onPictureChange: () -> Unit = {},
+    name: String = "",
+    onNameChange: (String) -> Unit = {},
+    onClearClick: () -> Unit = {},
+    description: String = "",
+    ondescriptionChange: (String) -> Unit = {},
+    onDeleteSubC: () -> Unit = {},
+    onAddClick: () -> Unit = {}
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(title = {
-            Row (modifier = Modifier.fillMaxWidth(),
+            Row(
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-            ){
-                IconButton(onClick = {onBackClick()}) {
+            ) {
+                IconButton(onClick = { onBackClick() }) {
                     Icon(
                         Icons.Default.ArrowBack,
                         contentDescription = "Back"
                     )
                 }
                 Spacer(modifier = Modifier.padding(8.dp))
-                Text(text =  "Perfil")
+                Text(text = "Menu")
             }
-
         })
-        Column (modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp, 0.dp)
-        ){
-            Row (modifier = Modifier.fillMaxWidth()){
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp, 0.dp)
+        ) {
+            Row(modifier = Modifier.fillMaxWidth()) {
                 Box(
                     modifier = Modifier
                         .background(
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = CircleShape
+                            color = MaterialTheme.colorScheme.primary
                         )
                         .size(150.dp)
                         .clip(CircleShape),
                     contentAlignment = androidx.compose.ui.Alignment.Center
                 ) {
-                    Image(painter = painterResource(id = R.drawable.pfp), contentDescription = "PFP")
-                    IconButton(onClick = onPictureChange,
-                        modifier = Modifier.size(100.dp)
-
-                    ) {
-
-
+                    IconButton(onClick = onPictureChange) {
+                        Icon(
+                            Icons.Default.Add,
+                            contentDescription = "Picture",
+                            modifier = Modifier.size(200.dp)
+                        )
                     }
-
                 }
                 Spacer(modifier = Modifier.padding(8.dp))
                 OutlinedTextField(
@@ -167,68 +163,45 @@ fun ElementsScreen(modifier: Modifier = Modifier,
                     }
                 )
             }
-            Spacer(modifier = Modifier.height(32.dp))
-            TextField(value = description, onValueChange = ondescriptionChange, modifier = Modifier.fillMaxWidth())
-
-            Spacer(modifier = Modifier.height(32.dp))
-            Text(text = "Redes Sociales", style = MaterialTheme.typography.headlineSmall, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
             Spacer(modifier = Modifier.height(16.dp))
+            TextField(
+                value = description,
+                onValueChange = ondescriptionChange,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            HorizontalDivider(thickness = 2.dp)
 
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = "Administrar Subcomunidades:")
+
+            Spacer(modifier = Modifier.height(8.dp))
             Column (modifier = Modifier.padding(4.dp, 0.dp)){
                 LazyColumn {
                     items(2) {
-                        SocialSquare("Red Social")
+                        SubcommunitySquare("SubComunidad", onDeleteSubC = onDeleteSubC)
                         Spacer(modifier = Modifier.height(16.dp))
                     }
 
                 }
-                AddSocial(Text = "Agregar", onAddClick = onAddClick)
+                AddSubcommuinity(Text = "Agregar", onAddClick = onAddClick)
 
             }
 
-
-    }
-
-
-}
-
-}
-
-@Composable
-fun SocialSquare(
-    Text: String
-){
-    Row (modifier = Modifier
-            .fillMaxWidth(),
-            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-        ){
-            Box(modifier = Modifier
-                .size(65.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.primary
-                )
-                .fillMaxWidth(0.35f)
-            ){
-
-            }
-            Spacer(modifier = Modifier.padding(8.dp))
-            Text(text = Text)
-
-
+        }
     }
 }
 
 @Composable
-fun AddSocial(
+fun SubcommunitySquare(
     Text: String,
-    onAddClick: () -> Unit = {}
+    onDeleteSubC: () -> Unit = {}
 ){
     Row (modifier = Modifier
-        .fillMaxWidth()
-        .clickable { onAddClick() },
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-        ){
+        .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+    ){
         Row(modifier = Modifier.fillMaxWidth(0.65f),
             verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
         ) {
@@ -241,6 +214,43 @@ fun AddSocial(
                     .fillMaxWidth(0.35f),
                 contentAlignment = androidx.compose.ui.Alignment.Center
             ) {
+
+            }
+            Spacer(modifier = Modifier.padding(8.dp))
+            Text(text = Text)
+        }
+        IconButton(onClick = onDeleteSubC) {
+            Icon(Icons.Default.Close, contentDescription = "Delete")
+        }
+
+
+
+    }
+}
+
+@Composable
+fun AddSubcommuinity(
+    Text: String,
+    onAddClick: () -> Unit = {}
+){
+    Row (modifier = Modifier
+        .fillMaxWidth()
+        .clickable { onAddClick() },
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+    ){
+        Row(modifier = Modifier.fillMaxWidth(0.65f),
+            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(65.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    .fillMaxWidth(0.35f)
+                ,contentAlignment = androidx.compose.ui.Alignment.Center
+            ) {
                 Icon(
                     Icons.Default.Add,
                     contentDescription = "Next",
@@ -250,8 +260,7 @@ fun AddSocial(
             Spacer(modifier = Modifier.padding(8.dp))
             Text(text = Text)
         }
-            Icon(Icons.Default.KeyboardArrowRight, contentDescription = "Next")
-
+        Icon(Icons.Default.KeyboardArrowRight, contentDescription = "Next")
 
     }
 }
@@ -261,10 +270,9 @@ fun AddSocial(
 private fun PreviewChanginProfileScreen() {
     HobbyLobbyTheme {
         Surface {
-            ChanginProfileData(
+            CommunitiesCreatorData(
                 modifier = Modifier.fillMaxSize()
             )
         }
     }
 }
-
