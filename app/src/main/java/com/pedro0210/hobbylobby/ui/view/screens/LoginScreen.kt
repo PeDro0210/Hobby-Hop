@@ -67,7 +67,7 @@ fun Login(
                 ) {
                     OutlinedTextField(
                         value = state.email,
-                        onValueChange = { onEmailChange(it)  },
+                        onValueChange = onEmailChange,
                         label = { Text("Email") },
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -76,7 +76,7 @@ fun Login(
 
                     OutlinedTextField(
                         value = state.password,
-                        onValueChange = { onPasswordChange(it) },
+                        onValueChange = onPasswordChange,
                         label = { Text("Password") },
                         modifier = Modifier.fillMaxWidth(),
                         visualTransformation = PasswordVisualTransformation()
