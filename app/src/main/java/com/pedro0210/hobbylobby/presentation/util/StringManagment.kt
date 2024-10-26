@@ -1,4 +1,4 @@
-package com.pedro0210.hobbylobby.controller.util
+package com.pedro0210.hobbylobby.presentation.util
 
 //Dude, it's just a funciton that cuts the string LMAO
 fun stringCutter(string: String, length: Int): String {

@@ -1,4 +1,4 @@
-package com.pedro0210.hobbylobby.ui.view.widgets.buttons
+package com.pedro0210.hobbylobby.presentation.view.screens.widgets.buttons
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,8 +20,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.pedro0210.hobbylobby.controller.util.stringCutter
+import com.pedro0210.hobbylobby.presentation.model.ButtonType
+import com.pedro0210.hobbylobby.presentation.util.stringCutter
 
 @Composable
 fun CommunityButton(
@@ -29,6 +31,8 @@ fun CommunityButton(
     name: String,
     description: String,
     partOfCommunity: Boolean,
+    navController: NavController,
+    type: ButtonType
 ){
 
     Row(
@@ -38,7 +42,15 @@ fun CommunityButton(
             Button(
                 modifier = Modifier
                     .weight(0.9f),
-                onClick = { /*TODO: create instance of community with all attributes*/ },
+                onClick = {
+                        /*
+                        * TODO: assign different navigation depending on the button type
+                        *
+                        * buttonType: bigCommunity -> navigate to community
+                        * buttonType: smallCommunity -> navigate to community, small community
+                        * buttonType: room -> navigate to room (idunno how those bitches named it)
+                        */
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
             ) {
 
@@ -69,7 +81,7 @@ fun CommunityButton(
         IconButton (
             modifier = Modifier
                 .weight(0.1f),
-            onClick = { /*TODO: Show popup to exit*/ },
+            onClick = { /*TODO: Show popup to exit, if part of community*/ },
         ){
             Icon(
                 imageVector = Icons.Default.MoreVert ,

@@ -1,4 +1,4 @@
-package com.pedro0210.hobbylobby.ui.view.screens
+package com.pedro0210.hobbylobby.presentation.ui.view.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,14 +31,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.pedro0210.hobbylobby.R
-import com.pedro0210.hobbylobby.model.LoginState
+import com.pedro0210.hobbylobby.presentation.state.LoginScreenState
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
-import com.pedro0210.hobbylobby.ui.view.widgets.buttons.LoginButton
+import com.pedro0210.hobbylobby.presentation.view.screens.widgets.buttons.LoginButton
 
 @Composable
 fun Login(
     navController: NavController,
-    state: LoginState,
+    state: LoginScreenState,
     onPasswordChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
     onLoginClick: () -> Unit
@@ -163,7 +163,7 @@ fun Login(
 
                     for (logo in logos) {
                         LoginButton(description = "Google", image = logo) {
-                            //TODO: add the login
+                            //TODO: add the login, with the viewmodel
                         }
                     }
                 }
@@ -180,7 +180,7 @@ fun LoginPreview() {
     HobbyLobbyTheme {
         Login(
             navController = rememberNavController(),
-            state = LoginState(),
+            state = LoginScreenState(),
             ///TODO: add the view model
             onPasswordChange = {},
             onLoginClick = {},

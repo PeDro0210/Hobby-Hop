@@ -1,57 +1,48 @@
-package com.pedro0210.hobbylobby.ui.view.screens
+package com.pedro0210.hobbylobby.presentation.ui.view.screens
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import com.pedro0210.hobbylobby.controller.util.Community
-import com.pedro0210.hobbylobby.controller.util.generateRandomCommunities
-import com.pedro0210.hobbylobby.model.ComunitiesState
+import com.pedro0210.hobbylobby.presentation.model.ButtonType
+import com.pedro0210.hobbylobby.presentation.state.ComunitiesScreenState
+import com.pedro0210.hobbylobby.presentation.util.generateRandomCommunities
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
-import com.pedro0210.hobbylobby.ui.view.widgets.CommunitiesColumns
-import com.pedro0210.hobbylobby.ui.view.widgets.SearchTopBar
+import com.pedro0210.hobbylobby.presentation.ui.view.widgets.CommunitiesColumns
+import com.pedro0210.hobbylobby.presentation.view.screens.widgets.TopBar
 
 @SuppressLint("UnrememberedMutableState")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Comunities(
+fun Communities(
     navController: NavController,
-    state: ComunitiesState
+    state: ComunitiesScreenState
 ){
     //TODO: make the view Model do the take care of the searchText
 
     Scaffold (
         topBar = {
-            SearchTopBar(
+            TopBar(
                 navController = navController ,
-                searchText = state.searchText,
-                homeScreen = false
+                homeScreen = false,
             )
         },
         content = {innerPadding ->
@@ -109,11 +100,11 @@ fun Comunities(
                 }
                     CommunitiesColumns(
                         modifier = Modifier.weight(0.65f),
-                        // Use the correct function depending on the screen
-                        communities = if (state.bigCommunity) generateRandomCommunities(10) else { generateRandomCommunities(10)  //this will change to the thing above
-                             }, // Replace with Firebase functions
+                        communities = state.communities,
                         title = if (state.bigCommunity) "Communities" else "All Users",
-                        partOfCommunity = state.partOfCommunity
+                        partOfCommunity = state.partOfCommunity,
+                        navController = navController,
+                        buttonType = state.buttonType
                     )
 
             }
@@ -129,14 +120,16 @@ fun Comunities(
 fun CommRedirectCommPreview() {
     HobbyLobbyTheme {
         val item = generateRandomCommunities(1)[0]
-        Comunities(
+        Communities(
             navController = rememberNavController(),
-            state = ComunitiesState(
+            state = ComunitiesScreenState(
                 image = item.image,
                 title = item.title,
                 description = item.description,
                 id = item.id,
                 partOfCommunity = item.partOfCommunity,
+                communities = generateRandomCommunities(10),
+                buttonType = ButtonType.bigCommunity
             )
         )
     }
@@ -148,15 +141,17 @@ fun CommRedirectCommPreview() {
 fun CommRedirectUsersPreview() {
     HobbyLobbyTheme {
         val item = generateRandomCommunities(1)[0]
-        Comunities(
+        Communities(
             navController = rememberNavController(),
-            state = ComunitiesState(
+            state = ComunitiesScreenState(
                 image = item.image,
                 title = item.title,
                 description = item.description,
                 id = item.id,
                 partOfCommunity = item.partOfCommunity,
-                bigCommunity = false
+                bigCommunity = false,
+                communities = generateRandomCommunities(10),
+                buttonType = ButtonType.smallCommunity
                 )
             )
         }

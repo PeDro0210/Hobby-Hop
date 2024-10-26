@@ -1,6 +1,6 @@
-package com.pedro0210.hobbylobby.model
+package com.pedro0210.hobbylobby.presentation.state
 
-data class LoginState(
+data class LoginScreenState(
     // States for sending the view model
     var email: String = "",
     var password: String = "",

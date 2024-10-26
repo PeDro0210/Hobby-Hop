@@ -1,8 +1,6 @@
-package com.pedro0210.hobbylobby.layoutsettings
+package com.pedro0210.hobbylobby.presentation.view.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,19 +10,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,22 +36,20 @@ import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 
 
 @Composable
-fun CommunitiesCreatorData(modifier: Modifier = Modifier) {
+fun SubcommunitiesCreatorData(modifier: Modifier = Modifier) {
     var name = "Nombre"
     var description = "Descripcion"
-    CommunitiesCreatorScreen(
+    SubcommunitiesCreatorScreen(
         name = name,
         onNameChange = { name = it },
         description = description,
-        ondescriptionChange = { description = it },
-        onDeleteSubC = {},
-        onAddClick = {}
+        ondescriptionChange = { description = it }
     )
 
 }
 
 @Composable
-fun CommunitiesCreatorScreen(
+fun SubcommunitiesCreatorScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit = {},
     onPictureChange: () -> Unit = {},
@@ -67,9 +58,7 @@ fun CommunitiesCreatorScreen(
     onClearClick: () -> Unit = {},
     description: String,
     ondescriptionChange: (String) -> Unit = {},
-    ondoneClick: () -> Unit = {},
-    onDeleteSubC: () -> Unit = {},
-    onAddClick: () -> Unit = {}
+    ondoneClick: () -> Unit = {}
 
 
 ){
@@ -82,7 +71,7 @@ fun CommunitiesCreatorScreen(
             }
         }
     ){
-        CommunitiesCreator(
+        SubcommunitiesCreator(
             modifier = modifier
                 .fillMaxSize()
                 .padding(it),
@@ -92,16 +81,14 @@ fun CommunitiesCreatorScreen(
             onNameChange = onNameChange,
             onClearClick = onClearClick,
             description = description,
-            ondescriptionChange = ondescriptionChange,
-            onDeleteSubC = onDeleteSubC,
-            onAddClick = onAddClick
+            ondescriptionChange = ondescriptionChange
         )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CommunitiesCreator(
+fun SubcommunitiesCreator(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit = {},
     onPictureChange: () -> Unit = {},
@@ -109,9 +96,7 @@ fun CommunitiesCreator(
     onNameChange: (String) -> Unit = {},
     onClearClick: () -> Unit = {},
     description: String = "",
-    ondescriptionChange: (String) -> Unit = {},
-    onDeleteSubC: () -> Unit = {},
-    onAddClick: () -> Unit = {}
+    ondescriptionChange: (String) -> Unit = {}
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(title = {
@@ -126,7 +111,7 @@ fun CommunitiesCreator(
                     )
                 }
                 Spacer(modifier = Modifier.padding(8.dp))
-                Text(text = "Menu")
+                Text(text = "Comunidades")
             }
         })
         Column(
@@ -163,105 +148,13 @@ fun CommunitiesCreator(
                     }
                 )
             }
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
             TextField(
                 value = description,
                 onValueChange = ondescriptionChange,
                 modifier = Modifier.fillMaxWidth()
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            HorizontalDivider(thickness = 2.dp)
-
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Administrar Subcomunidades:")
-
-            Spacer(modifier = Modifier.height(8.dp))
-            Column (modifier = Modifier.padding(4.dp, 0.dp)){
-                LazyColumn {
-                    items(2) {
-                        SubcommunitySquare("SubComunidad", onDeleteSubC = onDeleteSubC)
-                        Spacer(modifier = Modifier.height(16.dp))
-                    }
-
-                }
-                AddSubcommuinity(Text = "Agregar", onAddClick = onAddClick)
-
-            }
-
         }
-    }
-}
-
-@Composable
-fun SubcommunitySquare(
-    Text: String,
-    onDeleteSubC: () -> Unit = {}
-){
-    Row (modifier = Modifier
-        .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-    ){
-        Row(modifier = Modifier.fillMaxWidth(0.65f),
-            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(65.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    .fillMaxWidth(0.35f),
-                contentAlignment = androidx.compose.ui.Alignment.Center
-            ) {
-
-            }
-            Spacer(modifier = Modifier.padding(8.dp))
-            Text(text = Text)
-        }
-        IconButton(onClick = onDeleteSubC) {
-            Icon(Icons.Default.Close, contentDescription = "Delete")
-        }
-
-
-
-    }
-}
-
-@Composable
-fun AddSubcommuinity(
-    Text: String,
-    onAddClick: () -> Unit = {}
-){
-    Row (modifier = Modifier
-        .fillMaxWidth()
-        .clickable { onAddClick() },
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-    ){
-        Row(modifier = Modifier.fillMaxWidth(0.65f),
-            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(65.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    .fillMaxWidth(0.35f)
-                ,contentAlignment = androidx.compose.ui.Alignment.Center
-            ) {
-                Icon(
-                    Icons.Default.Add,
-                    contentDescription = "Next",
-                    modifier = Modifier.size(50.dp)
-                )
-            }
-            Spacer(modifier = Modifier.padding(8.dp))
-            Text(text = Text)
-        }
-        Icon(Icons.Default.KeyboardArrowRight, contentDescription = "Next")
-
     }
 }
 
@@ -270,7 +163,7 @@ fun AddSubcommuinity(
 private fun PreviewChanginProfileScreen() {
     HobbyLobbyTheme {
         Surface {
-            CommunitiesCreatorData(
+            SubcommunitiesCreatorData(
                 modifier = Modifier.fillMaxSize()
             )
         }

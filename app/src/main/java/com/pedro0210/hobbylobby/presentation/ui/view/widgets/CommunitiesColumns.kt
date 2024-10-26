@@ -1,4 +1,4 @@
-package com.pedro0210.hobbylobby.ui.view.widgets
+package com.pedro0210.hobbylobby.presentation.ui.view.widgets
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,15 +21,19 @@ import androidx.compose.material3.Icon
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.pedro0210.hobbylobby.controller.util.Community
-import com.pedro0210.hobbylobby.ui.view.widgets.buttons.CommunityButton
+import androidx.navigation.NavController
+import com.pedro0210.hobbylobby.presentation.model.ButtonType
+import com.pedro0210.hobbylobby.presentation.model.Community
+import com.pedro0210.hobbylobby.presentation.view.screens.widgets.buttons.CommunityButton
 
 @Composable
 fun CommunitiesColumns(
     modifier: Modifier,
     communities: List<Community>,
     title: String,
-    partOfCommunity: Boolean
+    partOfCommunity: Boolean,
+    navController: NavController,
+    buttonType: ButtonType
 ) {
     Column(
         modifier = modifier
@@ -56,7 +60,9 @@ fun CommunitiesColumns(
                         image = item.image,
                         name = item.title,
                         description = item.description,
-                        partOfCommunity = item.partOfCommunity
+                        partOfCommunity = item.partOfCommunity,
+                        navController = navController,
+                        type = buttonType
                     )
                 }
             }

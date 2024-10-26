@@ -1,14 +1,7 @@
-package com.pedro0210.hobbylobby.controller.util
+package com.pedro0210.hobbylobby.presentation.util
+import com.pedro0210.hobbylobby.presentation.model.Community
 import kotlin.random.Random
 
-//TODO: see where to refactor this
-data class Community( //ths structure of this will almoast be the same
-    val title:String,
-    val description:String,
-    val image:String,
-    val partOfCommunity:Boolean,
-    val id: String
-)
 
 
 fun generateRandomCommunities(n: Int): List<Community> {
