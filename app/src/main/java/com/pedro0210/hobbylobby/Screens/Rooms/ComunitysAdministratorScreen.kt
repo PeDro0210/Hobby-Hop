@@ -34,7 +34,32 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pedro0210.hobbylobby.R
+import com.pedro0210.hobbylobby.Screens.Rooms.Viewmodel.RoomsViewModel
+
+@Composable
+fun AceptacionesScreenRoute(
+    communityName: String,
+    communityDescription: String,
+    onEditClick: () -> Unit = {},
+    requests: List<String>,
+    onAcceptClick: (String) -> Unit = {},
+    onRejectClick: (String) -> Unit = {},
+    onBackClick: () -> Unit = {},
+    viewModel: RoomsViewModel = viewModel(factory = RoomsViewModel())
+) {
+    AceptacionesScreen(
+        communityName = communityName,
+        communityDescription = communityDescription,
+        requests = requests,
+        onAcceptClick = onAcceptClick,
+        onRejectClick = onRejectClick,
+        onBackClick = onBackClick,
+        onEditClick = onEditClick
+    )
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
