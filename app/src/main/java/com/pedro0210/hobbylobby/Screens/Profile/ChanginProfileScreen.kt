@@ -42,10 +42,15 @@ import com.pedro0210.hobbylobby.R
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 
 @Composable
-fun ChanginProfileData(modifier: Modifier = Modifier) {
+fun ChangingProfileScreenRoute(){
+    ChangingProfileData()
+}
+
+@Composable
+fun ChangingProfileData(modifier: Modifier = Modifier) {
     var description = "Descripcion"
     var name = "Nombre"
-    ChanginProfileScreen(
+    ChangingProfileScreen(
         modifier = modifier,
         description = description,
         ondescriptionChange = { description = it },
@@ -61,7 +66,7 @@ fun ChanginProfileData(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ChanginProfileScreen(modifier: Modifier = Modifier,
+fun ChangingProfileScreen(modifier: Modifier = Modifier,
                          description: String,
                          ondescriptionChange: (String) -> Unit,
                          name: String,
@@ -257,7 +262,7 @@ fun AddSocial(
 private fun PreviewChanginProfileScreen() {
     HobbyLobbyTheme {
         Surface {
-            ChanginProfileData(
+            ChangingProfileData(
                 modifier = Modifier.fillMaxSize()
             )
         }

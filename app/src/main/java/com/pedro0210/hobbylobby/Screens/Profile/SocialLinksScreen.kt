@@ -31,6 +31,11 @@ import androidx.compose.ui.unit.dp
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 
 @Composable
+fun SocialLinksScreenRoute(){
+    SocialLinksData()
+}
+
+@Composable
 fun SocialLinksData(modifier: Modifier = Modifier) {
     var socialName = "Nombre"
     var socialLink = "Link"

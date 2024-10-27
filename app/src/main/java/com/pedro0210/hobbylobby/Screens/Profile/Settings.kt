@@ -24,6 +24,17 @@ import androidx.compose.ui.unit.dp
 import com.pedro0210.hobbylobby.R
 
 @Composable
+fun SettingsRoute(){
+    SettingsScreen(
+        userName = "Pedro",
+        onRoomsClick = {},
+        onCreateCommunityClick = {},
+        onEditProfileClick = {},
+        onSignOutClick = {}
+    )
+}
+
+@Composable
 fun SettingsScreen(
     userName: String,
     onRoomsClick: () -> Unit = {},

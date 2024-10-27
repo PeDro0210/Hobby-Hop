@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.pedro0210.hobbylobby.R
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 
+
 @Composable
 fun ProfileScreenRoute(
     modifier: Modifier = Modifier,
