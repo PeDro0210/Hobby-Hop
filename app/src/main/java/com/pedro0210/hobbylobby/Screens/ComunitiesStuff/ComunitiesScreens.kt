@@ -1,4 +1,4 @@
-package com.pedro0210.hobbylobby.ScreensLogin.ComunitiesStuff
+package com.pedro0210.hobbylobby.Screens.ComunitiesStuff
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement

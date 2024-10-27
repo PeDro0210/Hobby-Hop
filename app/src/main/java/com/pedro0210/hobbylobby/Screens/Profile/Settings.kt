@@ -1,4 +1,4 @@
-package com.pedro0210.hobbylobby.ScreensLogin.Profile
+package com.pedro0210.hobbylobby.Screens.Profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
