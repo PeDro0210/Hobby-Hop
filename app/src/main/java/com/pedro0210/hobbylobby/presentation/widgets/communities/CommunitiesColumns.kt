@@ -22,8 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.pedro0210.hobbylobby.presentation.model.ButtonType
 import com.pedro0210.hobbylobby.presentation.model.Community
+import com.pedro0210.hobbylobby.presentation.model.CommunityType
 import com.pedro0210.hobbylobby.presentation.view.screens.widgets.buttons.CommunityButton
 
 @Composable
@@ -33,7 +33,7 @@ fun CommunitiesColumns(
     title: String,
     partOfCommunity: Boolean,
     navController: NavController,
-    buttonType: ButtonType
+    buttonType: CommunityType
 ) {
     Column(
         modifier = modifier

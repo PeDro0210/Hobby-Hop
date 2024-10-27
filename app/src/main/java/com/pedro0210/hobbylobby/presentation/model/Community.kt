@@ -5,5 +5,6 @@ data class Community( //ths structure of this will almost be the same
     val description:String,
     val image:String,
     val partOfCommunity:Boolean,
+    val type:CommunityType,
     val id: String
 )

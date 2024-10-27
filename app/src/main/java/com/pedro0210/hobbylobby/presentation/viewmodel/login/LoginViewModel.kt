@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pedro0210.hobbylobby.data.datastore.UserPreferences
+import com.pedro0210.hobbylobby.data.repository.LoginRepo
 import com.pedro0210.hobbylobby.dataStore
 import com.pedro0210.hobbylobby.presentation.state.LoginScreenState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,8 +16,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-private val preferences: UserPreferences
-    //TODO: add the repo here
+    private val preferences: UserPreferences,
+    private val loginRepo: LoginRepo
 ): ViewModel() {
     private val _state = MutableStateFlow(LoginScreenState())
     val state = _state.asStateFlow()
@@ -36,13 +37,24 @@ private val preferences: UserPreferences
         }
     }
 
-    fun login() {
-        //TODO: call the repo with the firebase implementation
-       viewModelScope.launch {
-           preferences.logIn("PLACEHOLDER_ID")
-       }
-    }
 
+    fun login(): Boolean {
+        var loginSuccessful = false
+
+        viewModelScope.launch {
+            val id = loginRepo.login(state.value.email, state.value.password)
+
+            if (id != "") {
+                preferences.logIn(id)
+                loginSuccessful = true
+            }
+
+            else {
+                loginSuccessful = false
+            }
+        }
+        return loginSuccessful
+    }
 
     companion object {
         fun provideFactory(): ViewModelProvider.Factory = viewModelFactory {
@@ -50,7 +62,8 @@ private val preferences: UserPreferences
                 val application = checkNotNull(this[APPLICATION_KEY])
 
                 LoginViewModel(
-                    preferences = UserPreferences(application.dataStore)
+                    preferences = UserPreferences(application.dataStore),
+                    loginRepo = LoginRepo()
                 )
             }
         }

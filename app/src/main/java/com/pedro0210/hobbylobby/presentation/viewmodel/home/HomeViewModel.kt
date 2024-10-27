@@ -1,49 +1,70 @@
 package com.pedro0210.hobbylobby.presentation.viewmodel.home
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.pedro0210.hobbylobby.data.datastore.UserPreferences
+import com.pedro0210.hobbylobby.data.repository.HomeRepo
+import com.pedro0210.hobbylobby.dataStore
 import com.pedro0210.hobbylobby.presentation.model.Community
 import com.pedro0210.hobbylobby.presentation.state.HomeScreenState
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 class HomeViewModel(
-    //TODO: add the repo here
-) {
-    //place holder
-    private val _countries = MutableStateFlow<List<Community>>(emptyList())
-    private val _ownCommunities = MutableStateFlow<List<Community>>(emptyList())
+    repo: HomeRepo,
+) : ViewModel() {
 
     private val _state = MutableStateFlow(
         HomeScreenState(
-            countries = _countries.value,
-            ownCommunities = _ownCommunities.value
+            countries = emptyList(),
+            ownCommunities = emptyList()
         )
     )
 
     val state = _state.asStateFlow()
 
-    //TODO: change the place holder
-    val countries: StateFlow<List<Community>> = _countries.asStateFlow()
-    val ownCommunities: StateFlow<List<Community>> = _ownCommunities.asStateFlow()
+    //will be initialize on the init
+    private lateinit var countries: StateFlow<List<Community>>
+    private lateinit var ownCommunities: StateFlow<List<Community>>
 
-    //TODO: add this line for the stateIn, for the repo with both countries and own communities
-    //characterRepo.getAll()
-    //  .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    init {
+        viewModelScope.launch {
+            countries = repo.getCountries()
+                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+            ownCommunities = repo.getOwnCommunities()
+                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    private fun getCountries() {
-        //TODO: call the repo with the firebase implementation
-    }
+            //have to do it async for each of the flows
+            launch {
+                countries.collect { countriesList ->
+                    _state.update { it.copy(countries = countriesList) }
+                }
+            }
 
-    private fun getOwnCommunities() {
-       //TODO: call the repo with the firebase implementation
+            launch {
+                ownCommunities.collect { ownCommunitiesList ->
+                    _state.update { it.copy(ownCommunities = ownCommunitiesList) }
+                }
+            }
+        }
     }
 
     companion object {
         fun provideFactory(): ViewModelProvider.Factory = viewModelFactory {
-            HomeViewModel()
+            initializer {
+                val application = checkNotNull(this[APPLICATION_KEY])
+                val repo = HomeRepo(userPreferences = UserPreferences(application.dataStore))
+                HomeViewModel(repo = repo)
+            }
         }
     }
 }

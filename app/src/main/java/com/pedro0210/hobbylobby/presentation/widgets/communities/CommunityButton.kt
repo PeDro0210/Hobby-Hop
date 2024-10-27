@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.pedro0210.hobbylobby.presentation.model.ButtonType
+import com.pedro0210.hobbylobby.presentation.model.CommunityType
 import com.pedro0210.hobbylobby.presentation.util.stringCutter
 
 @Composable
@@ -32,7 +32,7 @@ fun CommunityButton(
     description: String,
     partOfCommunity: Boolean,
     navController: NavController,
-    type: ButtonType
+    type: CommunityType
 ){
 
     Row(

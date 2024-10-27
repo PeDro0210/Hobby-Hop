@@ -78,6 +78,7 @@ dependencies {
     // Esta librería es necesaria para poder usar corrutinas y flows con Room
     implementation(libs.androidx.room.ktx)
     implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation(libs.mediation.test.suite)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

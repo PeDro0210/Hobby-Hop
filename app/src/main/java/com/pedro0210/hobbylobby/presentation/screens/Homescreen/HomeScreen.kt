@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.pedro0210.hobbylobby.presentation.model.ButtonType
+import com.pedro0210.hobbylobby.presentation.model.CommunityType
 import com.pedro0210.hobbylobby.presentation.state.HomeScreenState
 import com.pedro0210.hobbylobby.presentation.util.generateRandomCommunities
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
@@ -42,7 +43,7 @@ fun Home(
                     title =  "Countries",
                     partOfCommunity = true,
                     navController = navController,
-                    buttonType = ButtonType.bigCommunity
+                    buttonType = CommunityType.bigCommunity
                 )
                 CommunitiesColumns(
                     modifier = Modifier.weight(0.5f),
@@ -50,7 +51,7 @@ fun Home(
                     title = "My Communities",
                     partOfCommunity = true,
                     navController = navController,
-                    buttonType = ButtonType.smallCommunity
+                    buttonType = CommunityType.smallCommunity
                 )
             }
         }
