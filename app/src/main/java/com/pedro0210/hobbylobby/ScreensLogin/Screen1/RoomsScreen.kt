@@ -26,6 +26,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pedro0210.hobbylobby.R
 
+@Composable
+fun RoomScreenRoute() {
+    RoomScreen()
+}
+
 data class RoomMember(
     val name: String,
     val status: String,

@@ -48,6 +48,32 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pedro0210.hobbylobby.R
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
+
+@Composable
+fun ProfileScreenRoute(
+    modifier: Modifier = Modifier,
+    description: String,
+    ondescriptionChange: (String) -> Unit,
+    name: String,
+    onNameChange: (String) -> Unit,
+    onBackClick: () -> Unit = {},
+    onClearClick: () -> Unit = {},
+    onPictureChange: () -> Unit = {},
+    onAddClick: () -> Unit = {}
+
+) {
+    ElementsScreen(
+        description = description,
+        ondescriptionChange = ondescriptionChange,
+        name = name,
+        onNameChange = onNameChange,
+        onBackClick = onBackClick,
+        onClearClick = onClearClick,
+        onPictureChange = onPictureChange,
+        onAddClick = onAddClick
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ElementsScreen(modifier: Modifier = Modifier,
