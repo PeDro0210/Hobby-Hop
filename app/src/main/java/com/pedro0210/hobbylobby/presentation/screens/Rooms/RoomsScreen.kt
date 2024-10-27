@@ -1,4 +1,4 @@
-package com.pedro0210.hobbylobby.Screens.Rooms
+package com.pedro0210.hobbylobby.presentation.screens.Rooms
 
 
 import androidx.compose.foundation.Image
@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pedro0210.hobbylobby.R
-import com.pedro0210.hobbylobby.Screens.Rooms.Viewmodel.RoomMember
-import com.pedro0210.hobbylobby.Screens.Rooms.Viewmodel.RoomsViewModel
+import com.pedro0210.hobbylobby.presentation.model.RoomMember
+import com.pedro0210.hobbylobby.presentation.viewmodel.rooms.RoomsViewModel
 
 @Composable
 fun RoomScreenRoute(

@@ -1,4 +1,4 @@
-package com.pedro0210.hobbylobby.Screens.ComunitiesStuff
+package com.pedro0210.hobbylobby.presentation.screens.ComunitiesStuff
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
@@ -101,7 +101,7 @@ fun Communities(
                     CommunitiesColumns(
                         modifier = Modifier.weight(0.65f),
                         communities = state.communities,
-                        title = if (state.bigCommunity) "Communities" else "All Users",
+                        title = if (state.bigCommunity) "Communities" else "Rooms",
                         partOfCommunity = state.partOfCommunity,
                         navController = navController,
                         buttonType = state.buttonType

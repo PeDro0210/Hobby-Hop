@@ -1,4 +1,4 @@
-package com.pedro0210.hobbylobby.Screens.Rooms.Viewmodel
+package com.pedro0210.hobbylobby.presentation.viewmodel.rooms
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

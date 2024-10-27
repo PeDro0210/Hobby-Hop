@@ -1,4 +1,4 @@
-package com.pedro0210.hobbylobby.Screens.Profile.ViewModel
+package com.pedro0210.hobbylobby.presentation.event
 
 import com.pedro0210.hobbylobby.presentation.model.SocialMedia
 

@@ -1,9 +1,10 @@
-package com.pedro0210.hobbylobby.Screens.Profile.ViewModel
+package com.pedro0210.hobbylobby.presentation.viewmodel.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pedro0210.hobbylobby.data.datastore.UserPreferences
 import com.pedro0210.hobbylobby.presentation.model.SocialMedia
+import com.pedro0210.hobbylobby.presentation.state.ProfileState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,7 +16,6 @@ class ProfileViewModel(
 ): ViewModel() {
     private val _state = MutableStateFlow(ProfileState())
     val state = _state.asStateFlow()
-
 
     private fun onLoadUser(ID: Int) {
         viewModelScope.launch {
@@ -61,8 +61,5 @@ class ProfileViewModel(
             )}
         }
     }
-
-
-
 
 }

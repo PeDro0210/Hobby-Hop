@@ -1,4 +1,4 @@
-package com.pedro0210.hobbylobby.Screens.Rooms
+package com.pedro0210.hobbylobby.presentation.screens.Rooms
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -36,7 +36,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pedro0210.hobbylobby.R
-import com.pedro0210.hobbylobby.Screens.Rooms.Viewmodel.RoomsViewModel
+import com.pedro0210.hobbylobby.presentation.viewmodel.rooms.RoomsViewModel
+import com.pedro0210.hobbylobby.presentation.viewmodel.rooms.RoomsViewModelFactory
 
 @Composable
 fun AceptacionesScreenRoute(
@@ -47,7 +48,7 @@ fun AceptacionesScreenRoute(
     onAcceptClick: (String) -> Unit = {},
     onRejectClick: (String) -> Unit = {},
     onBackClick: () -> Unit = {},
-    viewModel: RoomsViewModel = viewModel(factory = RoomsViewModel())
+    viewModel: RoomsViewModel = viewModel(factory  = RoomsViewModelFactory())
 ) {
     AceptacionesScreen(
         communityName = communityName,

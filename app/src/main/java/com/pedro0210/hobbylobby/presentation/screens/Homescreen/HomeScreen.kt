@@ -1,4 +1,4 @@
-package com.pedro0210.hobbylobby.Screens.Homescreen
+package com.pedro0210.hobbylobby.presentation.screens.Homescreen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
@@ -29,7 +29,7 @@ fun Home(
         topBar = {
             TopBar(
                 navController = navController ,
-                homeScreen = false,
+                homeScreen = true,
             )
         },
         content = {innerPadding ->

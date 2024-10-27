@@ -90,9 +90,6 @@ fun CommunitiesColumns(
         }
 
         Spacer(modifier = Modifier.padding(8.dp))
-        HorizontalDivider(
-            color = Color.Gray,
-            thickness = 1.dp
-        )
+
     }
 }

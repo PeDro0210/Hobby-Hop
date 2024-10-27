@@ -49,11 +49,13 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    kapt {
-        arguments {
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
-    }
+    //kapt {
+     //   arguments {
+      //      arg("room.schemaLocation", "$projectDir/schemas")
+       // }
+    //}
+
+
 }
 
 dependencies {
@@ -72,7 +74,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.splashscreen)
     implementation(libs.androidx.room.runtime)
-    kapt(libs.androidx.room.compiler)
+    //kapt(libs.androidx.room.compiler)
     // Esta librería es necesaria para poder usar corrutinas y flows con Room
     implementation(libs.androidx.room.ktx)
     implementation("io.coil-kt:coil-compose:2.7.0")

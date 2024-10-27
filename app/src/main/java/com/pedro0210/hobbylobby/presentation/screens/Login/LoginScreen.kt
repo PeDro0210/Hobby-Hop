@@ -1,4 +1,4 @@
-package com.pedro0210.hobbylobby.Screens.Login
+package com.pedro0210.hobbylobby.presentation.screens.Login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.pedro0210.hobbylobby.R
+import com.pedro0210.hobbylobby.domain.util.LoginEnum
 import com.pedro0210.hobbylobby.presentation.state.LoginScreenState
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 import com.pedro0210.hobbylobby.presentation.view.screens.widgets.buttons.LoginButton
@@ -41,7 +42,7 @@ fun Login(
     state: LoginScreenState,
     onPasswordChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
-    onLoginClick: () -> Unit
+    onLoginClick: (LoginEnum) -> Unit
 ){ //TODO: add all states from the loginState somehow
     Scaffold (
         content = { paddingValues ->
@@ -161,11 +162,19 @@ fun Login(
                         R.drawable.x
                     )
 
-                    for (logo in logos) {
-                        LoginButton(description = "Google", image = logo) {
+                    val loginEnums: List<LoginEnum> = listOf(
+                        LoginEnum.GoogleAuth,
+                        LoginEnum.MetaAuth,
+                        LoginEnum.XAuth
+                    )
+
+                    for (i in 0..2){
+                        LoginButton(description = "Auth Button", image = logos[i]) {
                             //TODO: add the login, with the viewmodel
+                            onLoginClick(loginEnums[i])
                         }
                     }
+
                 }
             }
         }
