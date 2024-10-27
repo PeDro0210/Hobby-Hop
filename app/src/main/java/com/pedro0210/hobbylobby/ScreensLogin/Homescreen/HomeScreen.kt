@@ -1,4 +1,4 @@
-package com.pedro0210.hobbylobby.presentation.ui.view.screens
+package com.pedro0210.hobbylobby.ScreensLogin.Homescreen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column

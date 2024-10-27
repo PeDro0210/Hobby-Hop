@@ -1,4 +1,4 @@
-package com.pedro0210.hobbylobby.presentation.ui.view.screens
+package com.pedro0210.hobbylobby.ScreensLogin.ComunitiesStuff
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
