@@ -46,9 +46,8 @@ fun CommunityButton(
                         /*
                         * TODO: assign different navigation depending on the button type
                         *
-                        * buttonType: bigCommunity -> navigate to community
-                        * buttonType: smallCommunity -> navigate to community, small community
-                        * buttonType: room -> navigate to room (idunno how those bitches named it)
+                        * buttonType: bigCommunity -> navigate to small
+                        * buttonType: smallCommunity -> navigate to room
                         */
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)

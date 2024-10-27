@@ -32,7 +32,7 @@ import com.pedro0210.hobbylobby.presentation.view.screens.widgets.TopBar
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun Communities(
+fun CommunitiesScreen(
     navController: NavController,
     state: ComunitiesScreenState
 ){
@@ -120,7 +120,7 @@ fun Communities(
 fun CommRedirectCommPreview() {
     HobbyLobbyTheme {
         val item = generateRandomCommunities(1)[0]
-        Communities(
+        CommunitiesScreen(
             navController = rememberNavController(),
             state = ComunitiesScreenState(
                 image = item.image,
@@ -141,7 +141,7 @@ fun CommRedirectCommPreview() {
 fun CommRedirectUsersPreview() {
     HobbyLobbyTheme {
         val item = generateRandomCommunities(1)[0]
-        Communities(
+        CommunitiesScreen(
             navController = rememberNavController(),
             state = ComunitiesScreenState(
                 image = item.image,

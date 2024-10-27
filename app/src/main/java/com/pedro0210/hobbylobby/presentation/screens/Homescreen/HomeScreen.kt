@@ -18,8 +18,6 @@ import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 import com.pedro0210.hobbylobby.presentation.ui.view.widgets.CommunitiesColumns
 import com.pedro0210.hobbylobby.presentation.view.screens.widgets.TopBar
 
-@SuppressLint("UnrememberedMutableState")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Home(
     navController: NavController,

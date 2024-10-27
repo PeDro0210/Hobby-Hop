@@ -6,7 +6,6 @@ data class LoginScreenState(
     var password: String = "",
 
     // Just for the screen
-    val isPasswordVisible: Boolean = false,
     val isEmailValid: Boolean = false,
     val isPasswordValid: Boolean = false,
     var buttonText: String = "Login"
