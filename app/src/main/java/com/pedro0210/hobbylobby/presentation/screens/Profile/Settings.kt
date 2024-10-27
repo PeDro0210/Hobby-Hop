@@ -14,6 +14,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,12 +23,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pedro0210.hobbylobby.R
+import com.pedro0210.hobbylobby.presentation.event.ProfileEvent
+import com.pedro0210.hobbylobby.presentation.state.ProfileState
+import com.pedro0210.hobbylobby.presentation.viewmodel.profile.ProfileViewModel
 
 @Composable
-fun SettingsRoute(){
+fun SettingsRoute(
+    viewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.Factory)
+){
+    val state: ProfileState by viewModel.state.collectAsStateWithLifecycle()
+    LaunchedEffect(Unit) {
+        viewModel.onEvent(ProfileEvent.onLoadUser(1))
+    }
+
     SettingsScreen(
-        userName = "Pedro",
+        userName = state.user?.name ?: "Nombre",
         onRoomsClick = {},
         onCreateCommunityClick = {},
         onEditProfileClick = {},
