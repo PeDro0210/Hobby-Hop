@@ -37,6 +37,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.ui.draw.clip
@@ -92,9 +93,6 @@ fun ElementsScreen(modifier: Modifier = Modifier,
                     .size(150.dp)
                     .clip(CircleShape),
                     contentAlignment = androidx.compose.ui.Alignment.Center) {
-                    IconButton(onClick = onPictureChange) {
-                        Icon(Icons.Default.Face, contentDescription = "Picture", modifier = Modifier.size(120.dp))
-                    }
                 }
 
                 Spacer(modifier = Modifier.width(16.dp))
@@ -110,8 +108,7 @@ fun ElementsScreen(modifier: Modifier = Modifier,
             Spacer(modifier = Modifier.height(32.dp))
             Row(modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(text = "Oscar's social media", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-                Icon(Icons.Default.KeyboardArrowRight, contentDescription = "Social media")
+                Text(text = "Oscar's social media:", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -133,20 +130,31 @@ fun ElementsScreen(modifier: Modifier = Modifier,
 
 @Composable
 fun SocialSquare(name: String, iconResId: Int) {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .clip(RoundedCornerShape(8.dp))
-        .background(MaterialTheme.colorScheme.surface)
-        .padding(16.dp),
-        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+    Row (modifier = Modifier
+        .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+    ){
+        Row(modifier = Modifier.fillMaxWidth(0.65f),
+            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(65.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    .fillMaxWidth(0.35f),
+                contentAlignment = androidx.compose.ui.Alignment.Center
+            ) {
 
-        Icon(painter = painterResource(id = iconResId),
-            contentDescription = null,
-            modifier = Modifier.size(50.dp))
+            }
+            Spacer(modifier = Modifier.padding(8.dp))
+            Text(text = name)
+        }
 
-        Spacer(modifier = Modifier.width(16.dp))
 
-        Text(text = name, style = MaterialTheme.typography.bodyLarge)
+
     }
 }
 
