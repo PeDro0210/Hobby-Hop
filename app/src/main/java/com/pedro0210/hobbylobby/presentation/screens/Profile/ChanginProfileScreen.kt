@@ -33,24 +33,47 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pedro0210.hobbylobby.R
+import com.pedro0210.hobbylobby.presentation.event.ProfileEvent
+import com.pedro0210.hobbylobby.presentation.model.SocialMedia
+import com.pedro0210.hobbylobby.presentation.state.ProfileState
+import com.pedro0210.hobbylobby.presentation.viewmodel.profile.ProfileViewModel
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 
 @Composable
-fun ChangingProfileScreenRoute(){
-    ChangingProfileData()
+fun ChangingProfileScreenRoute(
+    viewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.Factory)
+){
+    val state: ProfileState by viewModel.state.collectAsStateWithLifecycle()
+    LaunchedEffect(Unit) {
+        viewModel.onEvent(ProfileEvent.onLoadUser(1))
+    }
+
+    ChangingProfileData(
+        state = state,
+    )
 }
 
+
+
 @Composable
-fun ChangingProfileData(modifier: Modifier = Modifier) {
-    var description = "Descripcion"
-    var name = "Nombre"
+fun ChangingProfileData(modifier: Modifier = Modifier,
+                        state: ProfileState
+) {
+    var description = state.user?.description ?: "Descripcion"
+    var name = state.user?.name ?: "Nombre"
     ChangingProfileScreen(
+        state = state,
         modifier = modifier,
         description = description,
         ondescriptionChange = { description = it },
@@ -67,6 +90,7 @@ fun ChangingProfileData(modifier: Modifier = Modifier) {
 
 @Composable
 fun ChangingProfileScreen(modifier: Modifier = Modifier,
+                            state: ProfileState,
                          description: String,
                          ondescriptionChange: (String) -> Unit,
                          name: String,
@@ -90,6 +114,7 @@ fun ChangingProfileScreen(modifier: Modifier = Modifier,
             modifier = modifier
                 .fillMaxSize()
                 .padding(it),
+            state = state,
             description = description,
             ondescriptionChange = ondescriptionChange,
             name = name,
@@ -107,6 +132,7 @@ fun ChangingProfileScreen(modifier: Modifier = Modifier,
 
 @Composable
 fun ElementsScreen(modifier: Modifier = Modifier,
+                     state: ProfileState,
                    description: String,
                    ondescriptionChange: (String) -> Unit,
                    name: String,
@@ -177,9 +203,11 @@ fun ElementsScreen(modifier: Modifier = Modifier,
 
             Column (modifier = Modifier.padding(4.dp, 0.dp)){
                 LazyColumn {
-                    items(2) {
-                        SocialSquare("Red Social")
+                    items(items = state.user?.socialMedia ?: emptyList()) { socialmedia: SocialMedia ->
+                        SocialSquare(Text = socialmedia.name)
                         Spacer(modifier = Modifier.height(16.dp))
+
+
                     }
 
                 }
@@ -262,8 +290,17 @@ fun AddSocial(
 private fun PreviewChanginProfileScreen() {
     HobbyLobbyTheme {
         Surface {
-            ChangingProfileData(
-                modifier = Modifier.fillMaxSize()
+            ChangingProfileScreen(
+                state = ProfileState(),
+                description = "Descripcion",
+                ondescriptionChange = {},
+                name = "Nombre",
+                onNameChange = {},
+                onBackClick = {},
+                ondoneClick = {},
+                onClearClick = {},
+                onPictureChange = {},
+                onAddClick = {}
             )
         }
     }

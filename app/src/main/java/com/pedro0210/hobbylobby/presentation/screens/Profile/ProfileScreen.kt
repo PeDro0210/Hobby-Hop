@@ -24,18 +24,57 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pedro0210.hobbylobby.R
+import com.pedro0210.hobbylobby.presentation.event.UserEvent
+import com.pedro0210.hobbylobby.presentation.model.SocialMedia
+import com.pedro0210.hobbylobby.presentation.state.UserState
+import com.pedro0210.hobbylobby.presentation.viewmodel.profile.UserViewModel
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 
 
 @Composable
 fun ProfileScreenRoute(
+    viewModel: UserViewModel = viewModel(factory = UserViewModel.Factory)
+){
+    val state: UserState by viewModel.state.collectAsStateWithLifecycle()
+    LaunchedEffect(Unit) {
+        viewModel.onEvent(UserEvent.onLoadUser(1))
+    }
+
+
+
+
+
+    ElementsScreen(
+        state = state,
+        description = state.user?.description ?: "Descripcion",
+        ondescriptionChange = {},
+        name = state.user?.name ?: "Nombre",
+        onNameChange = {},
+        onBackClick = {},
+        onClearClick = {},
+        onPictureChange = {},
+        onAddClick = {}
+    )
+}
+
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ElementsScreen(
     modifier: Modifier = Modifier,
+    state: UserState,
     description: String,
     ondescriptionChange: (String) -> Unit,
     name: String,
@@ -44,31 +83,6 @@ fun ProfileScreenRoute(
     onClearClick: () -> Unit = {},
     onPictureChange: () -> Unit = {},
     onAddClick: () -> Unit = {}
-
-) {
-    ElementsScreen(
-        description = description,
-        ondescriptionChange = ondescriptionChange,
-        name = name,
-        onNameChange = onNameChange,
-        onBackClick = onBackClick,
-        onClearClick = onClearClick,
-        onPictureChange = onPictureChange,
-        onAddClick = onAddClick
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ElementsScreen(modifier: Modifier = Modifier,
-                   description: String,
-                   ondescriptionChange: (String) -> Unit,
-                   name: String,
-                   onNameChange: (String) -> Unit,
-                   onBackClick: () -> Unit = {},
-                   onClearClick: () -> Unit = {},
-                   onPictureChange: () -> Unit = {},
-                   onAddClick: () -> Unit = {}
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
 
@@ -124,14 +138,11 @@ fun ElementsScreen(modifier: Modifier = Modifier,
             Spacer(modifier = Modifier.height(16.dp))
 
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                item {
-                    SocialSquare("SNAPCHAT", R.drawable.snapchat_logo)
-                }
-                item {
+                items(items = state.user?.socialMedia ?: emptyList()) { socialmedia: SocialMedia ->
+                    SocialSquare(name = socialmedia.name, iconResId = 1234)
                     Spacer(modifier = Modifier.height(16.dp))
-                }
-                item {
-                    SocialSquare("INSTAGRAM", R.drawable.instagram_logo)
+
+
                 }
             }
         }
@@ -180,7 +191,8 @@ fun PreviewElementsScreen() {
             onBackClick = {},
             onClearClick = {},
             onPictureChange = {},
-            onAddClick = {}
+            onAddClick = {},
+            state = UserState()
         )
     }
 }

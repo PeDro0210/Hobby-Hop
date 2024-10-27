@@ -10,27 +10,26 @@ import com.pedro0210.hobbylobby.Repos.ProfileRepository
 import com.pedro0210.hobbylobby.data.datastore.UserPreferences
 import com.pedro0210.hobbylobby.dataStore
 import com.pedro0210.hobbylobby.presentation.event.ProfileEvent
+import com.pedro0210.hobbylobby.presentation.event.UserEvent
 import com.pedro0210.hobbylobby.presentation.model.SocialMedia
 import com.pedro0210.hobbylobby.presentation.state.ProfileState
+import com.pedro0210.hobbylobby.presentation.state.UserState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class ProfileViewModel(
-    private val preferences: UserPreferences,
+class UserViewModel(
     private val repository: ProfileRepository
 ): ViewModel() {
-    private val _state = MutableStateFlow(ProfileState())
+    private val _state = MutableStateFlow(UserState())
     val state = _state.asStateFlow()
 
 
-    fun onEvent(event: ProfileEvent) {
+    fun onEvent(event: UserEvent) {
         when (event) {
-            is ProfileEvent.onLoadUser -> onLoadUser(event.ID)
-            ProfileEvent.onLogoutClick -> onLogoutClick()
-            is ProfileEvent.onDoneAdding -> onSocialAdd(event.socialMedia)
+            is UserEvent.onLoadUser -> onLoadUser(event.ID)
         }
     }
 
@@ -39,7 +38,7 @@ class ProfileViewModel(
             val screenState = _state.value
 
             _state.update { it.copy(
-                user = repository.getProfile1(ID),
+                user = repository.getProfile2(ID),
                 isLoading = true,
                 hasError = false
             )}
@@ -59,30 +58,12 @@ class ProfileViewModel(
         }
     }
 
-    private fun onLogoutClick() {
-        viewModelScope.launch {
-            preferences.logOut()
-        }
-    }
 
-    private fun onSocialAdd(social: SocialMedia) {
-        viewModelScope.launch {
-            _state.update { it.copy(
-                user = _state.value.user?.socialMedia?.plus(social)?.let { it1 ->
-                    _state.value.user?.copy(
-                        socialMedia = it1
-                    )
-                }
-            )}
-        }
-    }
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val application = checkNotNull(this[APPLICATION_KEY])
-                ProfileViewModel(
-                    UserPreferences(application.dataStore),
+                UserViewModel(
                     ProfileRepository()
                 )
             }
