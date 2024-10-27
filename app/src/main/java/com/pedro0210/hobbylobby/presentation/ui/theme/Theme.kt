@@ -13,15 +13,37 @@ import androidx.compose.ui.platform.LocalContext
 
 //TODO: Set the schemes (BRANDON)
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = DPink1,
+    secondary = DBlue1,
+    tertiary = DGreen1,
+    onPrimary = DPink2,
+    onSecondary = DBlue3,
+    onTertiary = DGreen2,
+
+    surface = DBlue2,
+    onSurface = DPink3,
+
+    outline = DPink4,
+
+    background = Gray1,
+    surfaceBright = Gray2,
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    primary = Pink1,
+    secondary = Blue1,
+    tertiary = Green1,
+    onPrimary = Pink2,
+    onSecondary = Blue3,
+    onTertiary = Green2,
+
+    surface = Blue2,
+    onSurface = Pink3,
+
+    outline = Pink4,
+
+    background = White1,
+    surfaceBright = White2,
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
