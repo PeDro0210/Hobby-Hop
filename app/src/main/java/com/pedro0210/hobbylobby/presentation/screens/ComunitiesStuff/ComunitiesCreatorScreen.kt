@@ -39,6 +39,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToCreateSmallCommunities
 import com.pedro0210.hobbylobby.presentation.viewmodel.communities_stuff.CommunitiesViewModel
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 
@@ -51,7 +52,8 @@ fun CommunitiesCreatorRoute(
     //TODO: Add state
 
     CommunitiesCreatorScreen(
-        navController = navController
+        navController = navController,
+        onAddClick = {navController.navigateToCreateSmallCommunities()}
     )
 
 }

@@ -32,3 +32,15 @@ data class Rooms(
 data class Profile(
     val id: String
 )
+
+@Serializable object SettingsGraph
+
+@Serializable object Settings
+
+@Serializable object ModifyProfile
+
+@Serializable object AddSocial
+
+@Serializable object CreateBigCommunity
+
+@Serializable object CreateSmallCommunity

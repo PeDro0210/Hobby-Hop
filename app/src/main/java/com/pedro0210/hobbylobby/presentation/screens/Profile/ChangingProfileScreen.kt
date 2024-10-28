@@ -44,6 +44,7 @@ import androidx.navigation.NavController
 import com.pedro0210.hobbylobby.R
 import com.pedro0210.hobbylobby.presentation.event.ProfileEvent
 import com.pedro0210.hobbylobby.presentation.model.SocialMedia
+import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToAddSocial
 import com.pedro0210.hobbylobby.presentation.state.ProfileState
 import com.pedro0210.hobbylobby.presentation.viewmodel.profile.ProfileViewModel
 
@@ -60,6 +61,7 @@ fun ChangingProfileScreenRoute(
     ChangingProfileScreen(
         state = state,
         navController = navController,
+        onAddClick = {navController.navigateToAddSocial()}
     )
 }
 

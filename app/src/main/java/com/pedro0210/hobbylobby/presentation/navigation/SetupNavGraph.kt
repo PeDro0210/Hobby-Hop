@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.pedro0210.hobbylobby.presentation.navigation.navgraphs.communitiesGraph
 import com.pedro0210.hobbylobby.presentation.navigation.navgraphs.loginGraph
+import com.pedro0210.hobbylobby.presentation.navigation.navgraphs.settingsGraph
 
 @Composable
 fun SetupNavGraph(
@@ -16,5 +17,6 @@ fun SetupNavGraph(
     ){
         loginGraph(navHostController)
         communitiesGraph(navHostController)
+        settingsGraph(navHostController)
     }
 }

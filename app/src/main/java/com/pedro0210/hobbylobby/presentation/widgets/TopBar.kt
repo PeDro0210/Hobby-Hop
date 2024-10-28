@@ -9,6 +9,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
+import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToSettings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,7 +37,7 @@ fun TopBar(
        },
         actions = {
             IconButton (
-                onClick = { /*TODO: redirect to the settings screen*/ },
+                onClick = { navController.navigateToSettings()},
             ){
                 Icon(
                     imageVector = Icons.Default.MoreVert ,
