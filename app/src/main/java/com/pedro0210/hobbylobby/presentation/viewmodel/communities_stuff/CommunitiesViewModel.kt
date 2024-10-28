@@ -21,16 +21,19 @@ import kotlinx.coroutines.launch
 class CommunitiesViewModel(
     repo: CommunitiesRepo,
     id: String,
+    title: String,
+    description: String,
+    image: String,
     communityType: CommunityType,
-
+    partOfCommunity: Boolean
 ): ViewModel(){
 
 
     private val _state = MutableStateFlow(
         ComunitiesScreenState(
             communities = emptyList(),
-            title = "",
-            description = "",
+            title = title,
+            description = description,
             partOfCommunity = false,
             id = id,
             image = ""
@@ -40,15 +43,12 @@ class CommunitiesViewModel(
     val state = _state.asStateFlow()
 
     private lateinit var communities : StateFlow<List<Community>>
-    private lateinit var community: StateFlow<Community>
 
     init {
         viewModelScope.launch {
+
             communities = repo.getCommunities(communityType, id)
                 .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
-
-            community = repo.getCommunity(id, communityType)
-                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), defaultCommunity())
 
             launch{
                 communities.collect{ communitiesList ->
@@ -61,16 +61,14 @@ class CommunitiesViewModel(
             }
 
             launch{
-                community.collect{community->
-                    _state.update{
-                        it.copy(
-                            title = community.title,
-                            description = community.description,
-                            partOfCommunity = community.partOfCommunity,
-                            id = community.id,
-                            image = community.image,
-                        )
-                    }
+                _state.update{
+                    it.copy(
+                        title = title,
+                        description = description,
+                        partOfCommunity = partOfCommunity,
+                        id = id,
+                        image = image,
+                    )
                 }
             }
 
@@ -88,16 +86,24 @@ class CommunitiesViewModel(
     }
     companion object{
         fun provideFactory(
-            id: String,
             communityType: CommunityType,
+            id: String,
+            title: String,
+            description: String,
+            image: String,
+            partOfCommunity: Boolean
 
         ): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val repo = CommunitiesRepo()
                 CommunitiesViewModel(
-                    repo,
-                    id,
-                    communityType,
+                    communityType = communityType,
+                    repo = repo,
+                    id = id,
+                    title = title,
+                    description = description,
+                    image = image,
+                    partOfCommunity = partOfCommunity
                 )
             }
         }

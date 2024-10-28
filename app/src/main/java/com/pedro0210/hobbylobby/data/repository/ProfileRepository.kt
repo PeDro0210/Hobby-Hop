@@ -3,7 +3,7 @@ package com.pedro0210.hobbylobby.data.repository
 import com.pedro0210.hobbylobby.presentation.model.SocialMedia
 import com.pedro0210.hobbylobby.presentation.model.User
 
-class ProfileRepository {
+class ProfileRepository {//TODO: Make this shit FLOW
     fun getProfile1(Id: Int): User {
         return User(
             id = Id,

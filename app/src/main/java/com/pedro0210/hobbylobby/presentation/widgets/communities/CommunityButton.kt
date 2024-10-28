@@ -61,12 +61,20 @@ fun CommunityButton(
                         when (type){
                            CommunityType.bigCommunity -> navController.navigateToBigCommunities(
                                BigCommunity(
-                                   id = id
+                                   id = id,
+                                   image = image,
+                                   title = name,
+                                   description = description,
+                                   partOfCommunity = partOfCommunity,
                                )
                            )
                            CommunityType.smallCommunity -> navController.navigateToSmallCommunities(
                                SmallCommunity(
-                                   id = id
+                                   id = id,
+                                   image = image,
+                                   title = name,
+                                   description = description,
+                                   partOfCommunity = partOfCommunity,
                                )
                            )
                            CommunityType.rooms -> navController.navigateToRooms(

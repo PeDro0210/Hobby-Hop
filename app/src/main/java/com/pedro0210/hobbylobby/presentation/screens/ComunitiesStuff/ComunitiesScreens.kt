@@ -37,7 +37,7 @@ import com.pedro0210.hobbylobby.presentation.viewmodel.communities_stuff.Communi
 @Composable
 fun CommunitiesRoute(
     viewModel: CommunitiesViewModel,
-    navController: NavController
+    navController: NavController,
 ){
     val state: ComunitiesScreenState by viewModel.state.collectAsStateWithLifecycle()
 

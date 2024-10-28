@@ -9,39 +9,6 @@ import kotlinx.coroutines.flow.flowOf
 
 class CommunitiesRepo {
 
-    //todo: for the movement return a standar community
-    suspend fun getCommunity(id: String, type: CommunityType): Flow<Community> {
-        when (type) {
-            CommunityType.bigCommunity -> {
-            return flowOf(
-                Community(
-                    title = id, //get's fetch by the id
-                    description = "The only public university in Guatemala.",
-                    image = "usac.png",
-                    partOfCommunity = true,
-                    id = "1",
-                    type = CommunityType.bigCommunity
-                )
-            )
-            }
-            CommunityType.smallCommunity -> {
-                return flowOf(
-                    Community(
-                    title = "UVG",
-                    description = "The only public university in Guatemala.",
-                    image = "usac.png",
-                    partOfCommunity = true,
-                    id = "1",
-                    type = CommunityType.smallCommunity
-                )
-                )
-            }
-            CommunityType.rooms -> {
-                return flowOf()
-            }
-        }
-    }
-
 
     /* double purpose, getting Rooms and getting communities */
     suspend fun getCommunities(

@@ -47,11 +47,15 @@ fun NavGraphBuilder.communitiesGraph(
 
         composable<BigCommunity>{ navBackStackEntry ->
 
-           val communityId: BigCommunity = navBackStackEntry.toRoute()
+           val community: BigCommunity = navBackStackEntry.toRoute()
 
            val bigCommunityViewModel : CommunitiesViewModel = viewModel(
                factory = CommunitiesViewModel.provideFactory(
-                    id = communityId.id,
+                    id = community.id,
+                    title = community.title,
+                    description = community.description,
+                    image = community.image,
+                    partOfCommunity = community.partOfCommunity,
                     communityType = CommunityType.bigCommunity
                )
            )
@@ -64,11 +68,15 @@ fun NavGraphBuilder.communitiesGraph(
 
         composable<SmallCommunity>{ navBackStackEntry ->
 
-           val communityId: BigCommunity = navBackStackEntry.toRoute()
+           val community: BigCommunity = navBackStackEntry.toRoute()
 
            val smallCommunityViewModel : CommunitiesViewModel = viewModel(
                factory = CommunitiesViewModel.provideFactory(
-                    id = communityId.id,
+                    id = community.id,
+                    title = community.title,
+                    description = community.description,
+                    image = community.image,
+                    partOfCommunity = community.partOfCommunity,
                     communityType = CommunityType.smallCommunity
                )
            )

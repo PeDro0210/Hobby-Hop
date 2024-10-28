@@ -15,12 +15,20 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class BigCommunity(
-    val id: String
+    val id: String,
+    val title: String,
+    val description: String,
+    val image: String,
+    val partOfCommunity: Boolean
 )
 
 @Serializable
 data class SmallCommunity(
-    val id: String
+    val id: String,
+    val title: String,
+    val description: String,
+    val image: String,
+    val partOfCommunity: Boolean
 )
 
 @Serializable
