@@ -32,7 +32,7 @@ import com.pedro0210.hobbylobby.presentation.viewmodel.profile.ProfileViewModel
 
 @Composable
 fun SettingsRoute(
-    viewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.Factory)
+    viewModel: ProfileViewModel
 ){
     val state: ProfileState by viewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {

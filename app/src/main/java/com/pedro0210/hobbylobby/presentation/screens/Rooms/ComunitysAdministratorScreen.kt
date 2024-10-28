@@ -34,44 +34,35 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.pedro0210.hobbylobby.R
-import com.pedro0210.hobbylobby.presentation.viewmodel.rooms.RoomsViewModel
-import com.pedro0210.hobbylobby.presentation.viewmodel.rooms.RoomsViewModelFactory
 
 @Composable
 fun AceptacionesScreenRoute(
-    communityName: String,
-    communityDescription: String,
-    onEditClick: () -> Unit = {},
-    requests: List<String>,
-    onAcceptClick: (String) -> Unit = {},
-    onRejectClick: (String) -> Unit = {},
-    onBackClick: () -> Unit = {},
-    viewModel: RoomsViewModel = viewModel(factory  = RoomsViewModelFactory())
-) {
+    navController: NavController
+){
+    //TODO: add viewmodel when created, same as state
+
     AceptacionesScreen(
-        communityName = communityName,
-        communityDescription = communityDescription,
-        requests = requests,
-        onAcceptClick = onAcceptClick,
-        onRejectClick = onRejectClick,
-        onBackClick = onBackClick,
-        onEditClick = onEditClick
+        navController = navController
     )
+
 }
 
-
+//TODO: add the buttons as they're in figma
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AceptacionesScreen(
-    communityName: String,
-    communityDescription: String,
+    //TODO: add state
+    communityName: String = "", //for the meanwhile
+    communityDescription: String = "" , //for the meanwhile
     onEditClick: () -> Unit = {},
-    requests: List<String>,
+    requests: List<String> = emptyList(), //idunno wtf is this, this should me manage
     onAcceptClick: (String) -> Unit = {},
     onRejectClick: (String) -> Unit = {},
-    onBackClick: () -> Unit = {}
+    onBackClick: () -> Unit = {},
+    navController: NavController
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
@@ -159,6 +150,7 @@ fun PreviewAceptacionesScreen() {
         onAcceptClick = {},
         onRejectClick = {},
         onBackClick = {},
-        onEditClick = {}
+        onEditClick = {},
+        navController = rememberNavController()
     )
 }

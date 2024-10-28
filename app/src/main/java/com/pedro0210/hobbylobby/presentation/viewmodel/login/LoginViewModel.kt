@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pedro0210.hobbylobby.data.datastore.UserPreferences
 import com.pedro0210.hobbylobby.data.repository.LoginRepo
 import com.pedro0210.hobbylobby.dataStore
+import com.pedro0210.hobbylobby.domain.util.LoginEnum
 import com.pedro0210.hobbylobby.presentation.state.LoginScreenState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -38,7 +39,8 @@ class LoginViewModel(
     }
 
 
-    fun login(): Boolean {
+    //TOOD: set login enum to the type of login
+    fun login(type: LoginEnum): Boolean {
         var loginSuccessful = false
 
         viewModelScope.launch {

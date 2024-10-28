@@ -14,21 +14,41 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import com.pedro0210.hobbylobby.presentation.model.ButtonType
+import com.pedro0210.hobbylobby.presentation.model.CommunityType
 import com.pedro0210.hobbylobby.presentation.state.ComunitiesScreenState
 import com.pedro0210.hobbylobby.presentation.util.generateRandomCommunities
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 import com.pedro0210.hobbylobby.presentation.ui.view.widgets.CommunitiesColumns
 import com.pedro0210.hobbylobby.presentation.view.screens.widgets.TopBar
+import com.pedro0210.hobbylobby.presentation.viewmodel.communities_stuff.CommunitiesViewModel
+
+@Composable
+fun CommunitiesRoute(
+    viewModel: CommunitiesViewModel,
+    navController: NavController
+){
+    val state: ComunitiesScreenState by viewModel.state.collectAsStateWithLifecycle()
+
+    CommunitiesScreen(
+        navController = navController,
+        state = state
+    )
+
+}
+
+
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
@@ -36,7 +56,6 @@ fun CommunitiesScreen(
     navController: NavController,
     state: ComunitiesScreenState
 ){
-    //TODO: make the view Model do the take care of the searchText
 
     Scaffold (
         topBar = {
@@ -104,7 +123,6 @@ fun CommunitiesScreen(
                         title = if (state.bigCommunity) "Communities" else "Rooms",
                         partOfCommunity = state.partOfCommunity,
                         navController = navController,
-                        buttonType = state.buttonType
                     )
 
             }
@@ -119,7 +137,7 @@ fun CommunitiesScreen(
 @Composable
 fun CommRedirectCommPreview() {
     HobbyLobbyTheme {
-        val item = generateRandomCommunities(1)[0]
+        val item = generateRandomCommunities(1, CommunityType.bigCommunity)[0]
         CommunitiesScreen(
             navController = rememberNavController(),
             state = ComunitiesScreenState(
@@ -128,8 +146,10 @@ fun CommRedirectCommPreview() {
                 description = item.description,
                 id = item.id,
                 partOfCommunity = item.partOfCommunity,
-                communities = generateRandomCommunities(10),
-                buttonType = ButtonType.bigCommunity
+                communities = generateRandomCommunities(
+                        n = 10,
+                        type = CommunityType.bigCommunity
+                    ),
             )
         )
     }
@@ -140,7 +160,7 @@ fun CommRedirectCommPreview() {
 @Composable
 fun CommRedirectUsersPreview() {
     HobbyLobbyTheme {
-        val item = generateRandomCommunities(1)[0]
+        val item = generateRandomCommunities(1, CommunityType.smallCommunity)[0]
         CommunitiesScreen(
             navController = rememberNavController(),
             state = ComunitiesScreenState(
@@ -150,8 +170,10 @@ fun CommRedirectUsersPreview() {
                 id = item.id,
                 partOfCommunity = item.partOfCommunity,
                 bigCommunity = false,
-                communities = generateRandomCommunities(10),
-                buttonType = ButtonType.smallCommunity
+                communities = generateRandomCommunities(
+                    n = 10,
+                    type = CommunityType.smallCommunity
+                    ),
                 )
             )
         }

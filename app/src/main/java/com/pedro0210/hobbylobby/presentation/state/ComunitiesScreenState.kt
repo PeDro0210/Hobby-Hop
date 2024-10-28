@@ -12,5 +12,4 @@ data class ComunitiesScreenState(
     val bigCommunity: Boolean = true,
 
     val communities: List<Community>,
-    val type: CommunityType
 )

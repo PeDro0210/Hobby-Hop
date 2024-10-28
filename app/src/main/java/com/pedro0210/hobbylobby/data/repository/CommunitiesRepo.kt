@@ -9,9 +9,45 @@ import kotlinx.coroutines.flow.flowOf
 
 class CommunitiesRepo {
 
+    //todo: for the movement return a standar community
+    suspend fun getCommunity(id: String, type: CommunityType): Flow<Community> {
+        when (type) {
+            CommunityType.bigCommunity -> {
+            return flowOf(
+                Community(
+                    title = id, //get's fetch by the id
+                    description = "The only public university in Guatemala.",
+                    image = "usac.png",
+                    partOfCommunity = true,
+                    id = "1",
+                    type = CommunityType.bigCommunity
+                )
+            )
+            }
+            CommunityType.smallCommunity -> {
+                return flowOf(
+                    Community(
+                    title = "UVG",
+                    description = "The only public university in Guatemala.",
+                    image = "usac.png",
+                    partOfCommunity = true,
+                    id = "1",
+                    type = CommunityType.smallCommunity
+                )
+                )
+            }
+            CommunityType.rooms -> {
+                return flowOf()
+            }
+        }
+    }
+
 
     /* double purpose, getting Rooms and getting communities */
-    suspend fun getCommunities(type: CommunityType): Flow<List<Community>> {
+    suspend fun getCommunities(
+        type: CommunityType,
+        id: String
+    ): Flow<List<Community>> {
         when (type) {
             //TODO: call the repo with the firebase implementation
             //This is pure dummy data
@@ -24,7 +60,7 @@ class CommunitiesRepo {
                             image = "usac.png",
                             partOfCommunity = true,
                             id = "1",
-                            type = CommunityType.bigCommunity
+                            type = CommunityType.smallCommunity
                         ),
                         Community(
                             title = "Universidad Francisco Marroquín",
@@ -32,7 +68,7 @@ class CommunitiesRepo {
                             image = "ufm.png",
                             partOfCommunity = false,
                             id = "2",
-                            type = CommunityType.bigCommunity
+                            type = CommunityType.smallCommunity
                         ),
                         Community(
                             title = "Universidad del Valle de Guatemala",
@@ -40,7 +76,7 @@ class CommunitiesRepo {
                             image = "uvg.png",
                             partOfCommunity = true,
                             id = "3",
-                            type = CommunityType.bigCommunity
+                            type = CommunityType.smallCommunity
                         )
                     )
                 )
@@ -59,7 +95,7 @@ class CommunitiesRepo {
                             image = "sports.png",
                             partOfCommunity = false,
                             id = "1",
-                            type = CommunityType.smallCommunity
+                            type = CommunityType.rooms
                         ),
                         Community(
                             title = "Art Workshop",
@@ -67,7 +103,7 @@ class CommunitiesRepo {
                             image = "art.png",
                             partOfCommunity = true,
                             id = "2",
-                            type = CommunityType.smallCommunity
+                            type = CommunityType.rooms
                         ),
                         Community(
                             title = "Student Council",
@@ -75,7 +111,7 @@ class CommunitiesRepo {
                             image = "council.png",
                             partOfCommunity = true,
                             id = "3",
-                            type = CommunityType.smallCommunity
+                            type = CommunityType.rooms
                         ),
                         Community(
                             title = "Science Club",
@@ -83,10 +119,13 @@ class CommunitiesRepo {
                             image = "science.png",
                             partOfCommunity = false,
                             id = "4",
-                            type = CommunityType.smallCommunity
+                            type = CommunityType.rooms
                         )
                     )
                 )
+            }
+            CommunityType.rooms -> {
+                return flowOf()
             }
         }
     }

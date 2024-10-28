@@ -1,6 +1,7 @@
 package com.pedro0210.hobbylobby.presentation.screens.Profile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,9 +35,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.pedro0210.hobbylobby.R
 import com.pedro0210.hobbylobby.presentation.event.UserEvent
 import com.pedro0210.hobbylobby.presentation.model.SocialMedia
+import com.pedro0210.hobbylobby.presentation.navigation.Profile
+import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToProfile
 import com.pedro0210.hobbylobby.presentation.state.UserState
 import com.pedro0210.hobbylobby.presentation.viewmodel.profile.UserViewModel
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
@@ -44,15 +48,13 @@ import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 
 @Composable
 fun ProfileScreenRoute(
-    viewModel: UserViewModel = viewModel(factory = UserViewModel.Factory)
+    viewModel: UserViewModel,
+    navController: NavController
 ){
     val state: UserState by viewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
         viewModel.onEvent(UserEvent.onLoadUser(1))
     }
-
-
-
 
 
     ElementsScreen(
@@ -64,7 +66,8 @@ fun ProfileScreenRoute(
         onBackClick = {},
         onClearClick = {},
         onPictureChange = {},
-        onAddClick = {}
+        onAddClick = {},
+        navController = navController
     )
 }
 
@@ -76,13 +79,14 @@ fun ElementsScreen(
     modifier: Modifier = Modifier,
     state: UserState,
     description: String,
-    ondescriptionChange: (String) -> Unit,
+    ondescriptionChange: (String) -> Unit = {},
     name: String,
-    onNameChange: (String) -> Unit,
+    onNameChange: (String) -> Unit = {},
     onBackClick: () -> Unit = {},
     onClearClick: () -> Unit = {},
     onPictureChange: () -> Unit = {},
-    onAddClick: () -> Unit = {}
+    onAddClick: () -> Unit = {},
+    navController: NavController
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
 
@@ -90,7 +94,7 @@ fun ElementsScreen(
             Row(modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
             ) {
-                IconButton(onClick = { onBackClick() }) {
+                IconButton(onClick = { navController.popBackStack() }) {
                     Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                 }
                 Spacer(modifier = Modifier.padding(8.dp))
@@ -139,7 +143,10 @@ fun ElementsScreen(
 
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 items(items = state.user?.socialMedia ?: emptyList()) { socialmedia: SocialMedia ->
-                    SocialSquare(name = socialmedia.name, iconResId = 1234)
+                    SocialSquare(
+                        name = socialmedia.name,
+                        iconResId = 1234,
+                        )
                     Spacer(modifier = Modifier.height(16.dp))
 
 
@@ -150,7 +157,10 @@ fun ElementsScreen(
 }
 
 @Composable
-fun SocialSquare(name: String, iconResId: Int) {
+fun SocialSquare(
+    name: String,
+    iconResId: Int,
+) {
     Row (modifier = Modifier
         .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -179,20 +189,4 @@ fun SocialSquare(name: String, iconResId: Int) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewElementsScreen() {
-    HobbyLobbyTheme {
-        ElementsScreen(
-            description = "Este es el perfil de Oscar. Aquí puedes encontrar información acerca de sus redes sociales y mucho más.",
-            ondescriptionChange = {},
-            name = "Oscar",
-            onNameChange = {},
-            onBackClick = {},
-            onClearClick = {},
-            onPictureChange = {},
-            onAddClick = {},
-            state = UserState()
-        )
-    }
-}
+

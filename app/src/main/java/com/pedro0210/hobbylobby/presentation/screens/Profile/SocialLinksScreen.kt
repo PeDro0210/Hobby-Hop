@@ -28,43 +28,36 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 
-@Composable
-fun SocialLinksScreenRoute(){
-    SocialLinksData()
-}
 
 @Composable
-fun SocialLinksData(modifier: Modifier = Modifier) {
-    var socialName = "Nombre"
-    var socialLink = "Link"
+fun AddingLinksScreenRoute(
+    //TODO: add viewmodel when created,
+    navController: NavController
+){
+    //TODO: add state
+
     AddingLinksScreen(
-        modifier = modifier,
-        socialName = socialName,
-        onSocialNameChange = { socialName = it },
-        socialLink = socialLink,
-        onSocialLinkChange = { socialLink = it },
-        onBackClick = {},
-        ondoneClick = {},
-        onClearNameClick = {},
-        onClearLinkClick = {},
-        onPictureChange = {}
+        navController = navController
     )
-
 }
 
+
+//TODO: need to manage states
 @Composable
 fun AddingLinksScreen(modifier: Modifier = Modifier,
-                        socialName: String,
-                        onSocialNameChange: (String) -> Unit,
-                        socialLink: String,
-                        onSocialLinkChange: (String) -> Unit,
-                         onBackClick: () -> Unit = {},
-                         ondoneClick: () -> Unit = {},
+                        socialName: String = "",
+                        onSocialNameChange: (String) -> Unit = {},
+                        socialLink: String = "",
+                        onSocialLinkChange: (String) -> Unit = {},
+                        onBackClick: () -> Unit = {},
+                        ondoneClick: () -> Unit = {},
                         onClearNameClick: () -> Unit = {},
                         onClearLinkClick: () -> Unit = {},
-                        onPictureChange: () -> Unit = {}
+                        onPictureChange: () -> Unit = {},
+                      navController: NavController
 ){
     Scaffold (
         floatingActionButton = {
@@ -160,17 +153,4 @@ fun AddSocialLinksScreen(modifier: Modifier = Modifier, onBackClick: () -> Unit,
         }
     }
 
-
-}
-
-@Preview
-@Composable
-private fun PreviewChanginProfileScreen() {
-    HobbyLobbyTheme {
-        Surface {
-            SocialLinksData(
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-    }
 }

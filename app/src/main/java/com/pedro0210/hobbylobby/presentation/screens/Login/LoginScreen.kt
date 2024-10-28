@@ -21,6 +21,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,13 +29,33 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.pedro0210.hobbylobby.R
 import com.pedro0210.hobbylobby.domain.util.LoginEnum
+import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToHome
 import com.pedro0210.hobbylobby.presentation.state.LoginScreenState
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 import com.pedro0210.hobbylobby.presentation.view.screens.widgets.buttons.LoginButton
+import com.pedro0210.hobbylobby.presentation.viewmodel.login.LoginViewModel
+
+@Composable
+fun LoginRoute(
+    viewModel: LoginViewModel,
+    navController: NavController
+){
+    val state: LoginScreenState by viewModel.state.collectAsStateWithLifecycle()
+
+    Login(
+        navController = navController,
+        state = state,
+        onPasswordChange = { viewModel.changePassword(it)  },
+        onEmailChange = { viewModel.changeEmail(it) },
+        onLoginClick = { viewModel.login(it) }
+    )
+}
+
 
 @Composable
 fun Login(
@@ -104,7 +125,9 @@ fun Login(
 
                         Spacer(modifier = Modifier.weight(1f))
 
-                        Button(onClick = { /* TODO: Handle login */ }) {
+                        Button(onClick = {
+                        /* TODO: Handle login */
+                        navController.navigateToHome()}) {
                             Text(state.buttonText)
                         }
                     }
@@ -170,6 +193,7 @@ fun Login(
 
                     for (i in 0..2){
                         LoginButton(description = "Auth Button", image = logos[i]) {
+                            navController.navigateToHome()
                             //TODO: add the login, with the viewmodel
                             onLoginClick(loginEnums[i])
                         }

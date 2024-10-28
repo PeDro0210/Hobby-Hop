@@ -38,39 +38,40 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.pedro0210.hobbylobby.presentation.viewmodel.communities_stuff.CommunitiesViewModel
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 
 
 @Composable
-fun CommunitiesCreatorData(modifier: Modifier = Modifier) {
-    var name = "Nombre"
-    var description = "Descripcion"
+fun CommunitiesCreatorRoute(
+    //TODO: create another viewmodel for this
+    navController: NavController
+){
+    //TODO: Add state
+
     CommunitiesCreatorScreen(
-        name = name,
-        onNameChange = { name = it },
-        description = description,
-        ondescriptionChange = { description = it },
-        onDeleteSubC = {},
-        onAddClick = {}
+        navController = navController
     )
 
 }
 
+
+//TODO: add state
 @Composable
 fun CommunitiesCreatorScreen(
     modifier: Modifier = Modifier,
-    onBackClick: () -> Unit = {},
+    onBackClick: () -> Unit = {}, //for nav
     onPictureChange: () -> Unit = {},
-    name: String,
+    name: String = "", //for the meanwhile
     onNameChange: (String) -> Unit = {},
     onClearClick: () -> Unit = {},
-    description: String,
+    description: String = "",
     ondescriptionChange: (String) -> Unit = {},
-    ondoneClick: () -> Unit = {},
+    ondoneClick: () -> Unit = {}, //For nav
     onDeleteSubC: () -> Unit = {},
-    onAddClick: () -> Unit = {}
-
-
+    onAddClick: () -> Unit = {}, //For nav
+    navController: NavController
 ){
     Scaffold (
         floatingActionButton = {
@@ -261,17 +262,5 @@ fun AddSubcommuinity(
         }
         Icon(Icons.Default.KeyboardArrowRight, contentDescription = "Next")
 
-    }
-}
-
-@Preview
-@Composable
-private fun PreviewChanginProfileScreen() {
-    HobbyLobbyTheme {
-        Surface {
-            CommunitiesCreatorData(
-                modifier = Modifier.fillMaxSize()
-            )
-        }
     }
 }

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pedro0210.hobbylobby.data.datastore.UserPreferences
+import com.pedro0210.hobbylobby.data.repository.ProfileRepository
 import com.pedro0210.hobbylobby.dataStore
 import com.pedro0210.hobbylobby.presentation.event.ProfileEvent
 import com.pedro0210.hobbylobby.presentation.event.UserEvent
@@ -20,7 +21,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class UserViewModel(
-    private val repository: ProfileRepository
+    private val repository: ProfileRepository,
+    id: String
 ): ViewModel() {
     private val _state = MutableStateFlow(UserState())
     val state = _state.asStateFlow()
@@ -60,13 +62,13 @@ class UserViewModel(
 
 
     companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                UserViewModel(
-                    ProfileRepository()
-                )
+        fun provideFactory(id: String) : ViewModelProvider.Factory = viewModelFactory {
+                initializer {
+                    UserViewModel(
+                        ProfileRepository(),
+                        id
+                    )
+                }
             }
         }
-    }
-
 }

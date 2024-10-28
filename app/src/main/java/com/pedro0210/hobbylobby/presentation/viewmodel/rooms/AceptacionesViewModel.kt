@@ -3,6 +3,9 @@ package com.pedro0210.hobbylobby.presentation.viewmodel.rooms
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pedro0210.hobbylobby.presentation.model.Request
 
 
@@ -28,5 +31,12 @@ class AceptacionesViewModel : ViewModel() {
 
     fun rejectRequest(userName: String) {
         // TODO Handle reject request action
+    }
+
+    companion object
+    fun provideFactory(): ViewModelProvider.Factory = viewModelFactory {
+        initializer {
+            AceptacionesViewModel()
+        }
     }
 }

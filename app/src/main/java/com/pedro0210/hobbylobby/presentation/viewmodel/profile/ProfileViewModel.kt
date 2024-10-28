@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pedro0210.hobbylobby.data.datastore.UserPreferences
+import com.pedro0210.hobbylobby.data.repository.ProfileRepository
 import com.pedro0210.hobbylobby.dataStore
 import com.pedro0210.hobbylobby.presentation.event.ProfileEvent
 import com.pedro0210.hobbylobby.presentation.model.SocialMedia

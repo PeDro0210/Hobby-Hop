@@ -32,33 +32,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 
-
 @Composable
-fun SubcommunitiesCreatorData(modifier: Modifier = Modifier) {
-    var name = "Nombre"
-    var description = "Descripcion"
-    SubcommunitiesCreatorScreen(
-        name = name,
-        onNameChange = { name = it },
-        description = description,
-        ondescriptionChange = { description = it }
-    )
+fun SubcommunitiesCreatorRoute(
+    //TODO: create another viewmodel for this
+    navController: NavController
+){
+    //TODO: add state
 
+    SubcommunitiesCreatorScreen(
+        navController = navController
+    )
 }
+
 
 @Composable
 fun SubcommunitiesCreatorScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit = {},
     onPictureChange: () -> Unit = {},
-    name: String,
+    name: String = "", //for the meanwhile
     onNameChange: (String) -> Unit = {},
     onClearClick: () -> Unit = {},
-    description: String,
+    description: String = "", //for the meanwhile
     ondescriptionChange: (String) -> Unit = {},
-    ondoneClick: () -> Unit = {}
+    ondoneClick: () -> Unit = {},
+    navController: NavController
 
 
 ){
@@ -153,18 +154,6 @@ fun SubcommunitiesCreator(
                 value = description,
                 onValueChange = ondescriptionChange,
                 modifier = Modifier.fillMaxWidth()
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun PreviewChanginProfileScreen() {
-    HobbyLobbyTheme {
-        Surface {
-            SubcommunitiesCreatorData(
-                modifier = Modifier.fillMaxSize()
             )
         }
     }

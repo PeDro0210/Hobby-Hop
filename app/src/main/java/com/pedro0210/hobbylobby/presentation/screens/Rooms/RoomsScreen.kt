@@ -2,6 +2,7 @@ package com.pedro0210.hobbylobby.presentation.screens.Rooms
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
@@ -21,23 +22,32 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.pedro0210.hobbylobby.R
 import com.pedro0210.hobbylobby.presentation.model.RoomMember
+import com.pedro0210.hobbylobby.presentation.navigation.Profile
+import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToProfile
 import com.pedro0210.hobbylobby.presentation.viewmodel.rooms.RoomsViewModel
 
 @Composable
-fun RoomScreenRoute(
-    viewModel: RoomsViewModel = viewModel()
-) {
-    RoomScreen()
+fun RoomRoute(
+    viewModel: RoomsViewModel,
+    navController: NavController
+){
+    //TODO: add state
+    RoomScreen(
+        navController = navController
+    )
 }
 
 
-
+//TODO: add state
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RoomScreen() {
+fun RoomScreen(
+    navController: NavController
+) {
     val members = remember {
         listOf(
             RoomMember("Juan", "Conectado", R.drawable.avatar),
@@ -84,7 +94,14 @@ fun RoomScreen() {
 
         Column(modifier = Modifier.fillMaxSize()) {
             members.forEach { member ->
-                MemberRow(member = member)
+                MemberRow(
+                    member = member,
+                    onItemClick = {navController.navigateToProfile(
+                    Profile(
+                        id = "1"
+                    )
+                    )}
+                )
                 Divider(color = Color.Gray, thickness = 0.5.dp)
             }
         }
@@ -92,11 +109,15 @@ fun RoomScreen() {
 }
 
 @Composable
-fun MemberRow(member: RoomMember) {
+fun MemberRow(
+    member: RoomMember,
+    onItemClick: () -> Unit = {}
+    ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
+            .clickable { onItemClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
@@ -134,5 +155,7 @@ fun MemberRow(member: RoomMember) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewRoomScreen() {
-    RoomScreen()
+    RoomScreen(
+        navController = rememberNavController()
+    )
 }

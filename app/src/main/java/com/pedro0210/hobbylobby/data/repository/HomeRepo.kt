@@ -19,7 +19,7 @@ class HomeRepo(
                     title = "United States",
                     description = "A country in North America.",
                     image = "us.png",
-                    partOfCommunity = false,
+                    partOfCommunity = true,
                     id = "1",
                     type = CommunityType.bigCommunity
                 ),
@@ -27,7 +27,7 @@ class HomeRepo(
                     title = "France",
                     description = "A country in Western Europe.",
                     image = "fr.png",
-                    partOfCommunity = false,
+                    partOfCommunity = true,
                     id = "2",
                     type = CommunityType.bigCommunity
                 ),
@@ -35,7 +35,7 @@ class HomeRepo(
                     title = "Japan",
                     description = "An island nation in East Asia.",
                     image = "jp.png",
-                    partOfCommunity = false,
+                    partOfCommunity = true,
                     id = "3",
                     type = CommunityType.bigCommunity
                 )

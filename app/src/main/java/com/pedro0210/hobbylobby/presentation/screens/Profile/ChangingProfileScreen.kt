@@ -25,7 +25,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
@@ -39,68 +38,49 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.pedro0210.hobbylobby.R
 import com.pedro0210.hobbylobby.presentation.event.ProfileEvent
 import com.pedro0210.hobbylobby.presentation.model.SocialMedia
 import com.pedro0210.hobbylobby.presentation.state.ProfileState
 import com.pedro0210.hobbylobby.presentation.viewmodel.profile.ProfileViewModel
-import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 
 @Composable
 fun ChangingProfileScreenRoute(
-    viewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.Factory)
+    viewModel: ProfileViewModel,
+    navController: NavController
 ){
     val state: ProfileState by viewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
         viewModel.onEvent(ProfileEvent.onLoadUser(1))
     }
 
-    ChangingProfileData(
-        state = state,
-    )
-}
-
-
-
-@Composable
-fun ChangingProfileData(modifier: Modifier = Modifier,
-                        state: ProfileState
-) {
-    var description = state.user?.description ?: "Descripcion"
-    var name = state.user?.name ?: "Nombre"
     ChangingProfileScreen(
         state = state,
-        modifier = modifier,
-        description = description,
-        ondescriptionChange = { description = it },
-        name = name,
-        onNameChange = { name = it },
-        onBackClick = {},
-        ondoneClick = {},
-        onClearClick = {},
-        onPictureChange = {},
-        onAddClick = {}
+        navController = navController,
     )
-
 }
 
+
+
+
 @Composable
-fun ChangingProfileScreen(modifier: Modifier = Modifier,
-                            state: ProfileState,
-                         description: String,
-                         ondescriptionChange: (String) -> Unit,
-                         name: String,
-                         onNameChange: (String) -> Unit,
-                         onBackClick: () -> Unit = {},
-                         ondoneClick: () -> Unit = {},
-                         onClearClick: () -> Unit = {},
-                         onPictureChange: () -> Unit = {},
-                         onAddClick: () -> Unit = {}
-                         ){
+fun ChangingProfileScreen(
+    modifier: Modifier = Modifier,
+    state: ProfileState,
+    description: String = "", //for the meanwhile
+    ondescriptionChange: (String) -> Unit = {},
+    name: String = "", //for the meanwhile
+    onNameChange: (String) -> Unit = {},
+    onBackClick: () -> Unit = {},
+    ondoneClick: () -> Unit = {},
+    onClearClick: () -> Unit = {},
+    onPictureChange: () -> Unit = {},
+    onAddClick: () -> Unit = {},
+    navController: NavController
+){
     Scaffold (
         floatingActionButton = {
             FloatingActionButton(onClick = {
@@ -132,7 +112,7 @@ fun ChangingProfileScreen(modifier: Modifier = Modifier,
 
 @Composable
 fun ElementsScreen(modifier: Modifier = Modifier,
-                     state: ProfileState,
+                   state: ProfileState,
                    description: String,
                    ondescriptionChange: (String) -> Unit,
                    name: String,
@@ -285,24 +265,5 @@ fun AddSocial(
     }
 }
 
-@Preview
-@Composable
-private fun PreviewChanginProfileScreen() {
-    HobbyLobbyTheme {
-        Surface {
-            ChangingProfileScreen(
-                state = ProfileState(),
-                description = "Descripcion",
-                ondescriptionChange = {},
-                name = "Nombre",
-                onNameChange = {},
-                onBackClick = {},
-                ondoneClick = {},
-                onClearClick = {},
-                onPictureChange = {},
-                onAddClick = {}
-            )
-        }
-    }
-}
+
 

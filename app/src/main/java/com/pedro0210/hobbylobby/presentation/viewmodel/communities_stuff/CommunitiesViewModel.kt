@@ -22,51 +22,75 @@ class CommunitiesViewModel(
     repo: CommunitiesRepo,
     id: String,
     communityType: CommunityType,
-    partOfCommunity: Boolean,
-    title: String,
-    description: String,
-    image: String
+
 ): ViewModel(){
+
 
     private val _state = MutableStateFlow(
         ComunitiesScreenState(
             communities = emptyList(),
-            title = title,
-            description = description,
-            partOfCommunity = partOfCommunity,
-            type = communityType,
+            title = "",
+            description = "",
+            partOfCommunity = false,
             id = id,
-            image = image
+            image = ""
         )
     )
 
     val state = _state.asStateFlow()
 
     private lateinit var communities : StateFlow<List<Community>>
+    private lateinit var community: StateFlow<Community>
 
     init {
         viewModelScope.launch {
-            communities = repo.getCommunities(communityType)
+            communities = repo.getCommunities(communityType, id)
                 .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+            community = repo.getCommunity(id, communityType)
+                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), defaultCommunity())
 
             launch{
                 communities.collect{ communitiesList ->
                     _state.update {
-                        it.copy(communities = communitiesList)
+                        it.copy(
+                            communities = communitiesList,
+                        )
                     }
                 }
             }
+
+            launch{
+                community.collect{community->
+                    _state.update{
+                        it.copy(
+                            title = community.title,
+                            description = community.description,
+                            partOfCommunity = community.partOfCommunity,
+                            id = community.id,
+                            image = community.image,
+                        )
+                    }
+                }
+            }
+
         }
     }
-
+    private fun defaultCommunity():Community{
+        return Community(
+            title = "",
+            description = "",
+            image = "",
+            partOfCommunity = false,
+            id = "",
+            type = CommunityType.bigCommunity
+        )
+    }
     companion object{
         fun provideFactory(
             id: String,
             communityType: CommunityType,
-            partOfCommunity: Boolean,
-            title: String,
-            description: String,
-            image: String
+
         ): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val repo = CommunitiesRepo()
@@ -74,10 +98,6 @@ class CommunitiesViewModel(
                     repo,
                     id,
                     communityType,
-                    partOfCommunity,
-                    title,
-                    description,
-                    image
                 )
             }
         }

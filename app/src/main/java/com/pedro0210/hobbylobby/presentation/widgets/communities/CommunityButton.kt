@@ -23,6 +23,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.pedro0210.hobbylobby.presentation.model.CommunityType
+import com.pedro0210.hobbylobby.presentation.navigation.BigCommunity
+import com.pedro0210.hobbylobby.presentation.navigation.Rooms
+import com.pedro0210.hobbylobby.presentation.navigation.SmallCommunity
+import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToBigCommunities
+import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToRooms
+import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToSmallCommunities
 import com.pedro0210.hobbylobby.presentation.util.stringCutter
 
 @Composable
@@ -30,6 +36,7 @@ fun CommunityButton(
     image: String,
     name: String,
     description: String,
+    id: String,
     partOfCommunity: Boolean,
     navController: NavController,
     type: CommunityType
@@ -43,12 +50,31 @@ fun CommunityButton(
                 modifier = Modifier
                     .weight(0.9f),
                 onClick = {
+
                         /*
                         * TODO: assign different navigation depending on the button type
                         *
-                        * buttonType: bigCommunity -> navigate to small
-                        * buttonType: smallCommunity -> navigate to room
+                        * buttonType: bigCommunity -> navigate to BigCommunity
+                        * buttonType: smallCommunity -> navigate to SmallCommunity
+                        * buttonType: room -> navigate to Room
                         */
+                        when (type){
+                           CommunityType.bigCommunity -> navController.navigateToBigCommunities(
+                               BigCommunity(
+                                   id = id
+                               )
+                           )
+                           CommunityType.smallCommunity -> navController.navigateToSmallCommunities(
+                               SmallCommunity(
+                                   id = id
+                               )
+                           )
+                           CommunityType.rooms -> navController.navigateToRooms(
+                               Rooms(
+                                   id = id
+                               )
+                           )
+                        }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
             ) {
