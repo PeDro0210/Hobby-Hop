@@ -14,7 +14,6 @@ Este proyecto es una **nueva red social organizada por comunidades según paíse
 3. [Tecnologías y Servicios Utilizados](#tecnologías-y-servicios-utilizados)  
 4. [Uso](#uso)  
 5. [Librerías y Dependencias](#librerías-y-dependencias)  
-6. [Licencia](#licencia)  
 
 ## Características
 
@@ -45,6 +44,6 @@ Este proyecto es una **nueva red social organizada por comunidades según paíse
 
 ## Librerías y Dependencias
 
-- **Firebase**: Para autenticación, almacenamiento en la nube y bases de datos en tiempo real.  
+- **Firebase**: Para autenticación, almacenamiento de las comunidades, nombre, imagen descripcion de comunidades y todo los datos del usuario 
 - **Coil**: Para la carga eficiente de imágenes en Android.  
 - **DataStore**: Almacenamiento local del estado de sesión y del ID del usuario.  
