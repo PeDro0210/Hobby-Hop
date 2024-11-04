@@ -1,4 +1,4 @@
-package com.pedro0210.hobbylobby.presentation.screens.Login
+package com.pedro0210.hobbylobby.presentation.screens.Auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,12 +30,19 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.pedro0210.hobbylobby.R
 import com.pedro0210.hobbylobby.domain.util.LoginEnum
+import com.pedro0210.hobbylobby.presentation.navigation.Auth
+import com.pedro0210.hobbylobby.presentation.navigation.Home
+import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateFromLogin
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToHome
 import com.pedro0210.hobbylobby.presentation.state.LoginScreenState
+import com.pedro0210.hobbylobby.presentation.util.LoginNavEnum
+import com.pedro0210.hobbylobby.presentation.util.LoginNavEnum.Login
+import com.pedro0210.hobbylobby.presentation.util.LoginNavEnum.SignUp
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 import com.pedro0210.hobbylobby.presentation.view.screens.widgets.buttons.LoginButton
 import com.pedro0210.hobbylobby.presentation.viewmodel.login.LoginViewModel
@@ -52,7 +59,10 @@ fun LoginRoute(
         state = state,
         onPasswordChange = { viewModel.changePassword(it)  },
         onEmailChange = { viewModel.changeEmail(it) },
-        onLoginClick = { viewModel.login(it) }
+        onLoginClick = { viewModel.login(it) },
+        onBoxChecked = { viewModel.checkBox(it) },
+        onChangeButtonText = { viewModel.changeButtonText(it)},
+        onChangeNavDestination = {viewModel.changeNavDestination(it)}
     )
 }
 
@@ -63,7 +73,10 @@ fun Login(
     state: LoginScreenState,
     onPasswordChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
-    onLoginClick: (LoginEnum) -> Unit
+    onLoginClick: (LoginEnum) -> Unit,
+    onBoxChecked: (Boolean) -> Unit,
+    onChangeButtonText: (String) -> Unit,
+    onChangeNavDestination: (Auth) -> Unit
 ){ //TODO: add all states from the loginState somehow
     Scaffold (
         content = { paddingValues ->
@@ -111,12 +124,15 @@ fun Login(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Checkbox(
-                            checked = false,
+                            checked = state.boxChecked,
                             onCheckedChange = { checked -> //TODO: also make that the view modle takes care of this
-                                state.buttonText = if (checked) {
-                                    "Join Us"
+                                onBoxChecked(checked)
+                                if (checked) {
+                                    onChangeButtonText("Join Us")
+                                    onChangeNavDestination(Home) // TODO: add the nav for the new screen
                                 } else {
-                                    "Welcome Back"
+                                    onChangeButtonText("Welcome Back")
+                                    onChangeNavDestination(Home)
                                 }
 
                             }
@@ -126,8 +142,8 @@ fun Login(
                         Spacer(modifier = Modifier.weight(1f))
 
                         Button(onClick = {
-                        /* TODO: Handle login */
-                        navController.navigateToHome()}) {
+                            navController.navigateFromLogin(state.navDestination)
+                        }) {
                             Text(state.buttonText)
                         }
                     }
@@ -193,9 +209,8 @@ fun Login(
 
                     for (i in 0..2){
                         LoginButton(description = "Auth Button", image = logos[i]) {
-                            navController.navigateToHome()
                             //TODO: add the login, with the viewmodel
-                            onLoginClick(loginEnums[i])
+                            onLoginClick(loginEnums[i]) // see in this where to render
                         }
                     }
 
@@ -211,13 +226,14 @@ fun Login(
 @Composable
 fun LoginPreview() {
     HobbyLobbyTheme {
-        Login(
-            navController = rememberNavController(),
-            state = LoginScreenState(),
-            ///TODO: add the view model
-            onPasswordChange = {},
-            onLoginClick = {},
-            onEmailChange = {}
+        val loginViewModel : LoginViewModel = viewModel(
+            factory = LoginViewModel.provideFactory()
         )
+        LoginRoute(
+            viewModel = loginViewModel,
+            navController = rememberNavController(),
+        )
+
+
     }
 }

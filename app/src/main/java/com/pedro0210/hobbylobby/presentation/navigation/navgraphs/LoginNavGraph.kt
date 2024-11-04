@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.pedro0210.hobbylobby.presentation.navigation.Login
 import com.pedro0210.hobbylobby.presentation.navigation.LoginGraph
-import com.pedro0210.hobbylobby.presentation.screens.Login.LoginRoute
+import com.pedro0210.hobbylobby.presentation.screens.Auth.LoginRoute
 import com.pedro0210.hobbylobby.presentation.viewmodel.login.LoginViewModel
 
 fun NavGraphBuilder.loginGraph(

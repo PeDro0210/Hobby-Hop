@@ -6,12 +6,17 @@ import kotlinx.serialization.Serializable
 //Login Graph
 @Serializable object LoginGraph
 
-@Serializable object Login
+
+interface Auth
+
+@Serializable object Login:Auth
+
+@Serializable object SignUp
 
 //Communities Graph
 @Serializable object CommunitiesGraph
 
-@Serializable object Home
+@Serializable object Home:Auth
 
 @Serializable
 data class BigCommunity(

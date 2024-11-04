@@ -74,16 +74,8 @@ class CommunitiesViewModel(
 
         }
     }
-    private fun defaultCommunity():Community{
-        return Community(
-            title = "",
-            description = "",
-            image = "",
-            partOfCommunity = false,
-            id = "",
-            type = CommunityType.bigCommunity
-        )
-    }
+
+
     companion object{
         fun provideFactory(
             communityType: CommunityType,
