@@ -21,10 +21,12 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,24 +37,21 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.pedro0210.hobbylobby.R
 import com.pedro0210.hobbylobby.domain.util.LoginEnum
-import com.pedro0210.hobbylobby.presentation.navigation.Auth
+import com.pedro0210.hobbylobby.presentation.navigation.AuthDestionation
 import com.pedro0210.hobbylobby.presentation.navigation.Home
+import com.pedro0210.hobbylobby.presentation.navigation.SignUp
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateFromLogin
-import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToHome
 import com.pedro0210.hobbylobby.presentation.state.LoginScreenState
-import com.pedro0210.hobbylobby.presentation.util.LoginNavEnum
-import com.pedro0210.hobbylobby.presentation.util.LoginNavEnum.Login
-import com.pedro0210.hobbylobby.presentation.util.LoginNavEnum.SignUp
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 import com.pedro0210.hobbylobby.presentation.view.screens.widgets.buttons.LoginButton
-import com.pedro0210.hobbylobby.presentation.viewmodel.login.LoginViewModel
+import com.pedro0210.hobbylobby.presentation.viewmodel.login.AuthViewModel
 
 @Composable
 fun LoginRoute(
-    viewModel: LoginViewModel,
+    viewModel: AuthViewModel,
     navController: NavController
 ){
-    val state: LoginScreenState by viewModel.state.collectAsStateWithLifecycle()
+    val state: LoginScreenState by viewModel.loginState.collectAsStateWithLifecycle()
 
     Login(
         navController = navController,
@@ -76,147 +75,160 @@ fun Login(
     onLoginClick: (LoginEnum) -> Unit,
     onBoxChecked: (Boolean) -> Unit,
     onChangeButtonText: (String) -> Unit,
-    onChangeNavDestination: (Auth) -> Unit
+    onChangeNavDestination: (AuthDestionation) -> Unit
 ){ //TODO: add all states from the loginState somehow
     Scaffold (
         content = { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.logo),
-                    contentDescription = null,
-                    modifier = Modifier.size(264.dp)
-                )
 
-                Spacer(modifier = Modifier.height(16.dp))
+            val context = LocalContext.current
+            LaunchedEffect(state) {
+                if (state.isLogged) {
+                    navController.navigateFromLogin(Home)
+                }
+            }
 
+            if (!state.isLogged) {
                 Column(
                     modifier = Modifier
-                        .border(1.dp, Color.Gray, shape = RoundedCornerShape(8.dp))
-                        .padding(16.dp)
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    OutlinedTextField(
-                        value = state.email,
-                        onValueChange = onEmailChange,
-                        label = { Text("Email") },
-                        modifier = Modifier.fillMaxWidth()
+                    Image(
+                        painter = painterResource(id = R.drawable.logo),
+                        contentDescription = null,
+                        modifier = Modifier.size(264.dp)
                     )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                    OutlinedTextField(
-                        value = state.password,
-                        onValueChange = onPasswordChange,
-                        label = { Text("Password") },
-                        modifier = Modifier.fillMaxWidth(),
-                        visualTransformation = PasswordVisualTransformation()
-                    )
+                    Column(
+                        modifier = Modifier
+                            .border(1.dp, Color.Gray, shape = RoundedCornerShape(8.dp))
+                            .padding(16.dp)
+                    ) {
+                        OutlinedTextField(
+                            value = state.email,
+                            onValueChange = onEmailChange,
+                            label = { Text("Email") },
+                            modifier = Modifier.fillMaxWidth()
+                        )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        OutlinedTextField(
+                            value = state.password,
+                            onValueChange = onPasswordChange,
+                            label = { Text("Password") },
+                            modifier = Modifier.fillMaxWidth(),
+                            visualTransformation = PasswordVisualTransformation()
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Checkbox(
+                                checked = state.boxChecked,
+                                onCheckedChange = { checked -> //TODO: also make that the view modle takes care of this
+                                    onBoxChecked(checked)
+                                    if (checked) {
+                                        onChangeButtonText("Join Us")
+                                        onChangeNavDestination(SignUp) // TODO: add the nav for the new screen
+                                    } else {
+                                        onChangeButtonText("Welcome Back")
+                                        onChangeNavDestination(Home)
+                                    }
+
+                                }
+                            )
+                            Text("Login")
+
+                            Spacer(modifier = Modifier.weight(1f))
+
+                            Button(onClick = {
+                                navController.navigateFromLogin(state.navDestination)
+                                onLoginClick(LoginEnum.NormalAuth)
+                            }) {
+                                Text(state.buttonText)
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    // Join Using Section
 
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Checkbox(
-                            checked = state.boxChecked,
-                            onCheckedChange = { checked -> //TODO: also make that the view modle takes care of this
-                                onBoxChecked(checked)
-                                if (checked) {
-                                    onChangeButtonText("Join Us")
-                                    onChangeNavDestination(Home) // TODO: add the nav for the new screen
-                                } else {
-                                    onChangeButtonText("Welcome Back")
-                                    onChangeNavDestination(Home)
-                                }
+                        HorizontalDivider(
+                            color = Color.Red,
+                            thickness = 2.dp,
+                            modifier = Modifier
+                                .weight(0.75f)
+                        )
+
+                        // "Join Using" text
+                        Text(
+                            text = "Join Using",
+                            color = Color.Red,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+
+                        // Second red line
+                        HorizontalDivider(
+                            color = Color.Red,
+                            thickness = 2.dp,
+                            modifier = Modifier
+                                .weight(0.75f)
+                        )
+                    }
+
+
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(32.dp),
+                        modifier = Modifier
+                            .background(
+                                MaterialTheme.colorScheme.onPrimaryContainer,
+                                shape = RoundedCornerShape(30.dp)
+                            ) // light blue background with rounded corners
+                            .padding(16.dp)
+                    ) {
+
+                        val logos: List<Int> = listOf(
+                            R.drawable.google,
+                            R.drawable.meta,
+                            R.drawable.x
+                        )
+
+                        val loginEnums: List<LoginEnum> = listOf(
+                            LoginEnum.GoogleAuth,
+                            LoginEnum.MetaAuth,
+                            LoginEnum.XAuth
+                        )
+
+                        for (i in 0..2) {
+                            LoginButton(description = "Auth Button", image = logos[i]) {
+                                //TODO: add the login, with the viewmodel
+                                onLoginClick(loginEnums[i]) // see in this where to render
 
                             }
-                        )
-                        Text("Login")
-
-                        Spacer(modifier = Modifier.weight(1f))
-
-                        Button(onClick = {
-                            navController.navigateFromLogin(state.navDestination)
-                        }) {
-                            Text(state.buttonText)
                         }
+
                     }
-                }
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Join Using Section
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    HorizontalDivider(
-                        color = Color.Red,
-                        thickness = 2.dp,
-                        modifier = Modifier
-                            .weight(0.75f)
-                    )
-
-                    // "Join Using" text
-                    Text(
-                        text = "Join Using",
-                        color = Color.Red,
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
-
-                    // Second red line
-                    HorizontalDivider(
-                        color = Color.Red,
-                        thickness = 2.dp,
-                        modifier = Modifier
-                            .weight(0.75f)
-                    )
-                }
-
-
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(32.dp),
-                    modifier = Modifier
-                        .background(
-                            MaterialTheme.colorScheme.onPrimaryContainer,
-                            shape = RoundedCornerShape(30.dp)
-                        ) // light blue background with rounded corners
-                        .padding(16.dp)
-                ) {
-
-                    val logos: List<Int> = listOf(
-                        R.drawable.google,
-                        R.drawable.meta,
-                        R.drawable.x
-                    )
-
-                    val loginEnums: List<LoginEnum> = listOf(
-                        LoginEnum.GoogleAuth,
-                        LoginEnum.MetaAuth,
-                        LoginEnum.XAuth
-                    )
-
-                    for (i in 0..2){
-                        LoginButton(description = "Auth Button", image = logos[i]) {
-                            //TODO: add the login, with the viewmodel
-                            onLoginClick(loginEnums[i]) // see in this where to render
-                        }
-                    }
-
                 }
             }
         }
+
     )
 
 }
@@ -226,9 +238,10 @@ fun Login(
 @Composable
 fun LoginPreview() {
     HobbyLobbyTheme {
-        val loginViewModel : LoginViewModel = viewModel(
-            factory = LoginViewModel.provideFactory()
+        val loginViewModel : AuthViewModel = viewModel(
+            factory = AuthViewModel.provideFactory()
         )
+
         LoginRoute(
             viewModel = loginViewModel,
             navController = rememberNavController(),

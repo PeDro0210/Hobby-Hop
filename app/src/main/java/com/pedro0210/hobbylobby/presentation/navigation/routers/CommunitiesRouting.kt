@@ -2,7 +2,7 @@ package com.pedro0210.hobbylobby.presentation.navigation.routers
 
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
-import com.pedro0210.hobbylobby.presentation.navigation.Auth
+import com.pedro0210.hobbylobby.presentation.navigation.AuthDestionation
 import com.pedro0210.hobbylobby.presentation.navigation.BigCommunity
 import com.pedro0210.hobbylobby.presentation.navigation.Home
 import com.pedro0210.hobbylobby.presentation.navigation.Profile
@@ -11,11 +11,15 @@ import com.pedro0210.hobbylobby.presentation.navigation.SmallCommunity
 
 
 fun NavController.navigateFromLogin(
-    destination: Auth,
+    destination: AuthDestionation,
     navOptions: NavOptions? = null
 ){
+    if (destination == Home) popBackStack()
+
     this.navigate(destination, navOptions)
 }
+
+
 
 fun NavController.navigateToBigCommunities(
     destination: BigCommunity,

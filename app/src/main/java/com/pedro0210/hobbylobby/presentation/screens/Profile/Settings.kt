@@ -24,12 +24,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.pedro0210.hobbylobby.R
 import com.pedro0210.hobbylobby.presentation.event.ProfileEvent
+import com.pedro0210.hobbylobby.presentation.navigation.Home
+import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateFromLogin
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToCreateBigCommunity
-import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToHome
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToModityProfile
 import com.pedro0210.hobbylobby.presentation.state.ProfileState
 import com.pedro0210.hobbylobby.presentation.viewmodel.profile.ProfileViewModel
@@ -46,7 +46,7 @@ fun SettingsRoute(
 
     SettingsScreen(
         userName = state.user?.name ?: "Nombre",
-        onRoomsClick = {navController.navigateToHome()},
+        onRoomsClick = {navController.navigateFromLogin(Home)}, //change this
         onCreateCommunityClick = {navController.navigateToCreateBigCommunity()},
         onEditProfileClick = {navController.navigateToModityProfile()},
         onSignOutClick = {} //later
