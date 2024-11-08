@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "112852360484",
+    "project_id": "hobbylobby-8d6b7",
+    "storage_bucket": "hobbylobby-8d6b7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:112852360484:android:aca2561c8862ffd701a7b1",
+        "android_client_info": {
+          "package_name": "com.pedro0210.hobbylobby"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBp3grM-PnRQlfOvkpR6V6UGHh2VooXNMg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

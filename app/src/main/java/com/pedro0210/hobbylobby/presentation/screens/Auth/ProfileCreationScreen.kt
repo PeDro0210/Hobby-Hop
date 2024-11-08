@@ -52,6 +52,7 @@ fun ProfileCreationScreen(
     onRegisterClick: () -> Unit
 ){
 
+    //TODO: if someone want's to improve this screen, do it pls
     Scaffold(
         content = {paddingValues ->
             Column(
