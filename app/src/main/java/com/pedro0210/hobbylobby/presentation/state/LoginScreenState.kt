@@ -12,8 +12,9 @@ data class LoginScreenState(
     var isEmailValid: Boolean = false,
     var isPasswordValid: Boolean = false,
     var isLogged: Boolean = false,
+    var hasError: Boolean = true,
 
-    var buttonText: String = "Login",
+    var buttonText: String = "Join Us",
     var navDestination: AuthDestionation = Home,
     var boxChecked: Boolean = false
 

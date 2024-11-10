@@ -40,7 +40,7 @@ class HomeViewModel(
             countries = repo.getCountries()
                 .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-            ownCommunities = repo.getOwnCommunities()
+            ownCommunities = repo.getOwnRooms()
                 .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
             //have to do it async for each of the flows

@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.math.log
 
 class AuthViewModel(
     private val preferences: UserPreferences,
@@ -90,24 +91,30 @@ class AuthViewModel(
         }
     }
 
+    private fun changeError(error: Boolean){
+            _loginState.update {
+                it.copy(
+                    hasError = error
+                )
+            }
+
+    }
+
     //TODO: set login enum to the type of login
     //TODO: set diferent types of loging depending on the enum
-    fun login(type: LoginEnum): Boolean {
-        var loginSuccessful = false
-
+    fun login(type: LoginEnum) {
         viewModelScope.launch {
-            val id = loginRepo.login(loginState.value.email, loginState.value.password)
+            val id = loginRepo.manageAuth(loginState.value.email, loginState.value.password)
 
-            if (id != "") {
+            if (id != "ERROR") {
+                changeError(false)
                 preferences.logIn(id)
-                loginSuccessful = true
             }
-
             else {
-                loginSuccessful = false
+                println("not logged in")
+                changeError(true)
             }
         }
-        return loginSuccessful
     }
 
 

@@ -80,7 +80,6 @@ fun Login(
     Scaffold (
         content = { paddingValues ->
 
-            val context = LocalContext.current
             LaunchedEffect(state) {
                 if (state.isLogged) {
                     navController.navigateFromLogin(Home)
@@ -136,11 +135,11 @@ fun Login(
                                 onCheckedChange = { checked -> //TODO: also make that the view modle takes care of this
                                     onBoxChecked(checked)
                                     if (checked) {
-                                        onChangeButtonText("Join Us")
-                                        onChangeNavDestination(SignUp) // TODO: add the nav for the new screen
+                                        onChangeButtonText("Welcome back")
+                                        onChangeNavDestination(Home) // TODO: add the nav for the new screen
                                     } else {
-                                        onChangeButtonText("Welcome Back")
-                                        onChangeNavDestination(Home)
+                                        onChangeButtonText("Join Us")
+                                        onChangeNavDestination(SignUp)
                                     }
 
                                 }
@@ -150,8 +149,10 @@ fun Login(
                             Spacer(modifier = Modifier.weight(1f))
 
                             Button(onClick = {
-                                navController.navigateFromLogin(state.navDestination)
                                 onLoginClick(LoginEnum.NormalAuth)
+                                if (!state.hasError) {
+                                    navController.navigateFromLogin(state.navDestination)
+                                }
                             }) {
                                 Text(state.buttonText)
                             }

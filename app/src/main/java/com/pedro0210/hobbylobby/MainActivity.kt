@@ -20,7 +20,6 @@ import com.pedro0210.hobbylobby.presentation.navigation.SetupNavGraph
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 
 
-//TODO: Set navigation graph
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
