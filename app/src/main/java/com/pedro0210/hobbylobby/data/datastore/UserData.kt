@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.map
 class UserPreferences(
     private val dataStore: DataStore<Preferences>
 ) {
+    private val usernameKey = stringPreferencesKey("username")
+    private val pfpKey = stringPreferencesKey("pfp")
     private val idKey = stringPreferencesKey("id") //will access this for all firebase related
     private val loggedKey = booleanPreferencesKey("logged")
 
@@ -21,10 +23,16 @@ class UserPreferences(
         }
     }
 
-    suspend fun logIn(id:String){
+    suspend fun logIn(
+        id:String,
+        username: String,
+        pfp: String
+        ){
         dataStore.edit { preferences ->
             preferences[loggedKey] = true
             preferences[idKey] = id
+            preferences[usernameKey] = username
+            preferences[pfpKey] = pfp
         }
     }
 
@@ -35,4 +43,11 @@ class UserPreferences(
     fun getId(): Flow<String> = dataStore.data.map{ preferences ->
         preferences[idKey].toString()
     }
+
+    fun getUsername(): Flow<String> = dataStore.data.map{ preferences ->
+        preferences[usernameKey].toString()}
+
+    fun getPfp(): Flow<String> = dataStore.data.map{ preferences ->
+        preferences[pfpKey].toString()}
+
 }
