@@ -45,7 +45,7 @@ import com.pedro0210.hobbylobby.R
 import com.pedro0210.hobbylobby.presentation.event.ProfileEvent
 import com.pedro0210.hobbylobby.presentation.model.SocialMedia
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToAddSocial
-import com.pedro0210.hobbylobby.presentation.state.ProfileState
+import com.pedro0210.hobbylobby.presentation.state.SettingsState
 import com.pedro0210.hobbylobby.presentation.viewmodel.profile.ProfileViewModel
 
 @Composable
@@ -53,7 +53,7 @@ fun ChangingProfileScreenRoute(
     viewModel: ProfileViewModel,
     navController: NavController
 ){
-    val state: ProfileState by viewModel.state.collectAsStateWithLifecycle()
+    val state: SettingsState by viewModel.settingsstate.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
         viewModel.onEvent(ProfileEvent.onLoadUser(1))
     }
@@ -71,7 +71,7 @@ fun ChangingProfileScreenRoute(
 @Composable
 fun ChangingProfileScreen(
     modifier: Modifier = Modifier,
-    state: ProfileState,
+    state: SettingsState,
     description: String = "", //for the meanwhile
     ondescriptionChange: (String) -> Unit = {},
     name: String = "", //for the meanwhile
@@ -114,7 +114,7 @@ fun ChangingProfileScreen(
 
 @Composable
 fun ElementsScreen(modifier: Modifier = Modifier,
-                   state: ProfileState,
+                   state: SettingsState,
                    description: String,
                    ondescriptionChange: (String) -> Unit,
                    name: String,
@@ -184,6 +184,8 @@ fun ElementsScreen(modifier: Modifier = Modifier,
             Spacer(modifier = Modifier.height(16.dp))
 
             Column (modifier = Modifier.padding(4.dp, 0.dp)){
+                //fix this thing
+                /*
                 LazyColumn {
                     items(items = state.user?.socialMedia ?: emptyList()) { socialmedia: SocialMedia ->
                         SocialSquare(Text = socialmedia.name)
@@ -193,6 +195,7 @@ fun ElementsScreen(modifier: Modifier = Modifier,
                     }
 
                 }
+                */
                 AddSocial(Text = "Agregar", onAddClick = onAddClick)
 
             }

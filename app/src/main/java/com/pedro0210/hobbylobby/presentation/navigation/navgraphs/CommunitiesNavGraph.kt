@@ -6,6 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.pedro0210.hobbylobby.data.repository.CommunitiesRepo
 import com.pedro0210.hobbylobby.presentation.model.CommunityType
 import com.pedro0210.hobbylobby.presentation.navigation.BigCommunity
 import com.pedro0210.hobbylobby.presentation.navigation.CommunitiesGraph
@@ -40,6 +41,7 @@ fun NavGraphBuilder.communitiesGraph(
             )
         }
 
+        val communityRepo = CommunitiesRepo()
         composable<BigCommunity>{ navBackStackEntry ->
 
            val community: BigCommunity = navBackStackEntry.toRoute()
@@ -51,7 +53,8 @@ fun NavGraphBuilder.communitiesGraph(
                     description = community.description,
                     image = community.image,
                     partOfCommunity = community.partOfCommunity,
-                    communityType = CommunityType.bigCommunity
+                    communityType = CommunityType.country,
+                    repo = communityRepo
                )
            )
 
@@ -72,7 +75,8 @@ fun NavGraphBuilder.communitiesGraph(
                     description = community.description,
                     image = community.image,
                     partOfCommunity = community.partOfCommunity,
-                    communityType = CommunityType.smallCommunity
+                    communityType = CommunityType.communities,
+                    repo = communityRepo
                )
            )
 

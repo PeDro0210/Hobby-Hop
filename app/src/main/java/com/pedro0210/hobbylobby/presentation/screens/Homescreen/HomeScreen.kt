@@ -62,7 +62,7 @@ fun Home(
                 CommunitiesColumns(
                     modifier = Modifier.weight(0.5f),
                     communities = state.ownCommunities,
-                    title = "My Communities",
+                    title = "My Rooms",
                     partOfCommunity = true,
                     navController = navController,
                 )
@@ -78,8 +78,8 @@ fun HomePreview() {
         Home(
             navController = rememberNavController(),
             state = HomeScreenState(
-                countries = generateRandomCommunities(10, CommunityType.bigCommunity),
-                ownCommunities = generateRandomCommunities(10, CommunityType.smallCommunity)
+                countries = generateRandomCommunities(10, CommunityType.country),
+                ownCommunities = generateRandomCommunities(10, CommunityType.communities)
             )
         )
     }

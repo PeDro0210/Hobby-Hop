@@ -1,99 +1,77 @@
 package com.pedro0210.hobbylobby.data.repository
 
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import com.pedro0210.hobbylobby.data.datastore.UserData
 import com.pedro0210.hobbylobby.presentation.model.Community
 import com.pedro0210.hobbylobby.presentation.model.CommunityType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.tasks.await
 
 
-class CommunitiesRepo {
+class CommunitiesRepo{
 
+    private val firestore = FirebaseFirestore.getInstance()
+
+    private lateinit var actualCommunity: CollectionReference
 
     /* double purpose, getting Rooms and getting communities */
     suspend fun getCommunities(
         type: CommunityType,
         id: String
     ): Flow<List<Community>> {
-        when (type) {
-            //TODO: call the repo with the firebase implementation
-            //This is pure dummy data
-            CommunityType.bigCommunity -> {
-                return flowOf(
-                    listOf(
-                        Community(
-                            title = "Universidad de San Carlos de Guatemala",
-                            description = "The only public university in Guatemala.",
-                            image = "usac.png",
-                            partOfCommunity = true,
-                            id = "1",
-                            type = CommunityType.smallCommunity
-                        ),
-                        Community(
-                            title = "Universidad Francisco Marroquín",
-                            description = "Known for its focus on business and economics.",
-                            image = "ufm.png",
-                            partOfCommunity = false,
-                            id = "2",
-                            type = CommunityType.smallCommunity
-                        ),
-                        Community(
-                            title = "Universidad del Valle de Guatemala",
-                            description = "A private university specializing in technology and sciences.",
-                            image = "uvg.png",
-                            partOfCommunity = true,
-                            id = "3",
-                            type = CommunityType.smallCommunity
-                        )
+
+        return try {
+            when (type) {
+
+                // Retrieve data for country-type communities
+                CommunityType.country -> {
+                    actualCommunity = firestore.collection("big_communities").document(id).collection("communities")
+                    val communitiesDoc  = actualCommunity.get().await()
+                    flowOf(
+                        communitiesDoc.documents.map { doc ->
+                            Community(
+                                title = doc.getString("name") ?: "",
+                                description = doc.getString("description") ?: "",
+                                image = doc.getString("pfp") ?: "",
+                                id = doc.id,
+                                type = CommunityType.communities,
+                                partOfCommunity = true
+                            )
+                        }
                     )
-                )
-            }
-            CommunityType.smallCommunity -> {
-                /*
-                * These are technically rooms, but community buttons
-                * and room buttons share the same structure, except
-                * the navigation, that's why I decided to call rooms in here
-                */
-                return flowOf(
-                    listOf(
-                        Community(
-                            title = "Sports Club",
-                            description = "Participate in football, basketball, and more.",
-                            image = "sports.png",
-                            partOfCommunity = false,
-                            id = "1",
-                            type = CommunityType.rooms
-                        ),
-                        Community(
-                            title = "Art Workshop",
-                            description = "Explore painting, drawing, and sculpture.",
-                            image = "art.png",
-                            partOfCommunity = true,
-                            id = "2",
-                            type = CommunityType.rooms
-                        ),
-                        Community(
-                            title = "Student Council",
-                            description = "Join and represent your fellow students.",
-                            image = "council.png",
-                            partOfCommunity = true,
-                            id = "3",
-                            type = CommunityType.rooms
-                        ),
-                        Community(
-                            title = "Science Club",
-                            description = "Engage in research and scientific discussions.",
-                            image = "science.png",
-                            partOfCommunity = false,
-                            id = "4",
-                            type = CommunityType.rooms
+                }
+
+                // Retrieve data for communities-type (technically rooms)
+                CommunityType.communities -> {
+
+                        val roomsDoc = actualCommunity.document(id).collection("rooms").get().await()
+                        println("ROOMS: ${roomsDoc.documents}")
+                        flowOf(
+                            roomsDoc.documents.map{ doc->
+                            Community(
+                                title = doc.getString("name") ?: "",
+                                description = doc.getString("description") ?: "",
+                                image = doc.getString("pfp") ?: "",
+                                id = doc.id,
+                                type = CommunityType.rooms,
+                                partOfCommunity = true
+                            )
+                            }
                         )
-                    )
-                )
+                }
+
+                // Empty flow for rooms or unsupported types (handle if needed)
+                CommunityType.rooms -> flowOf(emptyList())
             }
-            CommunityType.rooms -> {
-                return flowOf()
-            }
+        } catch (e: Exception) {
+            println(e.message)
+            flowOf(emptyList())
         }
     }
+
+
 }

@@ -1,7 +1,7 @@
 package com.pedro0210.hobbylobby.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.pedro0210.hobbylobby.data.datastore.UserPreferences
+import com.pedro0210.hobbylobby.data.datastore.UserData
 import com.pedro0210.hobbylobby.presentation.model.Community
 import com.pedro0210.hobbylobby.presentation.model.CommunityType
 import kotlinx.coroutines.flow.Flow
@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.tasks.await
 
 class HomeRepo(
-    private var userPreferences: UserPreferences, //for fetching the id
+    private var userPreferences: UserData, //for fetching the id
 ) {
 
     private val firestore = FirebaseFirestore.getInstance()
@@ -25,7 +25,7 @@ class HomeRepo(
                         description = doc.getString("description") ?: "",
                         image = doc.getString("pfp") ?: "",
                         id = doc.id,
-                        type = CommunityType.bigCommunity,
+                        type = CommunityType.country,
                         partOfCommunity = true
                     )
                 }
@@ -42,7 +42,6 @@ class HomeRepo(
             val id = userPreferences.getId().first()
             val userRef = firestore.collection("users").document(id)
 
-            // Now query the rooms collection to see if the user is part of any room
             val roomsQuery = firestore.collectionGroup("rooms")
                 .whereArrayContains("users", userRef) // Check if the userRef is in the 'users' array
 

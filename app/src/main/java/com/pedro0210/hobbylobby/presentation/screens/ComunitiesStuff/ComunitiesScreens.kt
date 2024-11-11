@@ -14,7 +14,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -137,7 +136,7 @@ fun CommunitiesScreen(
 @Composable
 fun CommRedirectCommPreview() {
     HobbyLobbyTheme {
-        val item = generateRandomCommunities(1, CommunityType.bigCommunity)[0]
+        val item = generateRandomCommunities(1, CommunityType.country)[0]
         CommunitiesScreen(
             navController = rememberNavController(),
             state = ComunitiesScreenState(
@@ -148,7 +147,7 @@ fun CommRedirectCommPreview() {
                 partOfCommunity = item.partOfCommunity,
                 communities = generateRandomCommunities(
                         n = 10,
-                        type = CommunityType.bigCommunity
+                        type = CommunityType.country
                     ),
             )
         )
@@ -160,7 +159,7 @@ fun CommRedirectCommPreview() {
 @Composable
 fun CommRedirectUsersPreview() {
     HobbyLobbyTheme {
-        val item = generateRandomCommunities(1, CommunityType.smallCommunity)[0]
+        val item = generateRandomCommunities(1, CommunityType.communities)[0]
         CommunitiesScreen(
             navController = rememberNavController(),
             state = ComunitiesScreenState(
@@ -172,7 +171,7 @@ fun CommRedirectUsersPreview() {
                 bigCommunity = false,
                 communities = generateRandomCommunities(
                     n = 10,
-                    type = CommunityType.smallCommunity
+                    type = CommunityType.communities
                     ),
                 )
             )

@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class UserPreferences(
+class UserData(
     private val dataStore: DataStore<Preferences>
 ) {
     private val usernameKey = stringPreferencesKey("username")

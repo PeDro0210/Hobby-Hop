@@ -29,6 +29,18 @@ class AuthRepo {
        }
     }
 
+   suspend fun getUsername(id: String): String {
+       val document = firestore.collection("users").document(id).get().await()
+       return document.getString("username") ?: ""
+   }
+
+   suspend fun getPfp(id: String): String {
+       val document = firestore.collection("users").document(id).get().await()
+       return document.getString("pfp") ?: ""
+
+   }
+
+
     private fun login(authResult: AuthResult): String {
         return authResult.user?.uid ?: ""
     }

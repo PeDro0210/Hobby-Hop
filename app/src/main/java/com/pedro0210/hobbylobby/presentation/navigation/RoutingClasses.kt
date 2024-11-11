@@ -38,7 +38,11 @@ data class SmallCommunity(
 
 @Serializable
 data class Rooms(
-    val id: String
+    val id: String,
+    val title: String,
+    val description: String,
+    val image: String,
+    val partOfCommunity: Boolean
 )
 
 @Serializable

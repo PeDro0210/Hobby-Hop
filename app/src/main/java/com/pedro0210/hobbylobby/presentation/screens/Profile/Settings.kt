@@ -25,13 +25,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.pedro0210.hobbylobby.R
 import com.pedro0210.hobbylobby.presentation.event.ProfileEvent
 import com.pedro0210.hobbylobby.presentation.navigation.Home
+import com.pedro0210.hobbylobby.presentation.navigation.Login
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateFromLogin
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToCreateBigCommunity
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToModityProfile
-import com.pedro0210.hobbylobby.presentation.state.ProfileState
+import com.pedro0210.hobbylobby.presentation.state.SettingsState
 import com.pedro0210.hobbylobby.presentation.viewmodel.profile.ProfileViewModel
 
 @Composable
@@ -39,23 +41,27 @@ fun SettingsRoute(
     viewModel: ProfileViewModel,
     navController: NavController
 ){
-    val state: ProfileState by viewModel.state.collectAsStateWithLifecycle()
-    LaunchedEffect(Unit) {
-        viewModel.onEvent(ProfileEvent.onLoadUser(1))
-    }
+    val state: SettingsState by viewModel.settingsstate.collectAsStateWithLifecycle()
 
     SettingsScreen(
-        userName = state.user?.name ?: "Nombre",
+        userName = state.username,
+        pfp = state.pfp,
         onRoomsClick = {navController.navigateFromLogin(Home)}, //change this
         onCreateCommunityClick = {navController.navigateToCreateBigCommunity()},
         onEditProfileClick = {navController.navigateToModityProfile()},
-        onSignOutClick = {} //later
+        onSignOutClick = {
+            viewModel.onLogoutClick()
+            navController.navigate(Login)
+        }
     )
+
+
 }
 
 @Composable
 fun SettingsScreen(
     userName: String,
+    pfp: String,
     onRoomsClick: () -> Unit = {},
     onCreateCommunityClick: () -> Unit = {},
     onEditProfileClick: () -> Unit = {},
@@ -64,8 +70,8 @@ fun SettingsScreen(
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         // Imagen y nombre de usuario
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Image(
-                painter = painterResource(R.drawable.avatar), // Placeholder image
+            AsyncImage(
+                model = pfp,
                 contentDescription = null,
                 modifier = Modifier
                     .size(100.dp)
@@ -125,6 +131,7 @@ fun PreviewSettingsScreen() {
         onRoomsClick = {},
         onCreateCommunityClick = {},
         onEditProfileClick = {},
-        onSignOutClick = {}
+        onSignOutClick = {},
+        pfp = "https://www.google.com/"
     )
 }

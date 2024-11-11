@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.pedro0210.hobbylobby.data.datastore.UserPreferences
 import com.pedro0210.hobbylobby.data.repository.CommunitiesRepo
 import com.pedro0210.hobbylobby.presentation.model.Community
 import com.pedro0210.hobbylobby.presentation.model.CommunityType
@@ -49,9 +48,11 @@ class CommunitiesViewModel(
 
             communities = repo.getCommunities(communityType, id)
                 .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
-
+            println("Communitytype : $communityType")
+            println("Communities: $communities")
             launch{
                 communities.collect{ communitiesList ->
+                    println("CommunitiesViewModel: $communitiesList")
                     _state.update {
                         it.copy(
                             communities = communitiesList,
@@ -78,6 +79,7 @@ class CommunitiesViewModel(
 
     companion object{
         fun provideFactory(
+            repo: CommunitiesRepo,
             communityType: CommunityType,
             id: String,
             title: String,
@@ -87,7 +89,7 @@ class CommunitiesViewModel(
 
         ): ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val repo = CommunitiesRepo()
+
                 CommunitiesViewModel(
                     communityType = communityType,
                     repo = repo,
