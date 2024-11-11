@@ -11,6 +11,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,58 +30,51 @@ import com.pedro0210.hobbylobby.R
 import com.pedro0210.hobbylobby.presentation.model.RoomMember
 import com.pedro0210.hobbylobby.presentation.navigation.Profile
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToProfile
+import com.pedro0210.hobbylobby.presentation.state.RoomScreenState
 import com.pedro0210.hobbylobby.presentation.viewmodel.rooms.RoomsViewModel
 
 @Composable
 fun RoomRoute(
     viewModel: RoomsViewModel,
     navController: NavController
-){
-    //TODO: add state
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
     RoomScreen(
-        navController = navController
+        navController = navController,
+        uiState = uiState,
+        onJoinClick = { viewModel.joinRoom() }
     )
 }
 
-
-//TODO: add state
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RoomScreen(
-    navController: NavController
+    navController: NavController,
+    uiState: RoomScreenState,
+    onJoinClick: () -> Unit
 ) {
-    val members = remember {
-        listOf(
-            RoomMember("Juan", "Conectado", R.drawable.avatar),
-            RoomMember("Abby", "18 min", R.drawable.avatar),
-            RoomMember("Oscar", "Me gusta Pokémon", R.drawable.avatar),
-            RoomMember("Name", "18 min", R.drawable.avatar),
-            RoomMember("Name", "18 min", R.drawable.avatar),
-        )
-    }
-
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
-            title = { Text(text = "Gaming") },
-
-            )
+            title = { Text(text = uiState.roomName) }
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Comunidad para personas que les gustan los juegos.",
+            text = uiState.roomDescription,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(
-            onClick = { /* Acción de unirse al room */ },
+            onClick = onJoinClick,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .align(Alignment.End)
         ) {
-            Text("Unirse")
+            Text(if (uiState.isJoined) "Unido" else "Unirse")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -93,14 +88,12 @@ fun RoomScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Column(modifier = Modifier.fillMaxSize()) {
-            members.forEach { member ->
+            uiState.users.forEach { member ->
                 MemberRow(
                     member = member,
-                    onItemClick = {navController.navigateToProfile(
-                    Profile(
-                        id = "1"
-                    )
-                    )}
+                    onItemClick = {
+                        navController.navigate("profile/${member.name}")
+                    }
                 )
                 Divider(color = Color.Gray, thickness = 0.5.dp)
             }
@@ -156,6 +149,18 @@ fun MemberRow(
 @Composable
 fun PreviewRoomScreen() {
     RoomScreen(
-        navController = rememberNavController()
+        navController = rememberNavController(),
+        uiState = RoomScreenState(
+            roomName = "Room Name",
+            roomDescription = "Room Description",
+            users = listOf(
+                RoomMember("Juan", "Conectado", R.drawable.avatar),
+                RoomMember("Abby", "18 min", R.drawable.avatar),
+                RoomMember("Oscar", "Me gusta Pokémon", R.drawable.avatar),
+                RoomMember("Name", "18 min", R.drawable.avatar),
+                RoomMember("Name", "18 min", R.drawable.avatar)
+            )
+        ),
+        onJoinClick = {}
     )
 }
