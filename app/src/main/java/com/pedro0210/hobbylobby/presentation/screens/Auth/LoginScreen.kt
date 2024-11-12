@@ -53,6 +53,19 @@ fun LoginRoute(
 ){
     val state: LoginScreenState by viewModel.loginState.collectAsStateWithLifecycle()
 
+
+    LaunchedEffect(state) {
+        //done what's happening in here, but this is doing a good job
+        if (state.isLogged && state.navDestination == Home) {
+            navController.navigateFromLogin(Home)
+        }
+        if (state.isLogged && state.navDestination == SignUp) {
+            navController.navigateFromLogin(SignUp)
+        }
+    }
+
+
+
     Login(
         navController = navController,
         state = state,
@@ -79,12 +92,6 @@ fun Login(
 ){ //TODO: add all states from the loginState somehow
     Scaffold (
         content = { paddingValues ->
-
-            LaunchedEffect(state) {
-                if (state.isLogged) {
-                    navController.navigateFromLogin(Home)
-                }
-            }
 
             if (!state.isLogged) {
                 Column(

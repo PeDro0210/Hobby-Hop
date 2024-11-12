@@ -24,6 +24,8 @@ fun NavGraphBuilder.loginGraph(
             val loginViewModel : AuthViewModel = viewModel(
                 factory = AuthViewModel.provideFactory()
             )
+
+
             LoginRoute(
                 viewModel = loginViewModel,
                 navController = navController,

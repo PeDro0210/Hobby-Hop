@@ -14,8 +14,7 @@ fun NavController.navigateFromLogin(
     destination: AuthDestionation,
     navOptions: NavOptions? = null
 ){
-    if (destination == Home) popBackStack()
-
+    popBackStack()
     this.navigate(destination, navOptions)
 }
 

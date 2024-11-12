@@ -23,7 +23,7 @@ class UserData(
         }
     }
 
-    suspend fun logIn(
+    suspend fun setUserKeys(
         id:String,
         username: String,
         pfp: String

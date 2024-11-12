@@ -2,6 +2,7 @@ package com.pedro0210.hobbylobby.presentation.state
 
 import com.pedro0210.hobbylobby.presentation.navigation.AuthDestionation
 import com.pedro0210.hobbylobby.presentation.navigation.Home
+import com.pedro0210.hobbylobby.presentation.navigation.SignUp
 
 data class LoginScreenState(
     // States for sending the view model
@@ -15,7 +16,7 @@ data class LoginScreenState(
     var hasError: Boolean = true,
 
     var buttonText: String = "Join Us",
-    var navDestination: AuthDestionation = Home,
+    var navDestination: AuthDestionation = SignUp,
     var boxChecked: Boolean = false
 
 )

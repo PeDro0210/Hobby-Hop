@@ -53,7 +53,7 @@ fun ChangingProfileScreenRoute(
     viewModel: ProfileViewModel,
     navController: NavController
 ){
-    val state: SettingsState by viewModel.settingsstate.collectAsStateWithLifecycle()
+    val state: SettingsState by viewModel.settingsState.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
         viewModel.onEvent(ProfileEvent.onLoadUser(1))
     }

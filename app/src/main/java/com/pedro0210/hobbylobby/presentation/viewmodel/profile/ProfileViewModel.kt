@@ -24,11 +24,9 @@ class ProfileViewModel(
     private val repository: SettingsRepo
 ): ViewModel() {
     private val _settingsState = MutableStateFlow(SettingsState())
-    val settingsstate = _settingsState.asStateFlow()
+    val settingsState = _settingsState.asStateFlow()
 
-    private val _profileState = MutableStateFlow(
-        ProfileCreationState()
-    )
+    private val _profileState = MutableStateFlow(ProfileCreationState())
 
     private lateinit var username: String
     private lateinit var pfp: String

@@ -1,9 +1,17 @@
 package com.pedro0210.hobbylobby.data.repository
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import com.google.api.Context
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import java.io.IOException
 
 class AuthRepo {
 
@@ -11,23 +19,35 @@ class AuthRepo {
     private val firestore = FirebaseFirestore.getInstance()
 
 
-    suspend fun manageAuth(email: String, password: String): String {
-       try {
-           val authResult = auth.signInWithEmailAndPassword(email, password).await()
 
-           val id = if (authResult != null) {
-               login(authResult)
-           } else {
-               signUp(email, password)
-           }
-           println(id);
-           return id
-       } catch (e: Exception) {
-           println("error: ")
-           println(e.message)
-           return "ERROR"
-       }
+    suspend fun manageAuth(email: String, password: String): String {
+        return try {
+            val authResult = auth.signInWithEmailAndPassword(email, password).await()
+            authResult.user?.uid ?: "Id Error" //returns the uid
+        } catch (e: FirebaseAuthInvalidCredentialsException) {
+            signUp(email = email, password = password) //does the signing with firebase and the uid
+        } catch (e: Exception) {
+            "ERROR"
+        }
     }
+
+
+    private suspend fun signUp(email: String, password: String): String {
+        try {
+            val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+            return authResult.user?.uid ?: "Id Error"
+        } catch (e: Exception){
+            return "ERROR"
+        }
+    }
+
+
+    suspend fun creteUser(username: String, id: String): String {
+
+
+        return "PLACEHOLDER_ID"
+    }
+
 
    suspend fun getUsername(id: String): String {
        val document = firestore.collection("users").document(id).get().await()
@@ -40,25 +60,6 @@ class AuthRepo {
 
    }
 
-
-    private fun login(authResult: AuthResult): String {
-        return authResult.user?.uid ?: ""
-    }
-
-    suspend fun signUp(email: String, password: String): String {
-        //TODO: do this later
-
-        return "PLACEHOLDER_ID"
-    }
-
-
-    suspend fun signUp(username: String): String {
-        //dummy repo, for the moment
-        //TODO: call the repo with the firebase implementation
-
-
-        return "PLACEHOLDER_ID"
-    }
 
 
     //TODO: add each loginEmail and registerEmail for X, Google and Facebook

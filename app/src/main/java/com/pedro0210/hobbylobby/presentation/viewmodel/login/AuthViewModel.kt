@@ -1,11 +1,15 @@
 package com.pedro0210.hobbylobby.presentation.viewmodel.login
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.google.api.Context
 import com.pedro0210.hobbylobby.data.datastore.UserData
 import com.pedro0210.hobbylobby.data.repository.AuthRepo
 import com.pedro0210.hobbylobby.dataStore
@@ -13,14 +17,18 @@ import com.pedro0210.hobbylobby.domain.util.LoginEnum
 import com.pedro0210.hobbylobby.presentation.navigation.AuthDestionation
 import com.pedro0210.hobbylobby.presentation.state.LoginScreenState
 import com.pedro0210.hobbylobby.presentation.state.ProfileCreationState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.IOException
 
 class AuthViewModel(
-    private val preferences: UserData,
-    private val loginRepo: AuthRepo
+    private val user: UserData,
+    private val repo: AuthRepo
 ): ViewModel() {
     private val _loginState = MutableStateFlow(LoginScreenState())
     val loginState = _loginState.asStateFlow()
@@ -31,12 +39,16 @@ class AuthViewModel(
 
     init {
         viewModelScope.launch {
-            preferences.getAuth().collect { authState ->
+            user.getAuth().collect { authState ->
                 _loginState.update {
-                    it.copy(isLogged = authState)
+                    it.copy(
+                        isLogged = authState
+                    )
                 }
             }
         }
+
+
     }
 
     //For Logging Screen
@@ -98,17 +110,20 @@ class AuthViewModel(
 
     }
 
+    //123123@gmail.com
+    //123
     //TODO: set login enum to the type of login
     //TODO: set diferent types of loging depending on the enum
     fun login(type: LoginEnum) {
         viewModelScope.launch {
-            val id = loginRepo.manageAuth(loginState.value.email, loginState.value.password)
-            val username = loginRepo.getUsername(id)
-            val pfp = loginRepo.getPfp(id)
-
+            val id = repo.manageAuth(loginState.value.email, loginState.value.password)
+            println(id)
+            val username = repo.getUsername(id)
+            val pfp = repo.getPfp(id)
+            println("NavDdestination"+loginState.value.navDestination)
             if (id != "ERROR") {
                 changeError(false)
-                preferences.logIn(
+                user.setUserKeys(
                     id = id,
                     username = username,
                     pfp = pfp
@@ -126,6 +141,7 @@ class AuthViewModel(
 
 
     //For Profile Creation Screen
+
     fun changeUsername(username: String) {
         _profileCreationState.update{
             it.copy(
@@ -133,6 +149,48 @@ class AuthViewModel(
             )
         }
     }
+
+
+
+    fun chooseImage(pfpUri: Uri){
+        viewModelScope.launch{
+            _profileCreationState.update{
+                it.copy(
+                    pfpUri = pfpUri
+                )
+            }
+        }
+
+    }
+
+
+    fun createUser(){
+        viewModelScope.launch {
+            val id = user.getId().first()
+            val username = profileCreationState.value.username
+
+            repo.creteUser(
+                username = username,
+                id = id
+            )
+
+            val pfp = repo.getPfp(id)
+
+            if (id != "ERROR") {
+                changeError(false)
+                user.setUserKeys(
+                    id = id,
+                    username = username,
+                    pfp = pfp
+                )
+            }
+            else {
+                println("not error signing")
+                changeError(true)
+            }
+        }
+    }
+
 
 
 
@@ -145,8 +203,8 @@ class AuthViewModel(
                 val application = checkNotNull(this[APPLICATION_KEY])
 
                 AuthViewModel(
-                    preferences = UserData(application.dataStore),
-                    loginRepo = AuthRepo()
+                    user = UserData(application.dataStore),
+                    repo = AuthRepo()
                 )
             }
         }

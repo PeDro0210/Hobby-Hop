@@ -41,7 +41,7 @@ fun SettingsRoute(
     viewModel: ProfileViewModel,
     navController: NavController
 ){
-    val state: SettingsState by viewModel.settingsstate.collectAsStateWithLifecycle()
+    val state: SettingsState by viewModel.settingsState.collectAsStateWithLifecycle()
 
     SettingsScreen(
         userName = state.username,
