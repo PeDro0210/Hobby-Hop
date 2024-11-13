@@ -8,16 +8,19 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import kotlin.coroutines.cancellation.CancellationException
 
 class AuthRepo {
 
     private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
-
+    private val storage = FirebaseStorage.getInstance()
 
 
     suspend fun manageAuth(email: String, password: String): String {
@@ -33,19 +36,47 @@ class AuthRepo {
 
 
     private suspend fun signUp(email: String, password: String): String {
-        try {
+        return try {
             val authResult = auth.createUserWithEmailAndPassword(email, password).await()
-            return authResult.user?.uid ?: "Id Error"
+            authResult.user?.uid ?: "Id Error"
         } catch (e: Exception){
-            return "ERROR"
+            "ERROR"
         }
     }
 
 
-    suspend fun creteUser(username: String, id: String): String {
+    suspend fun creteUser(username: String, id: String, pfpUri: Uri): String {
+        return try {
+            val userImageRef = storage.reference.child("users/$username/pfp.png")
 
+            userImageRef.putFile(pfpUri) //fucking listeners, fuck them, fuck them all
+            .addOnSuccessListener { taskSnapshot ->
+                // After the file is uploaded, get the download URL
+                userImageRef.downloadUrl.addOnSuccessListener { uri ->
+                    // Successfully fetched the download URL
+                    val pfpUrl = uri.toString()
+                    println("Profile picture URL: $pfpUrl")
+                    val user = mapOf( //lmao, no need to do fucking DTO's for everything
+                        "username" to username,
+                        "pfp" to pfpUrl,
+                        "admin_rooms" to emptyList<Any>()  // Initially empty array for future references
+                    )
 
-        return "PLACEHOLDER_ID"
+                    firestore.collection("users").document(id).set(user)
+
+                    id
+                }
+        }
+
+            id  //returns the id
+        } catch (e: CancellationException) {
+            println("Coroutine was cancelled: $e")
+            return "ERROR"
+        } catch (e: Exception) {
+            println("Error creating user: $e")
+            return "ERROR"
+        }
+
     }
 
 

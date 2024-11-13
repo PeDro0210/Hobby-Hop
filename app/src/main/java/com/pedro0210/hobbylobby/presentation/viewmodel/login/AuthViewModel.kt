@@ -168,11 +168,18 @@ class AuthViewModel(
         viewModelScope.launch {
             val id = user.getId().first()
             val username = profileCreationState.value.username
-
-            repo.creteUser(
-                username = username,
-                id = id
-            )
+            val uri = profileCreationState.value.pfpUri
+            println("URI: $uri")
+            if (uri != null) {
+                repo.creteUser(
+                    username = username,
+                    id = id,
+                    pfpUri = uri
+                )
+            }
+            else{
+                println("Failed to get the uri")
+            }
 
             val pfp = repo.getPfp(id)
 
@@ -190,11 +197,6 @@ class AuthViewModel(
             }
         }
     }
-
-
-
-
-
 
 
     companion object {

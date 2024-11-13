@@ -63,7 +63,7 @@ fun ProfileCreationRoute(
         state = state,
         onUsernameChange = { viewModel.changeUsername(it) },
         onImageChange = { viewModel.chooseImage(it)},
-        onRegisterClick = { /*TODO*/ }
+        onRegisterClick = { viewModel.createUser()}
     )
 }
 
