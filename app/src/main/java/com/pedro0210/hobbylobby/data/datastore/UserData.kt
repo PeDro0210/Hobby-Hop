@@ -17,6 +17,11 @@ class UserData(
     private val loggedKey = booleanPreferencesKey("logged")
 
 
+    suspend fun logIn() {
+        dataStore.edit { preferences ->
+            preferences[loggedKey] = true
+        }
+    }
     suspend fun logOut() {
         dataStore.edit { preferences ->
             preferences[loggedKey] = false
@@ -29,7 +34,6 @@ class UserData(
         pfp: String
         ){
         dataStore.edit { preferences ->
-            preferences[loggedKey] = true
             preferences[idKey] = id
             preferences[usernameKey] = username
             preferences[pfpKey] = pfp

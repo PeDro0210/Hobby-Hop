@@ -27,6 +27,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,6 +59,13 @@ fun ProfileCreationRoute(
 ){
     val state: ProfileCreationState by viewModel.profileCreationState.collectAsStateWithLifecycle()
 
+
+    LaunchedEffect(state) {
+        println("STATE: $state")
+        if (state.register) {
+            navController.navigateFromLogin(Home)
+        }
+    }
     ProfileCreationScreen(
         navController = navController,
         state = state,
@@ -154,7 +162,6 @@ fun ProfileCreationScreen(
                 Button(
                     onClick = {
                         onRegisterClick()
-                        navController.navigateFromLogin(Home)
                     },
                 ){
                     Text("Join Us")

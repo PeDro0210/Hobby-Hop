@@ -116,22 +116,25 @@ class AuthViewModel(
     //TODO: set diferent types of loging depending on the enum
     fun login(type: LoginEnum) {
         viewModelScope.launch {
-            val id = repo.manageAuth(loginState.value.email, loginState.value.password)
-            println(id)
-            val username = repo.getUsername(id)
-            val pfp = repo.getPfp(id)
-            println("NavDdestination"+loginState.value.navDestination)
-            if (id != "ERROR") {
-                changeError(false)
-                user.setUserKeys(
-                    id = id,
-                    username = username,
-                    pfp = pfp
-                )
-            }
-            else {
-                println("not logged in")
-                changeError(true)
+            try {
+                val id = repo.manageAuth(loginState.value.email, loginState.value.password)
+                val username = repo.getUsername(id)
+                val pfp = repo.getPfp(id)
+                if (id != "ERROR") {
+                    user.setUserKeys(
+                        id = id,
+                        username = username,
+                        pfp = pfp
+                    )
+                    changeError(false)
+
+                } else {
+                    println("not logged in")
+                    changeError(true)
+                }
+                println(loginState.value.hasError)
+            } catch (e: Exception) {
+                println("Error logging in: $e")
             }
         }
     }
@@ -150,6 +153,13 @@ class AuthViewModel(
         }
     }
 
+    fun registerConfirmed(boolean: Boolean){
+        _profileCreationState.update{
+            it.copy(
+                register = boolean
+            )
+        }
+    }
 
 
     fun chooseImage(pfpUri: Uri){
@@ -167,9 +177,10 @@ class AuthViewModel(
     fun createUser(){
         viewModelScope.launch {
             val id = user.getId().first()
+            println("ID: $id")
             val username = profileCreationState.value.username
             val uri = profileCreationState.value.pfpUri
-            println("URI: $uri")
+
             if (uri != null) {
                 repo.creteUser(
                     username = username,
@@ -184,13 +195,15 @@ class AuthViewModel(
             val pfp = repo.getPfp(id)
 
             if (id != "ERROR") {
-                changeError(false)
+                registerConfirmed(true)
                 user.setUserKeys(
                     id = id,
                     username = username,
                     pfp = pfp
                 )
+
             }
+
             else {
                 println("not error signing")
                 changeError(true)

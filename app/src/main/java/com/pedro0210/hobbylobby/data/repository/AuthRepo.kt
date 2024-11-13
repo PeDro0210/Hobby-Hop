@@ -16,6 +16,8 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import kotlin.coroutines.cancellation.CancellationException
 
+
+//TODO: REFACTOR A LOT OF THE NEW THINGS I PUT IN HERE
 class AuthRepo {
 
     private val auth = FirebaseAuth.getInstance()
@@ -28,47 +30,35 @@ class AuthRepo {
             val authResult = auth.signInWithEmailAndPassword(email, password).await()
             authResult.user?.uid ?: "Id Error" //returns the uid
         } catch (e: FirebaseAuthInvalidCredentialsException) {
-            signUp(email = email, password = password) //does the signing with firebase and the uid
+            val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+            authResult.user?.uid ?: "Id Error"
         } catch (e: Exception) {
             "ERROR"
         }
     }
 
 
-    private suspend fun signUp(email: String, password: String): String {
-        return try {
-            val authResult = auth.createUserWithEmailAndPassword(email, password).await()
-            authResult.user?.uid ?: "Id Error"
-        } catch (e: Exception){
-            "ERROR"
-        }
-    }
-
 
     suspend fun creteUser(username: String, id: String, pfpUri: Uri): String {
         return try {
+            println("ID CREATE USER MODEL" + id)
             val userImageRef = storage.reference.child("users/$username/pfp.png")
 
-            userImageRef.putFile(pfpUri) //fucking listeners, fuck them, fuck them all
-            .addOnSuccessListener { taskSnapshot ->
-                // After the file is uploaded, get the download URL
-                userImageRef.downloadUrl.addOnSuccessListener { uri ->
-                    // Successfully fetched the download URL
-                    val pfpUrl = uri.toString()
-                    println("Profile picture URL: $pfpUrl")
-                    val user = mapOf( //lmao, no need to do fucking DTO's for everything
-                        "username" to username,
-                        "pfp" to pfpUrl,
-                        "admin_rooms" to emptyList<Any>()  // Initially empty array for future references
-                    )
+            userImageRef.putFile(pfpUri).await() //fucking listeners, fuck them, fuck them all
+            val pfpUrl = userImageRef.downloadUrl.await()
+                   // Successfully fetched the download URL
+            println("Profile picture URL: $pfpUrl")
+            val user = mapOf( //lmao, no need to do fucking DTO's for everything
+                "username" to username,
+                "pfp" to pfpUrl,
+                "admin_rooms" to emptyList<Any>()  // Initially empty array for future references
+            )
 
-                    firestore.collection("users").document(id).set(user)
+            println("ID CREATE USER MODEL" + id)
+            firestore.collection("users").document(id).set(user)
 
-                    id
-                }
-        }
+            id
 
-            id  //returns the id
         } catch (e: CancellationException) {
             println("Coroutine was cancelled: $e")
             return "ERROR"

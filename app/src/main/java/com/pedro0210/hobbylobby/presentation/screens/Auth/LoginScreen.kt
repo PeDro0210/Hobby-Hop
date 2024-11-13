@@ -53,18 +53,11 @@ fun LoginRoute(
 ){
     val state: LoginScreenState by viewModel.loginState.collectAsStateWithLifecycle()
 
-
-    LaunchedEffect(state) {
-        //done what's happening in here, but this is doing a good job
-        if (state.isLogged && state.navDestination == Home) {
-            navController.navigateFromLogin(Home)
-        }
-        if (state.isLogged && state.navDestination == SignUp) {
-            navController.navigateFromLogin(SignUp)
+    LaunchedEffect(state) {//you saved my life
+        if (!state.hasError) {
+            navController.navigateFromLogin(state.navDestination)
         }
     }
-
-
 
     Login(
         navController = navController,
@@ -157,9 +150,6 @@ fun Login(
 
                             Button(onClick = {
                                 onLoginClick(LoginEnum.NormalAuth)
-                                if (!state.hasError) {
-                                    navController.navigateFromLogin(state.navDestination)
-                                }
                             }) {
                                 Text(state.buttonText)
                             }
@@ -234,6 +224,18 @@ fun Login(
 
                     }
                 }
+            }
+            else{
+                //Just do this, if app opens
+                LaunchedEffect(true) {
+                    //done what's happening in here, but this is doing a good job
+                    if (state.isLogged) {
+                        navController.navigateFromLogin(Home)
+                    }
+
+                }
+
+
             }
         }
 

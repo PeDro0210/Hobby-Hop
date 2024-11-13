@@ -5,5 +5,7 @@ import android.net.Uri
 data class ProfileCreationState(
     var username: String = "",
     var pfpUri: Uri? = null,
-    var pfpBitMap: Uri? = null
+    var pfpBitMap: Uri? = null,
+
+    var register: Boolean = false
 )
