@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.pedro0210.hobbylobby.data.datastore.UserPreferences
 import com.pedro0210.hobbylobby.data.repository.CommunitiesRepo
 import com.pedro0210.hobbylobby.presentation.model.Community
 import com.pedro0210.hobbylobby.presentation.model.CommunityType

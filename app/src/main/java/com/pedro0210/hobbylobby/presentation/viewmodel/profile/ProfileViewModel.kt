@@ -89,4 +89,7 @@ class ProfileViewModel(
         }
     }
 
+    //TODO: field, pfp, user, social
+    //TODO: collection social with the list of social media added
+
 }

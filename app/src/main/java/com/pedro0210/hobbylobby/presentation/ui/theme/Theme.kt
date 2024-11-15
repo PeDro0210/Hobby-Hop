@@ -17,10 +17,10 @@ private val DarkColorScheme = darkColorScheme(
     secondary = DBlue1,
     tertiary = DGreen1,
     onPrimary = DPink2,
-    onSecondary = DBlue3,
+    onSecondary = DBlue2,
     onTertiary = DGreen2,
 
-    surface = DBlue2,
+    surface = DBlue3,
     onSurface = DPink3,
 
     outline = DPink4,
@@ -34,10 +34,10 @@ private val LightColorScheme = lightColorScheme(
     secondary = Blue1,
     tertiary = Green1,
     onPrimary = Pink2,
-    onSecondary = Blue3,
+    onSecondary = Blue2,
     onTertiary = Green2,
 
-    surface = Blue2,
+    surface = Blue3,
     onSurface = Pink3,
 
     outline = Pink4,

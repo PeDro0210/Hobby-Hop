@@ -1,5 +1,6 @@
 package com.pedro0210.hobbylobby.presentation.view.screens.widgets.buttons
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +13,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -92,7 +94,7 @@ fun CommunityButton(
                     contentDescription = null,
                     modifier = Modifier
                         .size(64.dp)
-                        .clip(RoundedCornerShape(8.dp))
+                        .background(MaterialTheme.colorScheme.secondary)
                 )
                 Column(
                     modifier = Modifier.padding(horizontal = 16.dp)

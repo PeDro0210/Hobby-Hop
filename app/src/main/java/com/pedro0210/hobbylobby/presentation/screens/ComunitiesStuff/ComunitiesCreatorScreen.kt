@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -29,31 +30,40 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToCreateSmallCommunities
-import com.pedro0210.hobbylobby.presentation.viewmodel.communities_stuff.CommunitiesViewModel
+import com.pedro0210.hobbylobby.presentation.state.CreatorScreenState
+import com.pedro0210.hobbylobby.presentation.viewmodel.communities_stuff.CreatorViewModel
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 
 
 @Composable
 fun CommunitiesCreatorRoute(
+
+    viewModel: CreatorViewModel,
     //TODO: create another viewmodel for this
     navController: NavController
 ){
-    //TODO: Add state
+
+    val state: CreatorScreenState by viewModel.state.collectAsStateWithLifecycle()
+
 
     CommunitiesCreatorScreen(
         navController = navController,
-        onAddClick = {navController.navigateToCreateSmallCommunities()}
+        onAddClick = {navController.navigateToCreateSmallCommunities()},
+        state = state
     )
 
 }
@@ -62,41 +72,38 @@ fun CommunitiesCreatorRoute(
 //TODO: add state
 @Composable
 fun CommunitiesCreatorScreen(
-    modifier: Modifier = Modifier,
     onBackClick: () -> Unit = {}, //for nav
-    onPictureChange: () -> Unit = {},
-    name: String = "", //for the meanwhile
-    onNameChange: (String) -> Unit = {},
+    onPictureChange: () -> Unit = {}, //IDK
+    onNameChange: (String) -> Unit = {}, //IDK
     onClearClick: () -> Unit = {},
-    description: String = "",
-    ondescriptionChange: (String) -> Unit = {},
+    ondescriptionChange: (String) -> Unit = {},//IDK
     ondoneClick: () -> Unit = {}, //For nav
-    onDeleteSubC: () -> Unit = {},
+    onDeleteSubC: () -> Unit = {}, //IDK
     onAddClick: () -> Unit = {}, //For nav
-    navController: NavController
+    navController: NavController,
+    state: CreatorScreenState
 ){
     Scaffold (
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 ondoneClick()
-            }) {
-                Icon(Icons.Default.Check, contentDescription = null)
+            }, modifier = Modifier.background(MaterialTheme.colorScheme.onPrimary)) {
+                Icon(Icons.Default.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
             }
         }
     ){
         CommunitiesCreator(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(it),
             onBackClick = onBackClick,
             onPictureChange = onPictureChange,
-            name = name,
             onNameChange = onNameChange,
             onClearClick = onClearClick,
-            description = description,
             ondescriptionChange = ondescriptionChange,
             onDeleteSubC = onDeleteSubC,
-            onAddClick = onAddClick
+            onAddClick = onAddClick,
+            state = state
         )
     }
 }
@@ -105,17 +112,16 @@ fun CommunitiesCreatorScreen(
 @Composable
 fun CommunitiesCreator(
     modifier: Modifier = Modifier,
-    onBackClick: () -> Unit = {},
-    onPictureChange: () -> Unit = {},
-    name: String = "",
-    onNameChange: (String) -> Unit = {},
+    onBackClick: () -> Unit = {}, //for nav
+    onPictureChange: () -> Unit = {}, //IDK
+    onNameChange: (String) -> Unit = {}, //IDK
     onClearClick: () -> Unit = {},
-    description: String = "",
-    ondescriptionChange: (String) -> Unit = {},
-    onDeleteSubC: () -> Unit = {},
-    onAddClick: () -> Unit = {}
+    ondescriptionChange: (String) -> Unit = {},//IDK
+    onDeleteSubC: () -> Unit = {}, //IDK
+    onAddClick: () -> Unit = {}, //For nav
+    state: CreatorScreenState
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         TopAppBar(title = {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -140,12 +146,22 @@ fun CommunitiesCreator(
                 Box(
                     modifier = Modifier
                         .background(
-                            color = MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.secondary
                         )
                         .size(150.dp)
                         .clip(CircleShape),
                     contentAlignment = androidx.compose.ui.Alignment.Center
                 ) {
+                    AsyncImage(
+                        model = state.image,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(150.dp)
+                            .clip(
+                                RoundedCornerShape(16.dp)
+
+                            )
+                    )
                     IconButton(onClick = onPictureChange) {
                         Icon(
                             Icons.Default.Add,
@@ -156,20 +172,16 @@ fun CommunitiesCreator(
                 }
                 Spacer(modifier = Modifier.padding(8.dp))
                 OutlinedTextField(
-                    value = name,
+                    value = state.title,
                     onValueChange = onNameChange,
-                    trailingIcon = {
-                        IconButton(onClick = onClearClick) {
-                            Icon(Icons.Default.Clear, contentDescription = "Add")
-                        }
-                    }
+
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
             TextField(
-                value = description,
+                value = state.description,
                 onValueChange = ondescriptionChange,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface),
             )
             Spacer(modifier = Modifier.height(16.dp))
             HorizontalDivider(thickness = 2.dp)
@@ -181,7 +193,7 @@ fun CommunitiesCreator(
             Column (modifier = Modifier.padding(4.dp, 0.dp)){
                 LazyColumn {
                     items(2) {
-                        SubcommunitySquare("SubComunidad", onDeleteSubC = onDeleteSubC)
+                        SubcommunitySquare("Room", onDeleteSubC = onDeleteSubC)
                         Spacer(modifier = Modifier.height(16.dp))
                     }
 
@@ -209,9 +221,9 @@ fun SubcommunitySquare(
         ) {
             Box(
                 modifier = Modifier
-                    .size(65.dp)
+                    .size(64.dp)
                     .background(
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.secondary
                     )
                     .fillMaxWidth(0.35f),
                 contentAlignment = androidx.compose.ui.Alignment.Center
@@ -246,9 +258,9 @@ fun AddSubcommuinity(
         ) {
             Box(
                 modifier = Modifier
-                    .size(65.dp)
+                    .size(64.dp)
                     .background(
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.secondary
                     )
                     .fillMaxWidth(0.35f)
                 ,contentAlignment = androidx.compose.ui.Alignment.Center
@@ -264,5 +276,25 @@ fun AddSubcommuinity(
         }
         Icon(Icons.Default.KeyboardArrowRight, contentDescription = "Next")
 
+    }
+}
+
+
+@Preview
+@Composable
+fun PreviewCommunitiesCreatorScreen(){
+    HobbyLobbyTheme {
+        CommunitiesCreatorScreen(
+            onBackClick = {},
+            onPictureChange = {},
+            onNameChange = {},
+            onClearClick = {},
+            ondescriptionChange = {},
+            ondoneClick = {},
+            onDeleteSubC = {},
+            onAddClick = {},
+            navController = NavController(LocalContext.current),
+            state = CreatorScreenState()
+        )
     }
 }

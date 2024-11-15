@@ -33,14 +33,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.Camera
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.pedro0210.hobbylobby.R
 import com.pedro0210.hobbylobby.presentation.event.ProfileEvent
 import com.pedro0210.hobbylobby.presentation.model.SocialMedia
@@ -72,9 +76,7 @@ fun ChangingProfileScreenRoute(
 fun ChangingProfileScreen(
     modifier: Modifier = Modifier,
     state: ProfileState,
-    description: String = "", //for the meanwhile
     ondescriptionChange: (String) -> Unit = {},
-    name: String = "", //for the meanwhile
     onNameChange: (String) -> Unit = {},
     onBackClick: () -> Unit = {},
     ondoneClick: () -> Unit = {},
@@ -87,8 +89,8 @@ fun ChangingProfileScreen(
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 ondoneClick()
-            }) {
-                Icon(Icons.Default.Check, contentDescription = null)
+            }, modifier = Modifier.background(MaterialTheme.colorScheme.onPrimary)) {
+                Icon(Icons.Default.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
             }
         }
     ){
@@ -97,14 +99,12 @@ fun ChangingProfileScreen(
                 .fillMaxSize()
                 .padding(it),
             state = state,
-            description = description,
             ondescriptionChange = ondescriptionChange,
-            name = name,
             onNameChange = onNameChange,
             onBackClick = onBackClick,
             onClearClick = onClearClick,
             onPictureChange = onPictureChange,
-            onAddClick = onAddClick
+            onAddClick = onAddClick,
         )
     }
 }
@@ -115,9 +115,7 @@ fun ChangingProfileScreen(
 @Composable
 fun ElementsScreen(modifier: Modifier = Modifier,
                    state: ProfileState,
-                   description: String,
                    ondescriptionChange: (String) -> Unit,
-                   name: String,
                    onNameChange: (String) -> Unit,
                    onBackClick: () -> Unit = {},
                    onClearClick: () -> Unit = {},
@@ -148,26 +146,30 @@ fun ElementsScreen(modifier: Modifier = Modifier,
                 Box(
                     modifier = Modifier
                         .background(
-                            color = MaterialTheme.colorScheme.primary,
+                            color = MaterialTheme.colorScheme.secondary,
                             shape = CircleShape
                         )
                         .size(150.dp)
                         .clip(CircleShape),
                     contentAlignment = androidx.compose.ui.Alignment.Center
                 ) {
-                    Image(painter = painterResource(id = R.drawable.pfp), contentDescription = "PFP")
+                    AsyncImage(model = state.user?.image, contentDescription = "PFP")
                     IconButton(onClick = onPictureChange,
                         modifier = Modifier.size(100.dp)
 
                     ) {
-
+                        Icon(
+                            Icons.Default.Camera,
+                            contentDescription = "Picture",
+                            modifier = Modifier.size(50.dp)
+                        )
 
                     }
 
                 }
                 Spacer(modifier = Modifier.padding(8.dp))
                 OutlinedTextField(
-                    value = name,
+                    value = state.user?.name ?: "Unknown",
                     onValueChange = onNameChange,
                     trailingIcon = {
                         IconButton(onClick = onClearClick) {
@@ -177,7 +179,9 @@ fun ElementsScreen(modifier: Modifier = Modifier,
                 )
             }
             Spacer(modifier = Modifier.height(32.dp))
-            TextField(value = description, onValueChange = ondescriptionChange, modifier = Modifier.fillMaxWidth())
+            TextField(value = state.user?.name ?: "Description", onValueChange = ondescriptionChange, modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface))
 
             Spacer(modifier = Modifier.height(32.dp))
             Text(text = "Redes Sociales", style = MaterialTheme.typography.headlineSmall, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
@@ -247,7 +251,7 @@ fun AddSocial(
                 modifier = Modifier
                     .size(65.dp)
                     .background(
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.secondary
                     )
                     .fillMaxWidth(0.35f),
                 contentAlignment = androidx.compose.ui.Alignment.Center
@@ -265,6 +269,22 @@ fun AddSocial(
 
 
     }
+}
+
+@Preview
+@Composable
+fun ChangingProfileScreenPreview(){
+    ChangingProfileScreen(
+        state = ProfileState(),
+        onBackClick = {},
+        onClearClick = {},
+        ondoneClick = {},
+        onPictureChange = {},
+        onAddClick = {},
+        ondescriptionChange = {},
+        onNameChange = {},
+        navController = NavController(LocalContext.current)
+    )
 }
 
 

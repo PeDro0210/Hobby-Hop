@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -30,9 +31,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 
 @Composable
@@ -59,6 +62,7 @@ fun SubcommunitiesCreatorScreen(
     description: String = "", //for the meanwhile
     ondescriptionChange: (String) -> Unit = {},
     ondoneClick: () -> Unit = {},
+    image: String = "", //for the meanwhile
     navController: NavController
 
 
@@ -67,8 +71,8 @@ fun SubcommunitiesCreatorScreen(
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 ondoneClick()
-            }) {
-                Icon(Icons.Default.Check, contentDescription = null)
+            }, modifier = Modifier.background(MaterialTheme.colorScheme.onPrimary)) {
+                Icon(Icons.Default.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
             }
         }
     ){
@@ -82,6 +86,7 @@ fun SubcommunitiesCreatorScreen(
             onNameChange = onNameChange,
             onClearClick = onClearClick,
             description = description,
+            image = image,
             ondescriptionChange = ondescriptionChange
         )
     }
@@ -97,6 +102,7 @@ fun SubcommunitiesCreator(
     onNameChange: (String) -> Unit = {},
     onClearClick: () -> Unit = {},
     description: String = "",
+    image: String = "",
     ondescriptionChange: (String) -> Unit = {}
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
@@ -124,12 +130,22 @@ fun SubcommunitiesCreator(
                 Box(
                     modifier = Modifier
                         .background(
-                            color = MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.secondary
                         )
                         .size(150.dp)
                         .clip(CircleShape),
                     contentAlignment = androidx.compose.ui.Alignment.Center
                 ) {
+                    AsyncImage(
+                        model = image,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(150.dp)
+                            .clip(
+                                RoundedCornerShape(16.dp)
+
+                            )
+                    )
                     IconButton(onClick = onPictureChange) {
                         Icon(
                             Icons.Default.Add,
@@ -154,7 +170,23 @@ fun SubcommunitiesCreator(
                 value = description,
                 onValueChange = ondescriptionChange,
                 modifier = Modifier.fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface)
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun SubcommunitiesCreatorPreview() {
+    HobbyLobbyTheme {
+        SubcommunitiesCreatorScreen(
+            name = "Subcomunidad",
+            onNameChange = {},
+            onClearClick = {},
+            description = "Descripcion de la subcomunidad",
+            ondescriptionChange = {},
+            ondoneClick = {},
+            navController = NavController(LocalContext.current))
     }
 }
