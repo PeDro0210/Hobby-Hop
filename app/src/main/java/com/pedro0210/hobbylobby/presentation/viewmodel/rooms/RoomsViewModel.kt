@@ -2,18 +2,25 @@ package com.pedro0210.hobbylobby.presentation.viewmodel.rooms
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pedro0210.hobbylobby.R
+import com.pedro0210.hobbylobby.data.repository.RoomsRepo
 import com.pedro0210.hobbylobby.presentation.model.RoomMember
 import com.pedro0210.hobbylobby.presentation.state.RoomScreenState
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 
 class RoomsViewModel(
     roomId: String,
+    repo: RoomsRepo,
     roomName: String,
     roomDescription: String
 ) : ViewModel() {
@@ -22,13 +29,30 @@ class RoomsViewModel(
         RoomScreenState(
             roomName = roomName,
             roomDescription = roomDescription,
-            users = listOf(
-                RoomMember("Juan", "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Cristo_abrazado_a_la_cruz_%28El_Greco%2C_Museo_del_Prado%29.jpg/640px-Cristo_abrazado_a_la_cruz_%28El_Greco%2C_Museo_del_Prado%29.jpg"),
-
-                )
+            users = emptyList()
         )
     )
     val uiState: StateFlow<RoomScreenState> get() = _uiState
+
+
+    private lateinit var users : StateFlow<List<RoomMember>>
+
+    init{
+        viewModelScope.launch {
+            println(roomId)
+            users = repo.getUsers(roomId)
+                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+            launch {
+                users.collect{ usersList ->
+                    _uiState.update {
+                        it.copy(
+                            users = usersList
+                        )
+                    }
+                }
+            }
+        }
+    }
 
     fun joinRoom() {
         _uiState.update { currentState ->
@@ -39,7 +63,12 @@ class RoomsViewModel(
     companion object {
         fun provideFactory(id: String, roomName: String, roomDescription: String): ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                RoomsViewModel(id, roomName, roomDescription)
+                RoomsViewModel(
+                    repo = RoomsRepo(),
+                    roomId = id,
+                    roomName = roomName,
+                    roomDescription = roomDescription
+                )
             }
         }
 

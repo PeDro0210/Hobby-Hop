@@ -156,7 +156,6 @@ fun PreviewRoomScreen() {
             roomName = "Room Name",
             roomDescription = "Room Description",
             users = listOf(
-                RoomMember("Juan", "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Cristo_abrazado_a_la_cruz_%28El_Greco%2C_Museo_del_Prado%29.jpg/640px-Cristo_abrazado_a_la_cruz_%28El_Greco%2C_Museo_del_Prado%29.jpg",),
 
             )
         ),
