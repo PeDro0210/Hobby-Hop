@@ -59,6 +59,7 @@ fun LoginRoute(
         }
     }
 
+    //TODO: manage signup and login depending if the account is already logged in
     Login(
         navController = navController,
         state = state,

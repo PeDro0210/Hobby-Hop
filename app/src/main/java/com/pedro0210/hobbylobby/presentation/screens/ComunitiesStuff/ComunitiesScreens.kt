@@ -32,6 +32,7 @@ import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 import com.pedro0210.hobbylobby.presentation.ui.view.widgets.CommunitiesColumns
 import com.pedro0210.hobbylobby.presentation.view.screens.widgets.TopBar
 import com.pedro0210.hobbylobby.presentation.viewmodel.communities_stuff.CommunitiesViewModel
+import com.pedro0210.hobbylobby.presentation.widgets.communities.util.routingNormalCommunities
 
 @Composable
 fun CommunitiesRoute(
@@ -42,7 +43,18 @@ fun CommunitiesRoute(
 
     CommunitiesScreen(
         navController = navController,
-        state = state
+        state = state,
+        onClickNavigation = {image, name, description, id, partOfCommunity, navController, type ->
+            routingNormalCommunities(
+                image = image,
+                name = name,
+                description = description,
+                id = id,
+                partOfCommunity = partOfCommunity,
+                navController = navController,
+                type = type
+            )
+        }
     )
 
 }
@@ -53,7 +65,15 @@ fun CommunitiesRoute(
 @Composable
 fun CommunitiesScreen(
     navController: NavController,
-    state: ComunitiesScreenState
+    state: ComunitiesScreenState,
+    onClickNavigation: (
+        image: String,
+        name: String,
+        description: String,
+        id: String,
+        partOfCommunity: Boolean,
+        navController: NavController,
+        type: CommunityType) -> Unit
 ){
 
     Scaffold (
@@ -97,22 +117,22 @@ fun CommunitiesScreen(
                             text = state.description,
                             style = MaterialTheme.typography.bodyMedium
                         )
-                        if (state.partOfCommunity){
-                            Button(
-                                onClick = {/*TODO: exit the community*/},
-                                colors = ButtonDefaults.buttonColors(containerColor = Color.Red)                            )
-                            {
-                                Text(text = "Exit")
-                            }
-                        }
-                        else{
-                            Button(
-                                onClick = { /*TODO: auth the user for joining the community and redirect to the community screen*/ },
-                                colors = ButtonDefaults.buttonColors(containerColor = Color.Green) //TODO: change to theme
-                            ) {
-                                Text(text = "Join")
-                            }
-                        }
+//                        if (state.partOfCommunity){
+//                            Button(
+//                                onClick = {/*TODO: exit the community*/},
+//                                colors = ButtonDefaults.buttonColors(containerColor = Color.Red)                            )
+//                            {
+//                                Text(text = "Exit")
+//                            }
+//                        }
+//                        else{
+//                            Button(
+//                                onClick = { /*TODO: auth the user for joining the community and redirect to the community screen*/ },
+//                                colors = ButtonDefaults.buttonColors(containerColor = Color.Green) //TODO: change to theme
+//                            ) {
+//                                Text(text = "Join")
+//                            }
+//                        }
 
                     }
                 }
@@ -122,6 +142,7 @@ fun CommunitiesScreen(
                         title = if (state.bigCommunity) "Communities" else "Rooms",
                         partOfCommunity = state.partOfCommunity,
                         navController = navController,
+                        onClickNavigation = onClickNavigation
                     )
 
             }
@@ -149,7 +170,8 @@ fun CommRedirectCommPreview() {
                         n = 10,
                         type = CommunityType.country
                     ),
-            )
+            ),
+            onClickNavigation = {image, name, description, id, partOfCommunity, navController, type ->}
         )
     }
 }
@@ -173,7 +195,8 @@ fun CommRedirectUsersPreview() {
                     n = 10,
                     type = CommunityType.communities
                     ),
-                )
+                ),
+            onClickNavigation = {image, name, description, id, partOfCommunity, navController, type ->}
             )
         }
     }

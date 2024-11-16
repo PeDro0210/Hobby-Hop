@@ -1,6 +1,5 @@
 package com.pedro0210.hobbylobby.presentation.screens.Profile
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,23 +13,20 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.pedro0210.hobbylobby.R
-import com.pedro0210.hobbylobby.presentation.event.ProfileEvent
 import com.pedro0210.hobbylobby.presentation.navigation.Home
 import com.pedro0210.hobbylobby.presentation.navigation.Login
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateFromLogin
+import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToAdminCommunities
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToCreateBigCommunity
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToModityProfile
 import com.pedro0210.hobbylobby.presentation.state.SettingsState
@@ -46,7 +42,7 @@ fun SettingsRoute(
     SettingsScreen(
         userName = state.username,
         pfp = state.pfp,
-        onRoomsClick = {navController.navigateFromLogin(Home)}, //change this
+        onCommunitiesClick = {navController.navigateToAdminCommunities()}, //change this
         onCreateCommunityClick = {navController.navigateToCreateBigCommunity()},
         onEditProfileClick = {navController.navigateToModityProfile()},
         onSignOutClick = {
@@ -62,7 +58,7 @@ fun SettingsRoute(
 fun SettingsScreen(
     userName: String,
     pfp: String,
-    onRoomsClick: () -> Unit = {},
+    onCommunitiesClick: () -> Unit = {},
     onCreateCommunityClick: () -> Unit = {},
     onEditProfileClick: () -> Unit = {},
     onSignOutClick: () -> Unit = {}
@@ -85,10 +81,10 @@ fun SettingsScreen(
 
         // Botones de navegación
         Button(
-            onClick = onRoomsClick,
+            onClick = onCommunitiesClick,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Rooms")
+            Text(text = "My Communities")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -97,7 +93,7 @@ fun SettingsScreen(
             onClick = onCreateCommunityClick,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Crear Comunidad")
+            Text(text = "Create Communities")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -106,7 +102,7 @@ fun SettingsScreen(
             onClick = onEditProfileClick,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Modificar Perfil")
+            Text(text = "Modify Profile")
         }
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -128,7 +124,7 @@ fun SettingsScreen(
 fun PreviewSettingsScreen() {
     SettingsScreen(
         userName = "Pedro",
-        onRoomsClick = {},
+        onCommunitiesClick = {},
         onCreateCommunityClick = {},
         onEditProfileClick = {},
         onSignOutClick = {},

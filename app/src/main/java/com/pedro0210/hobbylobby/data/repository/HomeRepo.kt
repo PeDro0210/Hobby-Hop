@@ -36,9 +36,11 @@ class HomeRepo(
         return flowOf(emptyList())
     }
 
+
     suspend fun getOwnRooms(): Flow<List<Community>> {
         //TODO: call the repo with the firebase implementation
         try{
+            //TODO:pass the id donn't pass the userPreference
             val id = userPreferences.getId().first()
             val userRef = firestore.collection("users").document(id)
 
@@ -55,14 +57,15 @@ class HomeRepo(
             }
             return flowOf(
                 communitiesDoc.documents.map { doc ->
-                    Community(
-                        title = doc.getString("name") ?: "",
-                        description = doc.getString("description") ?: "",
-                        image = doc.getString("pfp") ?: "",
-                        id = doc.id,
-                        type = CommunityType.rooms,
-                        partOfCommunity = true
-                    )
+                        //get from the userRef the field community_admin (array of references)
+                        Community(
+                            title = doc.getString("name") ?: "",
+                            description = doc.getString("description") ?: "",
+                            image = doc.getString("pfp") ?: "",
+                            id = doc.id,
+                            type = CommunityType.rooms,
+                            partOfCommunity = true
+                        )
                 }
             )
 
@@ -73,4 +76,6 @@ class HomeRepo(
         return flowOf(emptyList())
     }
 
+
 }
+

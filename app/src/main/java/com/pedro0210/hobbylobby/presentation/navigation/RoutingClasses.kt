@@ -6,7 +6,6 @@ import kotlinx.serialization.Serializable
 //Login Graph
 @Serializable object LoginGraph
 
-
 interface AuthDestionation
 
 @Serializable object Login
@@ -17,6 +16,8 @@ interface AuthDestionation
 @Serializable object CommunitiesGraph
 
 @Serializable object Home:AuthDestionation
+
+
 
 @Serializable
 data class BigCommunity(
@@ -44,6 +45,20 @@ data class Rooms(
     val image: String,
     val partOfCommunity: Boolean
 )
+
+
+@Serializable object AdminGraph
+
+@Serializable object AdminCommunity
+
+@Serializable
+data class AdminRoom(
+    val id: String,
+    val title: String,
+    val description: String,
+    val image: String,
+)
+
 
 @Serializable
 data class Profile(

@@ -17,7 +17,6 @@ import java.io.IOException
 import kotlin.coroutines.cancellation.CancellationException
 
 
-//TODO: REFACTOR A LOT OF THE NEW THINGS I PUT IN HERE
 class AuthRepo {
 
     private val auth = FirebaseAuth.getInstance()
@@ -26,6 +25,7 @@ class AuthRepo {
 
 
     suspend fun manageAuth(email: String, password: String): String {
+        //TODO: manage the auth for checking if the user already exists, and pass it to the state of the login
         return try {
             val authResult = auth.signInWithEmailAndPassword(email, password).await()
             authResult.user?.uid ?: "Id Error" //returns the uid
@@ -40,6 +40,11 @@ class AuthRepo {
 
 
     suspend fun creteUser(username: String, id: String, pfpUri: Uri): String {
+        /*
+         *
+         * don't do a shit,
+         *
+         */
         return try {
             println("ID CREATE USER MODEL" + id)
             val userImageRef = storage.reference.child("users/$username/pfp.png")

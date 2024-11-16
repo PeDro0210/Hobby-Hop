@@ -19,7 +19,6 @@ fun NavController.navigateFromLogin(
 }
 
 
-
 fun NavController.navigateToBigCommunities(
     destination: BigCommunity,
     navOptions: NavOptions? = null

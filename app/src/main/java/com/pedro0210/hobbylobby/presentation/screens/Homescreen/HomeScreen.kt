@@ -18,6 +18,7 @@ import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 import com.pedro0210.hobbylobby.presentation.ui.view.widgets.CommunitiesColumns
 import com.pedro0210.hobbylobby.presentation.view.screens.widgets.TopBar
 import com.pedro0210.hobbylobby.presentation.viewmodel.home.HomeViewModel
+import com.pedro0210.hobbylobby.presentation.widgets.communities.util.routingNormalCommunities
 
 @Composable
 fun HomeRoute(
@@ -55,9 +56,20 @@ fun Home(
                 CommunitiesColumns(
                     modifier = Modifier.weight(0.5f),
                     communities = state.countries,
-                    title =  "Countries",
+                    title = "Countries",
                     partOfCommunity = true,
                     navController = navController,
+                    onClickNavigation = { image, name, description, id, partOfCommunity, navController, type ->
+                        routingNormalCommunities(
+                            image = image,
+                            name = name,
+                            description = description,
+                            id = id,
+                            partOfCommunity = partOfCommunity,
+                            navController = navController,
+                            type = type
+                        )
+                    }
                 )
                 CommunitiesColumns(
                     modifier = Modifier.weight(0.5f),
@@ -65,7 +77,19 @@ fun Home(
                     title = "My Rooms",
                     partOfCommunity = true,
                     navController = navController,
+                    onClickNavigation = { image, name, description, id, partOfCommunity, navController, type ->
+                        routingNormalCommunities(
+                            image = image,
+                            name = name,
+                            description = description,
+                            id = id,
+                            partOfCommunity = partOfCommunity,
+                            navController = navController,
+                            type = type
+                        )
+                    }
                 )
+
             }
         }
     )

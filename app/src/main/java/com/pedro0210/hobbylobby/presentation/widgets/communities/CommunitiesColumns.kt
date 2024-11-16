@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.pedro0210.hobbylobby.presentation.model.Community
+import com.pedro0210.hobbylobby.presentation.model.CommunityType
 import com.pedro0210.hobbylobby.presentation.view.screens.widgets.buttons.CommunityButton
 
 @Composable
@@ -32,6 +33,14 @@ fun CommunitiesColumns(
     title: String,
     partOfCommunity: Boolean,
     navController: NavController,
+    onClickNavigation: (
+        image: String,
+        name: String,
+        description: String,
+        id: String,
+        partOfCommunity: Boolean,
+        navController: NavController,
+        type: CommunityType) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -58,10 +67,18 @@ fun CommunitiesColumns(
                         image = item.image,
                         name = item.title,
                         description = item.description,
-                        partOfCommunity = item.partOfCommunity,
-                        navController = navController,
-                        type = item.type,
-                        id = item.id
+                        onClickNavigation = {
+                            onClickNavigation(
+                                item.image,
+                                item.title,
+                                item.description,
+                                item.id,
+                                partOfCommunity,
+                                navController,
+                                item.type
+                            )
+                        }
+
                     )
                 }
             }

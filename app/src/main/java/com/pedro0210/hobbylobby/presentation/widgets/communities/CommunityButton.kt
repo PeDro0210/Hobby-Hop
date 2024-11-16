@@ -36,10 +36,7 @@ fun CommunityButton(
     image: String,
     name: String,
     description: String,
-    id: String,
-    partOfCommunity: Boolean,
-    navController: NavController,
-    type: CommunityType
+    onClickNavigation:()-> Unit,
 ){
 
     Row(
@@ -49,45 +46,8 @@ fun CommunityButton(
             Button(
                 modifier = Modifier
                     .weight(0.9f),
-                onClick = {
-
-                        /*
-                        * TODO: assign different navigation depending on the button type
-                        *
-                        * buttonType: bigCommunity -> navigate to BigCommunity
-                        * buttonType: smallCommunity -> navigate to SmallCommunity
-                        * buttonType: room -> navigate to Room
-                        */
-                        when (type){
-                           CommunityType.country -> navController.navigateToBigCommunities(
-                               BigCommunity(
-                                   id = id,
-                                   image = image,
-                                   title = name,
-                                   description = description,
-                                   partOfCommunity = partOfCommunity,
-                               )
-                           )
-                           CommunityType.communities -> navController.navigateToSmallCommunities(
-                               SmallCommunity(
-                                   id = id,
-                                   image = image,
-                                   title = name,
-                                   description = description,
-                                   partOfCommunity = partOfCommunity,
-                               )
-                           )
-                           CommunityType.rooms -> navController.navigateToRooms(
-                               Rooms(
-                                   id = id,
-                                   image = image,
-                                   title = name,
-                                   description = description,
-                                   partOfCommunity = partOfCommunity
-                               )
-                           )
-                        }
-                },
+                onClick = onClickNavigation
+                ,
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
             ) {
 
@@ -115,6 +75,7 @@ fun CommunityButton(
 
                 }
             }
+        //TODO: show this button if you're admin of the community
         IconButton (
             modifier = Modifier
                 .weight(0.1f),
