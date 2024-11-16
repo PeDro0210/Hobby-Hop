@@ -2,21 +2,26 @@ package com.pedro0210.hobbylobby.presentation.screens.Rooms
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,62 +29,58 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
+import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import com.pedro0210.hobbylobby.R
 import com.pedro0210.hobbylobby.presentation.model.RoomMember
 import com.pedro0210.hobbylobby.presentation.navigation.Profile
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToProfile
+import com.pedro0210.hobbylobby.presentation.state.RoomScreenState
 import com.pedro0210.hobbylobby.presentation.viewmodel.rooms.RoomsViewModel
 
 @Composable
 fun RoomRoute(
     viewModel: RoomsViewModel,
     navController: NavController
-){
-    //TODO: add state
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
     RoomScreen(
-        navController = navController
+        navController = navController,
+        uiState = uiState,
+        onJoinClick = { viewModel.joinRoom() }
     )
 }
 
-
-//TODO: add state
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RoomScreen(
-    navController: NavController
+    navController: NavController,
+    uiState: RoomScreenState,
+    onJoinClick: () -> Unit
 ) {
-    val members = remember {
-        listOf(
-            RoomMember("Juan", "Conectado", R.drawable.avatar),
-            RoomMember("Abby", "18 min", R.drawable.avatar),
-            RoomMember("Oscar", "Me gusta Pokémon", R.drawable.avatar),
-            RoomMember("Name", "18 min", R.drawable.avatar),
-            RoomMember("Name", "18 min", R.drawable.avatar),
-        )
-    }
-
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
-            title = { Text(text = "Gaming") },
-
-            )
+            title = { Text(text = uiState.roomName) }
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Comunidad para personas que les gustan los juegos.",
+            text = uiState.roomDescription,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(
-            onClick = { /* Acción de unirse al room */ },
+            onClick = onJoinClick,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .align(Alignment.End)
         ) {
-            Text("Unirse")
+            Text(if (uiState.isJoined) "Unido" else "Unirse")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -93,14 +94,12 @@ fun RoomScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Column(modifier = Modifier.fillMaxSize()) {
-            members.forEach { member ->
+            uiState.users.forEach { member ->
                 MemberRow(
                     member = member,
-                    onItemClick = {navController.navigateToProfile(
-                    Profile(
-                        id = "1"
-                    )
-                    )}
+                    onItemClick = {
+                        navController.navigate("profile/${member.name}")
+                    }
                 )
                 Divider(color = Color.Gray, thickness = 0.5.dp)
             }
@@ -112,7 +111,7 @@ fun RoomScreen(
 fun MemberRow(
     member: RoomMember,
     onItemClick: () -> Unit = {}
-    ) {
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -120,14 +119,19 @@ fun MemberRow(
             .clickable { onItemClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painter = painterResource(id = member.avatarResource),
-            contentDescription = null,
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(member.pfp)
+                .crossfade(true)
+                .build(),
+            contentDescription = "",
             modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape),
-            contentScale = ContentScale.Crop
+                .size(64.dp)
+                .clip(CircleShape)
+                .background(color = MaterialTheme.colorScheme.secondary)
         )
+
+
 
         Spacer(modifier = Modifier.width(16.dp))
 
@@ -137,18 +141,9 @@ fun MemberRow(
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
             )
-            Text(
-                text = member.status,
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
+
         }
 
-        Text(
-            text = "Conectado",
-            color = Color.Green,
-            modifier = Modifier.padding(end = 8.dp)
-        )
     }
 }
 
@@ -156,6 +151,15 @@ fun MemberRow(
 @Composable
 fun PreviewRoomScreen() {
     RoomScreen(
-        navController = rememberNavController()
+        navController = rememberNavController(),
+        uiState = RoomScreenState(
+            roomName = "Room Name",
+            roomDescription = "Room Description",
+            users = listOf(
+                RoomMember("Juan", "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Cristo_abrazado_a_la_cruz_%28El_Greco%2C_Museo_del_Prado%29.jpg/640px-Cristo_abrazado_a_la_cruz_%28El_Greco%2C_Museo_del_Prado%29.jpg",),
+
+            )
+        ),
+        onJoinClick = {}
     )
 }

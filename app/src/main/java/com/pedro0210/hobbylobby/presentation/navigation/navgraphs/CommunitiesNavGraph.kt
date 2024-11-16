@@ -94,7 +94,9 @@ fun NavGraphBuilder.communitiesGraph(
 
         val roomViewModel : RoomsViewModel = viewModel(
             factory = RoomsViewModel.provideFactory(
-                id = roomId.id
+                id = roomId.id,
+                roomName = roomId.title,
+                roomDescription = roomId.description
             )
         )
 

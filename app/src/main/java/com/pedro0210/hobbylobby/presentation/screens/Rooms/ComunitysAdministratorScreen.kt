@@ -27,6 +27,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,38 +40,42 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.pedro0210.hobbylobby.R
+import com.pedro0210.hobbylobby.presentation.viewmodel.rooms.AceptacionesViewModel
 
 @Composable
 fun AceptacionesScreenRoute(
-    navController: NavController
-){
-    //TODO: add viewmodel when created, same as state
+    navController: NavController,
+    viewModel: AceptacionesViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = AceptacionesViewModel.provideFactory())
+) {
+    val uiState by viewModel.uiState.collectAsState()
 
     AceptacionesScreen(
-        navController = navController
+        navController = navController,
+        communityName = uiState.roomName,
+        communityDescription = uiState.roomDescription,
+        requests = uiState.aceptaciones,
+        onAcceptClick = { userName -> viewModel.acceptRequest(userName) },
+        onRejectClick = { userName -> viewModel.rejectRequest(userName) },
+        onBackClick = { navController.popBackStack() },
+        onEditClick = { /* Acción de edición */ }
     )
-
 }
 
-//TODO: add the buttons as they're in figma
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AceptacionesScreen(
-    //TODO: add state
-    communityName: String = "", //for the meanwhile
-    communityDescription: String = "" , //for the meanwhile
+    navController: NavController,
+    communityName: String,
+    communityDescription: String,
+    requests: List<String>,
     onEditClick: () -> Unit = {},
-    requests: List<String> = emptyList(), //idunno wtf is this, this should me manage
     onAcceptClick: (String) -> Unit = {},
     onRejectClick: (String) -> Unit = {},
-    onBackClick: () -> Unit = {},
-    navController: NavController
+    onBackClick: () -> Unit = {}
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
-            title = {
-                Text(text = "Aceptaciones")
-            },
+            title = { Text(text = "Aceptaciones") },
             navigationIcon = {
                 IconButton(onClick = onBackClick) {
                     Icon(Icons.Default.ArrowBack, contentDescription = "Back")
