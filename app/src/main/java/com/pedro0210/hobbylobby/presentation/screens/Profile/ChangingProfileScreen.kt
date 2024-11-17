@@ -56,6 +56,7 @@ import com.pedro0210.hobbylobby.presentation.event.ProfileEvent
 import com.pedro0210.hobbylobby.presentation.model.SocialMedia
 import com.pedro0210.hobbylobby.presentation.model.SocialMediaCreation
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToAddSocial
+import com.pedro0210.hobbylobby.presentation.screens.Util.LoadingLayout
 import com.pedro0210.hobbylobby.presentation.state.ProfileCreationState
 import com.pedro0210.hobbylobby.presentation.viewmodel.communities_stuff.GlobalRoom
 import com.pedro0210.hobbylobby.presentation.viewmodel.profile.GlobalSocial
@@ -114,29 +115,34 @@ fun ChangingProfileScreen(
     onDeleteSocial: (String) -> Unit = {},
     navController: NavController
 ){
-    Scaffold (
+    Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 ondoneClick()
             }, modifier = Modifier.background(MaterialTheme.colorScheme.onPrimary)) {
                 Icon(Icons.Default.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
             }
+        },
+        content = { innerPadding ->
+            if (state.isLoading) {
+                LoadingLayout(modifier = Modifier.fillMaxSize())
+            } else {
+                ElementsScreen(
+                    modifier = modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    state = state,
+                    ondescriptionChange = ondescriptionChange,
+                    onNameChange = onNameChange,
+                    onBackClick = onBackClick,
+                    onClearClick = onClearClick,
+                    onPictureChange = onPictureChange,
+                    onAddClick = onAddClick,
+                    onDeleteSocial = onDeleteSocial
+                )
+            }
         }
-    ){
-        ElementsScreen(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(it),
-            state = state,
-            ondescriptionChange = ondescriptionChange,
-            onNameChange = onNameChange,
-            onBackClick = onBackClick,
-            onClearClick = onClearClick,
-            onPictureChange = onPictureChange,
-            onAddClick = onAddClick,
-            onDeleteSocial = onDeleteSocial
-        )
-    }
+    )
 }
 
 
