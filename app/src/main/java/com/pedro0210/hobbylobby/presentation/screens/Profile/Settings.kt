@@ -31,10 +31,11 @@ import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToModiyP
 import com.pedro0210.hobbylobby.presentation.state.SettingsState
 import com.pedro0210.hobbylobby.presentation.view.screens.widgets.TopBar
 import com.pedro0210.hobbylobby.presentation.viewmodel.profile.ProfileViewModel
+import com.pedro0210.hobbylobby.presentation.viewmodel.profile.SettingsViewModel
 
 @Composable
 fun SettingsRoute(
-    viewModel: ProfileViewModel,
+    viewModel: SettingsViewModel,
     navController: NavController
 ){
     val state: SettingsState by viewModel.settingsState.collectAsStateWithLifecycle()
@@ -69,7 +70,7 @@ fun SettingsScreen(
         topBar = {
             TopBar(
                 navController = navController ,
-                homeScreen = true,
+                homeScreen = false,
                 settingsScreen = false
             )
         },

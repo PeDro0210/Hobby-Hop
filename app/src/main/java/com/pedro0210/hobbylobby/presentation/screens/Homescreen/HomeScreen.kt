@@ -96,18 +96,6 @@ fun Home(
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun HomePreview() {
-    HobbyLobbyTheme {
-        Home(
-            navController = rememberNavController(),
-            state = HomeScreenState(
-                countries = generateRandomCommunities(10, CommunityType.country),
-                ownCommunities = generateRandomCommunities(10, CommunityType.communities)
-            )
-        )
-    }
-}
+
 
 

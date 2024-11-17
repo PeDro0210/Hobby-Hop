@@ -70,7 +70,7 @@ class HomeViewModel(
                 HomeViewModel(
                     repo = repo,
                     userData = userData
-                    )
+                )
             }
         }
     }

@@ -43,38 +43,38 @@ fun CommunityButton(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-            Button(
-                modifier = Modifier,
-                onClick = onClickNavigation,
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
+        Button(
+            modifier = Modifier,
+            onClick = onClickNavigation,
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
+        ) {
+
+            AsyncImage(
+                model = image,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .weight(0.2f)
+            )
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .weight(0.7f)
             ) {
-
-                AsyncImage(
-                    model = image,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .weight(0.2f)
+                Text(
+                    text = name,
+                    color = Black //I know is a burnt color, but I don't give a damm
                 )
-                Column(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .weight(0.7f)
-                ) {
-                    Text(
-                        text = name,
-                        color = Black //I know is a burnt color, but I don't give a damm
-                    )
-                    Text(
-                        text = stringCutter(
-                            description,
-                            50
-                        ), //about 50 letters for having a reason to read the description
-                        color = Gray //Same with this f**** one
-                    )
+                Text(
+                    text = stringCutter(
+                        description,
+                        50
+                    ), //about 50 letters for having a reason to read the description
+                    color = Gray //Same with this f**** one
+                )
 
-                }
             }
+        }
     }
 }

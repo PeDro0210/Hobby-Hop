@@ -1,5 +1,6 @@
 package com.pedro0210.hobbylobby.presentation.viewmodel.profile
 
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -79,18 +80,18 @@ class UserViewModel(
 
     companion object {
         fun provideFactory(
-           id: String,
-           name: String,
-           pfp: String
+            id: String,
+            name: String,
+            pfp: String
         ) : ViewModelProvider.Factory = viewModelFactory {
-                initializer {
-                    UserViewModel(
-                        repository = UserRepo(),
-                        id = id,
-                        name = name,
-                        pfp = pfp
-                    )
-                }
+            initializer {
+                UserViewModel(
+                    repository = UserRepo(),
+                    id = id,
+                    name = name,
+                    pfp = pfp
+                )
             }
         }
+    }
 }

@@ -1,5 +1,6 @@
 package com.pedro0210.hobbylobby.presentation.viewmodel.login
 
+
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -15,6 +16,7 @@ import com.pedro0210.hobbylobby.data.repository.AuthRepo
 import com.pedro0210.hobbylobby.dataStore
 import com.pedro0210.hobbylobby.domain.util.LoginEnum
 import com.pedro0210.hobbylobby.presentation.navigation.AuthDestionation
+import com.pedro0210.hobbylobby.presentation.state.CreationState
 import com.pedro0210.hobbylobby.presentation.state.LoginScreenState
 import com.pedro0210.hobbylobby.presentation.state.ProfileCreationState
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +35,7 @@ class AuthViewModel(
     private val _loginState = MutableStateFlow(LoginScreenState())
     val loginState = _loginState.asStateFlow()
 
-    private val _profileCreationState = MutableStateFlow(ProfileCreationState())
+    private val _profileCreationState = MutableStateFlow(CreationState())
     val profileCreationState = _profileCreationState.asStateFlow()
 
 
@@ -102,11 +104,11 @@ class AuthViewModel(
     }
 
     private fun changeError(error: Boolean){
-            _loginState.update {
-                it.copy(
-                    hasError = error
-                )
-            }
+        _loginState.update {
+            it.copy(
+                hasError = error
+            )
+        }
 
     }
 

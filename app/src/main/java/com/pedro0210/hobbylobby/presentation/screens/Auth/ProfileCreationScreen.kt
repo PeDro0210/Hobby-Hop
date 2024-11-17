@@ -47,6 +47,7 @@ import coil.request.ImageRequest
 import com.pedro0210.hobbylobby.presentation.navigation.Home
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateFromLogin
 import com.pedro0210.hobbylobby.presentation.screens.Profile.ProfileScreenRoute
+import com.pedro0210.hobbylobby.presentation.state.CreationState
 import com.pedro0210.hobbylobby.presentation.state.ProfileCreationState
 import com.pedro0210.hobbylobby.presentation.util.NoRippleTheme
 import com.pedro0210.hobbylobby.presentation.viewmodel.login.AuthViewModel
@@ -57,7 +58,7 @@ fun ProfileCreationRoute(
     viewModel: AuthViewModel,
     navController: NavController
 ){
-    val state: ProfileCreationState by viewModel.profileCreationState.collectAsStateWithLifecycle()
+    val state: CreationState by viewModel.profileCreationState.collectAsStateWithLifecycle()
 
 
     LaunchedEffect(state) {
@@ -79,7 +80,7 @@ fun ProfileCreationRoute(
 @Composable
 fun ProfileCreationScreen(
     navController: NavController,
-    state: ProfileCreationState,
+    state: CreationState,
     onUsernameChange: (String) -> Unit,
     onImageChange: (Uri) -> Unit,
     onRegisterClick: () -> Unit
