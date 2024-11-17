@@ -133,7 +133,7 @@ fun SubcommunitiesCreator(
 
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         TopAppBar(title = {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -185,13 +185,15 @@ fun SubcommunitiesCreator(
                         IconButton(onClick = onClearClick) {
                             Icon(Icons.Default.Clear, contentDescription = "delete")
                         }
-                    }
+                    },
+                    placeholder = { Text("Name") },
                 )
             }
             Spacer(modifier = Modifier.height(32.dp))
             TextField(
                 value = state.roomDescription,
                 onValueChange = ondescriptionChange,
+                placeholder = { Text("Description") },
                 modifier = Modifier.fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surface)
             )

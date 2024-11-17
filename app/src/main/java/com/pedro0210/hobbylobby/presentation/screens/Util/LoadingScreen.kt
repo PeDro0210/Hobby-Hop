@@ -1,6 +1,7 @@
 package com.pedro0210.hobbylobby.presentation.screens.Util
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -28,7 +29,8 @@ fun LoadingLayout(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .background(color = MaterialTheme.colorScheme.background),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -43,7 +45,7 @@ fun LoadingLayout(
         Spacer(modifier = Modifier.height(16.dp))
 
         // Indicador de carga
-        CircularProgressIndicator(modifier = Modifier.size(48.dp))
+        CircularProgressIndicator(modifier = Modifier.size(48.dp), color = MaterialTheme.colorScheme.primary)
 
         Spacer(modifier = Modifier.height(16.dp))
 

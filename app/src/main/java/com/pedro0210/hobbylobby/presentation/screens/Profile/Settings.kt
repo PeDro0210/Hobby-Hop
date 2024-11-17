@@ -1,5 +1,7 @@
 package com.pedro0210.hobbylobby.presentation.screens.Profile
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -79,58 +82,67 @@ fun SettingsScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(it)
+                    .background(color = MaterialTheme.colorScheme.background),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
                 // Imagen y nombre de usuario
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(horizontalAlignment = Alignment.Start, modifier = Modifier.padding(16.dp,0.dp)) {
                     AsyncImage(
                         model = pfp,
                         contentDescription = null,
                         modifier = Modifier
                             .size(100.dp)
-                            .clip(CircleShape)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(text = userName, style = MaterialTheme.typography.headlineLarge)
+
+
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    // Botones de navegación
+                    Button(
+                        onClick = onCommunitiesClick,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+                    ) {
+                        Text(text = "My Communities")
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Button(
+                        onClick = onCreateCommunityClick,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+                    ) {
+                        Text(text = "Create Communities")
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Button(
+                        onClick = onEditProfileClick,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+                    ) {
+                        Text(text = "Modify Profile")
+                    }
+                }
+                //Spacer(modifier = Modifier.height(32.dp))
+                Column(horizontalAlignment = Alignment.Start, modifier = Modifier.padding(16.dp,0.dp)){
+                    // Botón de cerrar sesión
+                    Button(
+                        onClick = onSignOutClick,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                    ) {
+                        Text(text = "Sign Out")
+                    }
                 }
 
-                Spacer(modifier = Modifier.height(32.dp))
 
-                // Botones de navegación
-                Button(
-                    onClick = onCommunitiesClick,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(text = "My Communities")
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = onCreateCommunityClick,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(text = "Create Communities")
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = onEditProfileClick,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(text = "Modify Profile")
-                }
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                // Botón de cerrar sesión
-                Button(
-                    onClick = onSignOutClick,
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
-                ) {
-                    Text(text = "Sign Out")
-                }
             }
         }
     )

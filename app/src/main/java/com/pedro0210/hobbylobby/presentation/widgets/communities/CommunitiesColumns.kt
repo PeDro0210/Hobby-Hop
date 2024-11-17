@@ -54,7 +54,7 @@ fun CommunitiesColumns(
         )
         Spacer(modifier = Modifier.padding(8.dp))
         HorizontalDivider(
-            color = Color.Gray,
+            color = MaterialTheme.colorScheme.primary,
             thickness = 1.dp
         )
         
@@ -94,13 +94,13 @@ fun CommunitiesColumns(
                     imageVector = Icons.Default.Lock,
                     contentDescription = "Locked",
                     modifier = Modifier.size(64.dp),
-                    tint = Color.Gray
+                    tint = MaterialTheme.colorScheme.secondary
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "Blocked",
                     style = MaterialTheme.typography.titleLarge,
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.secondary
                 )
             }
         }

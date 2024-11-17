@@ -26,7 +26,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            SetupNavGraph(navHostController = rememberNavController())
+            HobbyLobbyTheme {
+                SetupNavGraph(navHostController = rememberNavController())
+            }
+
         }
     }
 }

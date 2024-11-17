@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -83,7 +84,9 @@ fun RoomScreen(
     onJoinClick: () -> Unit,
     onNavigateToProfile: (String, String, String) -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .background(color = MaterialTheme.colorScheme.background)) {
         TopBar(
             navController = navController,
             homeScreen = false,
@@ -92,24 +95,37 @@ fun RoomScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Row {
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp, 0.dp)) {
             AsyncImage(
                 modifier = Modifier
-                    .weight(0.3f)
-                    .size(128.dp)
-                    .clip(CircleShape),
+                    .weight(0.35f)
+                    .size(128.dp),
                 model = uiState.roomImage,
-                contentDescription = "Room Image"
+                contentDescription = "Room Image",
+                contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.width(8.dp))
             Box(
                 modifier = Modifier
                     .weight(0.7f)
             ) {
-                Text(
-                    text = uiState.roomDescription,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
+                Column (modifier = Modifier.fillMaxWidth()){
+                    Text(
+                        text = uiState.roomName,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = MaterialTheme.typography.headlineMedium.fontSize,
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        color = MaterialTheme.colorScheme.inverseSurface
+                    )
+                    Text(
+                        text = uiState.roomDescription,
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        color = MaterialTheme.colorScheme.inverseSurface
+                    )
+                }
+
             }
         }
 
@@ -122,7 +138,7 @@ fun RoomScreen(
                     text = "Esperando aprobación...",
                     modifier = Modifier.padding(horizontal = 16.dp),
                     fontWeight = FontWeight.Bold,
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.inverseSurface
                 )
             }
             uiState.isJoined -> {
@@ -130,8 +146,9 @@ fun RoomScreen(
                     onClick = onJoinClick,
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
-                        .align(Alignment.End)
-                ) {
+                        .align(Alignment.End),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+                    ) {
                     Text("Salir")
                 }
             }
@@ -152,7 +169,8 @@ fun RoomScreen(
         Text(
             text = "Miembros del room:",
             modifier = Modifier.padding(start = 16.dp),
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.inverseSurface
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -169,7 +187,7 @@ fun RoomScreen(
                         )
                     }
                 )
-                Divider(color = Color.Gray, thickness = 0.5.dp)
+                Divider(color = MaterialTheme.colorScheme.primary, thickness = 0.5.dp)
             }
         }
     }
@@ -200,7 +218,8 @@ fun MemberRow(
                         .size(64.dp)
                         .clip(CircleShape)
                         .background(color = MaterialTheme.colorScheme.secondary),
-                    clipToBounds = true
+                    clipToBounds = true,
+                    contentScale = ContentScale.Crop
 
                 )
 
@@ -210,10 +229,11 @@ fun MemberRow(
 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        color = Black,
+                        color = MaterialTheme.colorScheme.inverseSurface,
                         text = member.name,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
+                        fontSize = 18.sp,
+
                     )
 
                 }

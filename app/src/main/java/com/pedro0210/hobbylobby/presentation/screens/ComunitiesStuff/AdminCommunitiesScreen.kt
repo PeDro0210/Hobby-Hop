@@ -1,9 +1,11 @@
 package com.pedro0210.hobbylobby.presentation.screens.ComunitiesStuff
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -72,6 +74,7 @@ fun AdminCommunitiesScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
+                    .background(color = MaterialTheme.colorScheme.background)
             ) {
                 CommunitiesColumns(
                     modifier = Modifier.weight(0.65f),

@@ -40,9 +40,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.Camera
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -168,7 +170,7 @@ fun ElementsScreen(modifier: Modifier = Modifier,
         }
 
     }
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         TopAppBar(title = {
             Row (modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
@@ -201,10 +203,10 @@ fun ElementsScreen(modifier: Modifier = Modifier,
                 ) {
                     if (state.imageUrl == "") {
                         AsyncImage(model = state.image, contentDescription = "PFP", modifier = Modifier
-                            .size(150.dp))
+                            .size(150.dp), contentScale = ContentScale.Crop)
                     } else {
                         AsyncImage(model = state.imageUrl, contentDescription = "PFP", modifier = Modifier
-                            .size(150.dp))
+                            .size(150.dp), contentScale = ContentScale.Crop)
                     }
 
                     IconButton(onClick = {launcher.launch("image/*")},
@@ -274,36 +276,49 @@ fun SocialSquare(
     imageUrl: String,
     onDeleteSocial: () -> Unit = {}
 ){
-    Row (modifier = Modifier
-        .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-    ){
-        Row(modifier = Modifier.fillMaxWidth(0.65f),
+    Column {
+
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
         ) {
-            Box(modifier = Modifier
-                .size(65.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.primary
-                )
-                .fillMaxWidth(0.35f)
-            ){
-                if (imageUrl == "") {
-                    AsyncImage(model = image, contentDescription = "Social", modifier = Modifier
-                        .size(75.dp))
-                } else {
-                    AsyncImage(model = imageUrl, contentDescription = "Social", modifier = Modifier
-                        .size(75.dp))
-                }
+            Row(
+                modifier = Modifier.fillMaxWidth(0.65f),
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(65.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        .fillMaxWidth(0.35f)
+                ) {
+                    if (imageUrl == "") {
+                        AsyncImage(
+                            model = image, contentDescription = "Social", modifier = Modifier
+                                .size(75.dp), contentScale = ContentScale.Crop
+                        )
+                    } else {
+                        AsyncImage(
+                            model = imageUrl, contentDescription = "Social", modifier = Modifier
+                                .size(75.dp), contentScale = ContentScale.Crop
+                        )
+                    }
 
+                }
+                Spacer(modifier = Modifier.padding(8.dp))
+                Text(text = Text)
             }
-            Spacer(modifier = Modifier.padding(8.dp))
-            Text(text = Text)
+            IconButton(onClick = onDeleteSocial) {
+                Icon(Icons.Default.Close, contentDescription = "Delete")
+            }
         }
-        IconButton(onClick = onDeleteSocial) {
-            Icon(Icons.Default.Close, contentDescription = "Delete")
-        }
+        Spacer(modifier = Modifier.padding(4.dp))
+        HorizontalDivider( color = MaterialTheme.colorScheme.primary, thickness = 0.5.dp)
     }
 }
 

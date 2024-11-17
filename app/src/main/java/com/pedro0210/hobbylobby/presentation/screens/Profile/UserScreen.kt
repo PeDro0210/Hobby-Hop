@@ -3,6 +3,7 @@ package com.pedro0210.hobbylobby.presentation.screens.Profile
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,15 +28,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -69,7 +73,10 @@ fun UserScreen(
     onBackClick: () -> Unit,
     state: UserState,
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .background(color = MaterialTheme.colorScheme.background)
+    ) {
 
         TopAppBar(title = {
             Row(modifier = Modifier.fillMaxWidth(),
@@ -79,7 +86,7 @@ fun UserScreen(
                     Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                 }
                 Spacer(modifier = Modifier.padding(8.dp))
-                Text(text = "${state.user.name} profile")
+                Text(text = "${state.user.name} profile", color = MaterialTheme.colorScheme.inverseSurface)
             }
         },
             actions = {
@@ -102,27 +109,29 @@ fun UserScreen(
                         .size(150.dp)
                         .clip(CircleShape),
                     model = state.user.image,
-                    contentDescription = "User pfp"
+                    contentDescription = "User pfp",
+                    contentScale = ContentScale.Crop
                 )
 
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(32.dp))
 
                 Text(
                     text = state.user.name,
                     style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    color = MaterialTheme.colorScheme.inverseSurface
                 )
             }
 
             // Descripción
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = state.user.description, style = MaterialTheme.typography.bodyLarge)
+            Text(text = state.user.description, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.inverseSurface)
 
             // Sección de redes sociales
             Spacer(modifier = Modifier.height(32.dp))
             Row(modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(text = "${state.user.name}'s social media:", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+                Text(text = "${state.user.name}'s social media:", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.inverseSurface)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -153,26 +162,23 @@ fun SocialSquare(
 
 
     CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
-        Button(
-            onClick = {
-                val intent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(url.trim())
-                ) //the trim is for sanitizing the f****** url
-                context.startActivity(intent)
-            },
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
-        ) {
-
+        Column {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .clickable {
+                        val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(url.trim())
+                        ) //the trim is for sanitizing the f****** url
+                        context.startActivity(intent)
+                    },
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(0.65f),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
                 ) {
                     Box(
                         modifier = Modifier
@@ -180,25 +186,25 @@ fun SocialSquare(
                             .background(
                                 color = MaterialTheme.colorScheme.primary
                             )
-                            .fillMaxWidth(0.35f),
-                        contentAlignment = Alignment.Center
+                            .fillMaxWidth(0.35f)
                     ) {
-
                         AsyncImage(
-                            model = pfp,
-                            contentDescription = "Social media icon",
+                            model = pfp, contentDescription = "Social", modifier = Modifier
+                                .size(75.dp), contentScale = ContentScale.Crop
                         )
+
 
                     }
                     Spacer(modifier = Modifier.padding(8.dp))
-                    Text(
-                        text = name,
-                        color = Color.Black,
-                        )
+                    Text(text = name, color = MaterialTheme.colorScheme.inverseSurface)
                 }
 
             }
+            Spacer(modifier = Modifier.padding(8.dp))
+            HorizontalDivider( color = MaterialTheme.colorScheme.primary, thickness = 0.5.dp)
         }
+
+
     }
 }
 

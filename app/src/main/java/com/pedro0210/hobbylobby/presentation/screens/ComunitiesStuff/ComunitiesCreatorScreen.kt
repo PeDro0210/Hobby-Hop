@@ -45,6 +45,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -176,8 +177,10 @@ fun SubcommunitySquare(Text: String, image: Uri?, onDeleteSubC: () -> Unit) {
             ) {
                 AsyncImage(model = image,
                     contentDescription = null,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(50.dp))
+
             }
             Spacer(modifier = Modifier.padding(8.dp))
             Text(text = Text)
@@ -288,7 +291,8 @@ fun CommunitiesCreator(
                         model = state.image,
                         contentDescription = null,
                         modifier = Modifier
-                            .size(150.dp)
+                            .size(150.dp),
+                        contentScale = ContentScale.Crop
 
                     )
                     IconButton(onClick = {launcher.launch("image/*")}
@@ -309,7 +313,8 @@ fun CommunitiesCreator(
                             IconButton(onClick = onClearClick) {
                                 Icon(Icons.Default.Clear, contentDescription = "Add")
                             }
-                        }
+                        },
+                        placeholder = { Text("Community Name") }
                         )
                     Spacer(modifier = Modifier.height(16.dp))
                     OutlinedTextField(
@@ -319,7 +324,8 @@ fun CommunitiesCreator(
                             IconButton(onClick = onBCClearClick) {
                                 Icon(Icons.Default.Clear, contentDescription = "Add")
                             }
-                        }
+                        },
+                        placeholder = { Text("Big Community Name") }
                     )
 
                 }
@@ -332,6 +338,7 @@ fun CommunitiesCreator(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surface),
+                placeholder = { Text("Description") }
             )
             Spacer(modifier = Modifier.height(16.dp))
             HorizontalDivider(thickness = 2.dp)

@@ -17,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -100,10 +102,8 @@ fun CommunitiesScreen(
                         contentDescription = null,
                         modifier = Modifier
                             .size(150.dp)
-                            .background(MaterialTheme.colorScheme.secondary)
-
-
-                            )
+                            .background(MaterialTheme.colorScheme.secondary),
+                        contentScale = ContentScale.Crop)
 
                     Column(
                         modifier = Modifier
@@ -113,6 +113,8 @@ fun CommunitiesScreen(
                             modifier = Modifier
                                 .padding(bottom = 8.dp),
                             text = state.title,
+                            fontSize = MaterialTheme.typography.headlineMedium.fontSize,
+                            fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.titleLarge
                         )
                         Text (

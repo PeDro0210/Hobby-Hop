@@ -1,6 +1,7 @@
 package com.pedro0210.hobbylobby.presentation.screens.ComunitiesStuff
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -71,7 +73,7 @@ fun AceptacionesScreen(
    if (state.isLoading) {
     LoadingLayout(modifier = Modifier.fillMaxSize())
 } else {
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.background)) {
         TopBar(
             navController = navController,
             homeScreen = false,
@@ -88,18 +90,19 @@ fun AceptacionesScreen(
                     contentDescription = "Room image",
                     modifier = Modifier
                         .size(80.dp)
-                        .clip(CircleShape)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
-                    Text(text = state.name, style = MaterialTheme.typography.headlineLarge)
-                    Text(text = state.description)
+                    Text(text = state.name, style = MaterialTheme.typography.headlineLarge, color = MaterialTheme.colorScheme.inverseSurface)
+                    Text(text = state.description, color = MaterialTheme.colorScheme.inverseSurface)
                 }
                 Spacer(modifier = Modifier.weight(1f))
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Solicitudes", style = MaterialTheme.typography.bodyLarge)
+            Text(text = "Solicitudes", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.inverseSurface)
 
             LazyColumn {
                 items(state.requests) { item ->
@@ -132,10 +135,11 @@ fun RequestItem(
         AsyncImage(
             model = image,
             contentDescription = null,
-            modifier = Modifier.size(40.dp)
+            modifier = Modifier.size(40.dp),
+            contentScale = ContentScale.Crop
         )
         Spacer(modifier = Modifier.width(16.dp))
-        Text(text = userName, modifier = Modifier.weight(1f))
+        Text(text = userName, modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.inverseSurface)
         IconButton(onClick = onAcceptClick) {
             Icon(Icons.Default.Check, contentDescription = "Accept", tint = Color.Green)
         }

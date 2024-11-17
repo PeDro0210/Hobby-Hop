@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,7 +25,7 @@ fun TopBar(
     TopAppBar(
         modifier = Modifier
             .background(
-                color = MaterialTheme.colorScheme.error
+                color = MaterialTheme.colorScheme.tertiary
             ),
         navigationIcon = {
             if (!homeScreen){
@@ -49,7 +50,7 @@ fun TopBar(
                     onClick = { navController.navigateToSettings() },
                 ) {
                     Icon(
-                        imageVector = Icons.Default.MoreVert,
+                        imageVector = Icons.Default.Person,
                         contentDescription = "For going to settings"
                     )
                 }

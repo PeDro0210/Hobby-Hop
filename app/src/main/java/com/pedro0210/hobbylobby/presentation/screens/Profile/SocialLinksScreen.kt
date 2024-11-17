@@ -30,6 +30,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -121,7 +122,7 @@ fun AddSocialLinksScreen(modifier: Modifier = Modifier, onBackClick: () -> Unit,
 
     }
 
-    Column(modifier = Modifier.fillMaxSize()){
+    Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         TopAppBar(title = {
             Row (modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
@@ -143,11 +144,11 @@ fun AddSocialLinksScreen(modifier: Modifier = Modifier, onBackClick: () -> Unit,
 
         ){
             Box(modifier = Modifier
-                .size(150.dp)
+                .size(180.dp)
                 .background(color = MaterialTheme.colorScheme.primary),
                 contentAlignment = androidx.compose.ui.Alignment.Center
             ) {
-                AsyncImage(model = state.socialImage, contentDescription = "new social image", modifier = Modifier.size(150.dp))
+                AsyncImage(model = state.socialImage, contentDescription = "new social image", modifier = Modifier.size(180.dp), contentScale = ContentScale.Crop)
                 IconButton(onClick = {launcher.launch("image/*")}) {
                     Icon(
                         Icons.Default.Add,

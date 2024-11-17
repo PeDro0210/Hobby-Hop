@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -117,14 +118,13 @@ fun ProfileCreationScreen(
                         if (state.pfpUri == null) {
                             Box(
                                 modifier = Modifier
-                                    .size(128.dp)
+                                    .size(200.dp)
                                     .clip(CircleShape)
-                                    .background(MaterialTheme.colorScheme.onPrimaryContainer)
+                                    .background(MaterialTheme.colorScheme.onPrimary),
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Add,
-                                    contentDescription = "Add Profile Picture",
-                                    modifier = Modifier.size(128.dp)
+                                    contentDescription = "Add Profile Picture"
                                 )
                             }
                         } else {
@@ -140,6 +140,9 @@ fun ProfileCreationScreen(
                                 modifier = Modifier
                                     .size(128.dp)
                                     .clip(CircleShape)
+                                    .fillMaxSize(),
+                                contentScale = ContentScale.Crop
+
                             )
                         }
                     }
@@ -147,9 +150,10 @@ fun ProfileCreationScreen(
 
                 Text(
                     modifier = Modifier
-                        .padding(start = 16.dp),
-                    text = "What's your name? Hobbyist",
+                        .padding(16.dp),
+                    text = "What's your name?",
                     style = MaterialTheme.typography.titleLarge,
+                    fontWeight = MaterialTheme.typography.titleLarge.fontWeight
                 )
 
 
@@ -157,7 +161,7 @@ fun ProfileCreationScreen(
                     value = state.username,
                     onValueChange = onUsernameChange,
                     label = { Text("Username") },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(16.dp , 0.dp),
                 )
 
 
@@ -165,8 +169,9 @@ fun ProfileCreationScreen(
                     onClick = {
                         onRegisterClick()
                     },
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
                 ){
-                    Text("Join Us")
+                    Text("Join")
                 }
 
             }

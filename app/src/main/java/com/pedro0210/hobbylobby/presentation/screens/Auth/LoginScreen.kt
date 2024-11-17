@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,7 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -25,8 +28,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -91,77 +96,95 @@ fun Login(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(paddingValues),
+                        .padding(paddingValues)
+                        .background(MaterialTheme.colorScheme.background)
+                    ,
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
+
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.logo),
-                        contentDescription = null,
-                        modifier = Modifier.size(264.dp)
-                    )
+
+                    Box(
+                        modifier = Modifier
+                            .size(264.dp)
+                            .background(
+                                brush = Brush.radialGradient(
+                                    colors = listOf(Color.Transparent, MaterialTheme.colorScheme.background),
+                                    radius = with(LocalDensity.current) { 132.dp.toPx() }
+                                )
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.logo),
+                            contentDescription = null,
+                            modifier = Modifier.size(256.dp)
+                        )
+                    }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Column(
-                        modifier = Modifier
-                            .border(1.dp, Color.Gray, shape = RoundedCornerShape(8.dp))
-                            .padding(16.dp)
-                    ) {
-                        OutlinedTextField(
-                            value = state.email,
-                            onValueChange = onEmailChange,
-                            label = { Text("Email") },
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                    Column (modifier = Modifier.fillMaxWidth().padding(16.dp, 0.dp)) {
 
-                        Spacer(modifier = Modifier.height(8.dp))
 
-                        OutlinedTextField(
-                            value = state.password,
-                            onValueChange = onPasswordChange,
-                            label = { Text("Password") },
-                            modifier = Modifier.fillMaxWidth(),
-                            visualTransformation = PasswordVisualTransformation()
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
+                        Column(
+                            modifier = Modifier
+                                .border(1.dp, Color.Gray, shape = RoundedCornerShape(8.dp))
+                                .padding(16.dp).background(MaterialTheme.colorScheme.surface)
                         ) {
-                            Checkbox(
-                                checked = state.boxChecked,
-                                onCheckedChange = { checked ->
-                                    onBoxChecked(checked)
-                                    if (checked) {
-                                        onChangeButtonText("Welcome back")
-                                        onChangeNavDestination(Home)
-                                    } else {
-                                        onChangeButtonText("Join Us")
-                                        onChangeNavDestination(SignUp)
-                                    }
-                                }
+                            OutlinedTextField(
+                                value = state.email,
+                                onValueChange = onEmailChange,
+                                label = { Text("Email") },
+                                modifier = Modifier.fillMaxWidth()
                             )
-                            Text("Login")
 
-                            Spacer(modifier = Modifier.weight(1f))
-
-                            Button(onClick = {
-                                onLoginClick(state.authAction)
-                            }) {
-                                Text(state.buttonText)
-                            }
-                        }
-
-                        if (state.hasError) {
                             Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = state.errorMessage,
-                                color = Color.Red,
-                                style = MaterialTheme.typography.bodyMedium
+
+                            OutlinedTextField(
+                                value = state.password,
+                                onValueChange = onPasswordChange,
+                                label = { Text("Password") },
+                                modifier = Modifier.fillMaxWidth(),
+                                visualTransformation = PasswordVisualTransformation()
                             )
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Checkbox(
+                                    checked = state.boxChecked,
+                                    onCheckedChange = { checked ->
+                                        onBoxChecked(checked)
+                                        if (checked) {
+                                            onChangeButtonText("Welcome back")
+                                            onChangeNavDestination(Home)
+                                        } else {
+                                            onChangeButtonText("Join Us")
+                                            onChangeNavDestination(SignUp)
+                                        }
+                                    },
+                                    colors = CheckboxDefaults.colors(
+                                        checkedColor = MaterialTheme.colorScheme.secondary,
+                                        uncheckedColor = MaterialTheme.colorScheme.onSurface
+                                    )
+                                )
+                                Text("Login")
+
+                                Spacer(modifier = Modifier.weight(1f))
+
+                                Button(
+                                    onClick = {
+                                        onLoginClick(state.authAction)
+                                    },
+                                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+                                ) {
+                                    Text(state.buttonText)
+                                }
+                            }
                         }
                     }
 
@@ -172,20 +195,22 @@ fun Login(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         HorizontalDivider(
-                            color = Color.Red,
+                            color = MaterialTheme.colorScheme.primary,
                             thickness = 2.dp,
                             modifier = Modifier.weight(0.75f)
                         )
 
-                        Text(
-                            text = "Join Using",
-                            color = Color.Red,
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(horizontal = 16.dp)
-                        )
+                        if (state.hasError) {
+                            Text(
+                                text = state.errorMessage,
+                                color = MaterialTheme.colorScheme.primary,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(horizontal = 16.dp)
+                            )
+                        }
 
                         HorizontalDivider(
-                            color = Color.Red,
+                            color = MaterialTheme.colorScheme.primary,
                             thickness = 2.dp,
                             modifier = Modifier.weight(0.75f)
                         )
@@ -193,18 +218,7 @@ fun Login(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(32.dp),
-                        modifier = Modifier
-                            .background(
-                                MaterialTheme.colorScheme.onPrimaryContainer,
-                                shape = RoundedCornerShape(30.dp)
-                            )
-                            .padding(16.dp)
-                    ) {
 
-
-                    }
                 }
             } else {
                 LaunchedEffect(true) {
