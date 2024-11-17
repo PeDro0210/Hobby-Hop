@@ -51,7 +51,7 @@ class AuthRepo {
             val uid = authResult.user?.uid ?: return Result.Error(NetworkError.USER_NOT_FOUND)
             Result.Success(uid)
 
-            Result.Error(NetworkError.EMAIL_ALREADY_IN_USE)
+
         } catch (e: FirebaseException) {
 
             Result.Error(NetworkError.FIREBASE_GENERIC)

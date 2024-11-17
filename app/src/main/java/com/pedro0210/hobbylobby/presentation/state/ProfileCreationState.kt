@@ -17,5 +17,5 @@ data class ProfileCreationState(
     val socialUrl: String = "",
     val socialImage: Uri? = null,
     val socualNew: Boolean = false,
-    override var isLoading: Boolean = true
+    override var isLoading: Boolean = false
 ):IState
