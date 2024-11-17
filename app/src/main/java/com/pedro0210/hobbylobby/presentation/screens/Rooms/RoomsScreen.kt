@@ -42,14 +42,13 @@ import com.pedro0210.hobbylobby.presentation.viewmodel.rooms.RoomsViewModel
 fun RoomRoute(
     viewModel: RoomsViewModel,
     navController: NavController,
-    userId: String
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
 
     if (uiState.isRequestPending) {
-        LaunchedEffect(userId) {
-            viewModel.checkRoomAcceptance(userId)
+        LaunchedEffect(uiState) {
+            viewModel.checkRoomAcceptance()
         }
     }
 
@@ -57,9 +56,9 @@ fun RoomRoute(
         uiState = uiState,
         onJoinClick = {
             if (uiState.isJoined) {
-                viewModel.leaveRoom(userId)
+                viewModel.leaveRoom()
             } else {
-                viewModel.attemptJoinRoom(userId)
+                viewModel.attemptJoinRoom()
             }
         },
         onNavigateToProfile = { id, title, image ->

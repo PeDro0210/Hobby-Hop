@@ -92,8 +92,6 @@ fun NavGraphBuilder.communitiesGraph(
     composable<Rooms> { navBackStackEntry ->
         val roomId: Rooms = navBackStackEntry.toRoute()
 
-        // Retrieve the userId or other parameters properly
-        val profileId: Profile = navBackStackEntry.toRoute() // Ensure this matches your navigation data structure
 
         val roomViewModel: RoomsViewModel = viewModel(
             factory = RoomsViewModel.provideFactory(
@@ -107,7 +105,6 @@ fun NavGraphBuilder.communitiesGraph(
         RoomRoute(
             viewModel = roomViewModel,
             navController = navController,
-            userId = profileId.id // Pass the `profileId.id` correctly
         )
     }
 

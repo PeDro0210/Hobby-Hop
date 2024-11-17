@@ -45,30 +45,30 @@ class RoomsRepo {
     ): Boolean {
         return try {
             val roomDoc = firestore.collectionGroup("rooms").get().await().find { it.id == roomId }
-            print("RoomDoc: $roomDoc")
-            if (roomDoc == null) return false
+            println("RoomDoc: $roomDoc")
 
+            val membersRef = roomDoc?.get("users") as? List<DocumentReference>?: emptyList()
 
-            val membersRef = roomDoc.get("users") as? List<DocumentReference> ?: emptyList()
-
+            println("MembersRef: $membersRef")
 
             val isUserInRoom = membersRef.any { ref ->
                 val userDoc = ref.get().await()
                 userDoc.id == userId
             }
 
+            println("isUserInRoom: $isUserInRoom")
             if (!isUserInRoom) {
 
-                val usersToAccept = roomDoc.get("users_to_accept") as? MutableList<DocumentReference> ?: mutableListOf()
-                println(usersToAccept)
+                val usersToAccept = roomDoc?.get("users_to_accept") as? MutableList<DocumentReference> ?: mutableListOf()
                 val userRef = firestore.collection("users").document(userId)
-                if (!usersToAccept.contains(userRef)) {
-                    usersToAccept.add(userRef)
-                    firestore.collection("rooms")
-                        .document(roomDoc.id)
-                        .update("users_to_accept", usersToAccept)
-                        .await()
-                }
+
+                println("UsersToAccept: $usersToAccept")
+                println("UserRef: $userRef")
+
+                usersToAccept.add(userRef)
+
+                roomDoc?.reference?.update("users_to_accept", usersToAccept)?.await()
+
             }
 
             true
