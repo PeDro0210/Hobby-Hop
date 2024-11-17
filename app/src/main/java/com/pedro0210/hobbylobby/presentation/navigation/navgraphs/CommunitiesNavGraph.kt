@@ -96,7 +96,8 @@ fun NavGraphBuilder.communitiesGraph(
             factory = RoomsViewModel.provideFactory(
                 id = roomId.id,
                 roomName = roomId.title,
-                roomDescription = roomId.description
+                roomDescription = roomId.description,
+                roomImage = roomId.image
             )
         )
 
@@ -112,7 +113,9 @@ fun NavGraphBuilder.communitiesGraph(
 
         val profileViewModel : UserViewModel = viewModel(
             factory = UserViewModel.provideFactory(
-                id = profileId.id
+                id = profileId.id,
+                name = profileId.title,
+                pfp = profileId.image,
             )
         )
 

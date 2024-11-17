@@ -11,25 +11,11 @@ import com.pedro0210.hobbylobby.presentation.model.CommunityType
 import com.pedro0210.hobbylobby.presentation.navigation.AdminCommunity
 import com.pedro0210.hobbylobby.presentation.navigation.AdminGraph
 import com.pedro0210.hobbylobby.presentation.navigation.AdminRoom
-import com.pedro0210.hobbylobby.presentation.navigation.BigCommunity
-import com.pedro0210.hobbylobby.presentation.navigation.CommunitiesGraph
-import com.pedro0210.hobbylobby.presentation.navigation.Home
-import com.pedro0210.hobbylobby.presentation.navigation.Profile
 import com.pedro0210.hobbylobby.presentation.navigation.Requests
-import com.pedro0210.hobbylobby.presentation.navigation.Rooms
-import com.pedro0210.hobbylobby.presentation.navigation.SmallCommunity
 import com.pedro0210.hobbylobby.presentation.screens.ComunitiesStuff.AceptacionesScreenRoute
 import com.pedro0210.hobbylobby.presentation.screens.ComunitiesStuff.AdminCommunitiesRoute
-import com.pedro0210.hobbylobby.presentation.screens.ComunitiesStuff.CommunitiesRoute
-import com.pedro0210.hobbylobby.presentation.screens.Homescreen.HomeRoute
-import com.pedro0210.hobbylobby.presentation.screens.Profile.ProfileScreenRoute
-import com.pedro0210.hobbylobby.presentation.screens.Rooms.RoomRoute
 import com.pedro0210.hobbylobby.presentation.viewmodel.communities_stuff.AdminViewModel
-import com.pedro0210.hobbylobby.presentation.viewmodel.communities_stuff.CommunitiesViewModel
-import com.pedro0210.hobbylobby.presentation.viewmodel.home.HomeViewModel
-import com.pedro0210.hobbylobby.presentation.viewmodel.profile.UserViewModel
 import com.pedro0210.hobbylobby.presentation.viewmodel.rooms.AceptacionesViewModel
-import com.pedro0210.hobbylobby.presentation.viewmodel.rooms.RoomsViewModel
 
 fun NavGraphBuilder.adminGraph(
     navController: NavController,

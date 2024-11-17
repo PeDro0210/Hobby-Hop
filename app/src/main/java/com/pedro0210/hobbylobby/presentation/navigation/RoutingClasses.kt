@@ -70,7 +70,9 @@ data class Requests(
 
 @Serializable
 data class Profile(
-    val id: String
+    val id: String,
+    val title: String,
+    val image: String,
 )
 
 @Serializable object SettingsGraph

@@ -6,37 +6,34 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import coil.compose.rememberImagePainter
-import coil.request.ImageRequest
-import com.pedro0210.hobbylobby.R
 import com.pedro0210.hobbylobby.presentation.model.RoomMember
 import com.pedro0210.hobbylobby.presentation.navigation.Profile
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToProfile
 import com.pedro0210.hobbylobby.presentation.state.RoomScreenState
+import com.pedro0210.hobbylobby.presentation.util.NoRippleTheme
 import com.pedro0210.hobbylobby.presentation.viewmodel.rooms.RoomsViewModel
 
 @Composable
@@ -47,18 +44,26 @@ fun RoomRoute(
     val uiState by viewModel.uiState.collectAsState()
 
     RoomScreen(
-        navController = navController,
         uiState = uiState,
-        onJoinClick = { viewModel.joinRoom() }
+        onJoinClick = { viewModel.joinRoom() },
+        onNavigateToProfile = { id, title, image ->
+            navController.navigateToProfile(
+                Profile(
+                    id = id,
+                    title = title,
+                    image = image
+                )
+            )
+        }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RoomScreen(
-    navController: NavController,
     uiState: RoomScreenState,
-    onJoinClick: () -> Unit
+    onJoinClick: () -> Unit,
+    onNavigateToProfile: (String,String,String) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
@@ -67,11 +72,26 @@ fun RoomScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(
-            text = uiState.roomDescription,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-
+        Row {
+            AsyncImage(
+                modifier = Modifier
+                    .weight(0.3f)
+                    .size(128.dp)
+                    .clip(CircleShape),
+                model = uiState.roomImage,
+                contentDescription = "Room Image"
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Box(
+                modifier = Modifier
+                    .weight(0.7f)
+            ) {
+                Text(
+                    text = uiState.roomDescription,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
+        }
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(
@@ -98,8 +118,12 @@ fun RoomScreen(
                 MemberRow(
                     member = member,
                     onItemClick = {
-                        navController.navigate("profile/${member.name}")
-                    }
+                        onNavigateToProfile(
+                            member.id,
+                            member.name,
+                            member.pfp
+                    )}
+
                 )
                 Divider(color = Color.Gray, thickness = 0.5.dp)
             }
@@ -112,53 +136,60 @@ fun MemberRow(
     member: RoomMember,
     onItemClick: () -> Unit = {}
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .clickable { onItemClick() },
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(member.pfp)
-                .crossfade(true)
-                .build(),
-            contentDescription = "",
-            modifier = Modifier
-                .size(64.dp)
-                .clip(CircleShape)
-                .background(color = MaterialTheme.colorScheme.secondary)
-        )
+    CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
+        Button(
+            onClick =  onItemClick,
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                AsyncImage(
+                    model = member.pfp,
+                    contentDescription = "",
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(CircleShape)
+                        .background(color = MaterialTheme.colorScheme.secondary),
+                    clipToBounds = true
+
+                )
 
 
 
-        Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(16.dp))
 
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = member.name,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp
-            )
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        color = Black,
+                        text = member.name,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
+                    )
 
+                }
+
+            }
         }
-
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewRoomScreen() {
-    RoomScreen(
-        navController = rememberNavController(),
-        uiState = RoomScreenState(
-            roomName = "Room Name",
-            roomDescription = "Room Description",
-            users = listOf(
-
-            )
-        ),
-        onJoinClick = {}
-    )
-}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewRoomScreen() {
+//    RoomScreen(
+//        uiState = RoomScreenState(
+//            roomName = "Room Name",
+//            roomDescription = "Room Description",
+//            users = listOf(
+//
+//            )
+//        ),
+//        onJoinClick = {},
+//        onNavigateToProfile = {}
+//    )
+//}

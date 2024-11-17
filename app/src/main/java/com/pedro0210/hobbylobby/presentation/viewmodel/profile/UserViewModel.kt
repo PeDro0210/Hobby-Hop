@@ -5,62 +5,90 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.pedro0210.hobbylobby.data.repository.ProfileRepository
+import com.pedro0210.hobbylobby.data.repository.UserRepo
 import com.pedro0210.hobbylobby.presentation.event.UserEvent
+import com.pedro0210.hobbylobby.presentation.model.SocialMedia
+import com.pedro0210.hobbylobby.presentation.model.User
 import com.pedro0210.hobbylobby.presentation.state.UserState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class UserViewModel(
-    private val repository: ProfileRepository,
-    id: String
+    private val repository: UserRepo,
+    id: String,
+    name: String,
+    pfp: String
 ): ViewModel() {
-    private val _state = MutableStateFlow(UserState())
+    private val _state = MutableStateFlow(UserState(
+        user = User(
+            id = id,
+            name = name,
+            image = pfp,
+            description = "",
+            socialMedia = emptyList()
+        )
+    ))
+
     val state = _state.asStateFlow()
 
+    private lateinit var description: StateFlow<String>
+    private lateinit var socialMedia: StateFlow<List<SocialMedia>>
 
-    fun onEvent(event: UserEvent) {
-        when (event) {
-            is UserEvent.onLoadUser -> onLoadUser(event.ID)
-        }
-    }
-
-    private fun onLoadUser(ID: Int) {
+    init {
         viewModelScope.launch {
-            val screenState = _state.value
 
-            _state.update { it.copy(
-                user = repository.getProfile2(ID),
-                isLoading = true,
-                hasError = false
-            )}
+            description = repository.getDescription(id)
+                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
 
-            delay(2000)
+            socialMedia = repository.getSocials(id)
+                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-            if (!_state.value.hasError){
-                _state.update { it.copy(
-                    isLoading = false,
-                    isSuccess = true,
-                    hasError = false
-                )}
-
+            launch {
+                description.collect { description ->
+                    _state.update {
+                        it.copy(
+                            user = it.user.copy(
+                                description = description
+                            )
+                        )
+                    }
+                }
             }
 
 
+            launch {
+                socialMedia.collect { socialMedia ->
+                    println("Socials"+socialMedia)
+                    _state.update {
+                        it.copy(
+                            user = it.user.copy(
+                                socialMedia = socialMedia
+                            )
+                        )
+                    }
+                }
+            }
         }
     }
 
-
-
     companion object {
-        fun provideFactory(id: String) : ViewModelProvider.Factory = viewModelFactory {
+        fun provideFactory(
+           id: String,
+           name: String,
+           pfp: String
+        ) : ViewModelProvider.Factory = viewModelFactory {
                 initializer {
                     UserViewModel(
-                        ProfileRepository(),
-                        id
+                        repository = UserRepo(),
+                        id = id,
+                        name = name,
+                        pfp = pfp
                     )
                 }
             }

@@ -19,7 +19,7 @@ fun NavController.navigateToSettings(
     this.navigate(Settings, navOptions)
 }
 
-fun NavController.navigateToModityProfile(
+fun NavController.navigateToModiyProfile(
     navOptions: NavOptions? = null
 ){
     this.navigate(ModifyProfile, navOptions)

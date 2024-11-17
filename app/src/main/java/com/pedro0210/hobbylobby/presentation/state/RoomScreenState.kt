@@ -7,7 +7,8 @@ data class RoomScreenState(
     val users: List<RoomMember> = emptyList(),
     val isJoined: Boolean = false,
     val roomName: String = "",
-    val roomDescription: String = ""
+    val roomDescription: String = "",
+    val roomImage: String = ""
 ) {
 
 }

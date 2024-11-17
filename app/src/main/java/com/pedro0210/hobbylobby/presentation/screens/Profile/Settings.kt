@@ -23,12 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.pedro0210.hobbylobby.presentation.navigation.Home
 import com.pedro0210.hobbylobby.presentation.navigation.Login
-import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateFromLogin
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToAdminCommunities
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToCreateBigCommunity
-import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToModityProfile
+import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToModiyProfile
 import com.pedro0210.hobbylobby.presentation.state.SettingsState
 import com.pedro0210.hobbylobby.presentation.viewmodel.profile.ProfileViewModel
 
@@ -44,7 +42,7 @@ fun SettingsRoute(
         pfp = state.pfp,
         onCommunitiesClick = {navController.navigateToAdminCommunities()}, //change this
         onCreateCommunityClick = {navController.navigateToCreateBigCommunity()},
-        onEditProfileClick = {navController.navigateToModityProfile()},
+        onEditProfileClick = {navController.navigateToModiyProfile()},
         onSignOutClick = {
             viewModel.onLogoutClick()
             navController.navigate(Login)

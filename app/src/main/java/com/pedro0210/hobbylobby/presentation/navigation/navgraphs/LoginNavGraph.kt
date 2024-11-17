@@ -10,8 +10,6 @@ import com.pedro0210.hobbylobby.presentation.navigation.LoginGraph
 import com.pedro0210.hobbylobby.presentation.navigation.SignUp
 import com.pedro0210.hobbylobby.presentation.screens.Auth.LoginRoute
 import com.pedro0210.hobbylobby.presentation.screens.Auth.ProfileCreationRoute
-import com.pedro0210.hobbylobby.presentation.screens.Auth.ProfileCreationScreen
-import com.pedro0210.hobbylobby.presentation.screens.Profile.ProfileScreenRoute
 import com.pedro0210.hobbylobby.presentation.viewmodel.login.AuthViewModel
 
 fun NavGraphBuilder.loginGraph(

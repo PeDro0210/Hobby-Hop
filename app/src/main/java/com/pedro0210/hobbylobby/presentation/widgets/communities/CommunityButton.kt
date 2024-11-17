@@ -44,10 +44,8 @@ fun CommunityButton(
             .fillMaxWidth()
     ) {
             Button(
-                modifier = Modifier
-                    .weight(0.9f),
-                onClick = onClickNavigation
-                ,
+                modifier = Modifier,
+                onClick = onClickNavigation,
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
             ) {
 
@@ -56,10 +54,13 @@ fun CommunityButton(
                     contentDescription = null,
                     modifier = Modifier
                         .size(64.dp)
-                        .clip(RoundedCornerShape(8.dp))
+                        .clip(RoundedCornerShape(16.dp))
+                        .weight(0.2f)
                 )
                 Column(
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .weight(0.7f)
                 ) {
                     Text(
                         text = name,
@@ -75,16 +76,5 @@ fun CommunityButton(
 
                 }
             }
-        //TODO: show this button if you're admin of the community
-        IconButton (
-            modifier = Modifier
-                .weight(0.1f),
-            onClick = { /*TODO: Show popup to exit, if part of community*/ },
-        ){
-            Icon(
-                imageVector = Icons.Default.MoreVert ,
-                contentDescription =  "For going to settings"
-            )
-        }
     }
 }

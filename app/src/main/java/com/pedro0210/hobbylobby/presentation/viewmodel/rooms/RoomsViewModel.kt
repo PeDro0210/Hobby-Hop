@@ -23,6 +23,7 @@ class RoomsViewModel(
     roomId: String,
     repo: RoomsRepo,
     roomName: String,
+    roomImage:String,
     roomDescription: String
 ) : ViewModel() {
 
@@ -30,7 +31,8 @@ class RoomsViewModel(
         RoomScreenState(
             roomName = roomName,
             roomDescription = roomDescription,
-            users = emptyList()
+            users = emptyList(),
+            roomImage = roomImage
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -62,13 +64,19 @@ class RoomsViewModel(
     }
 
     companion object {
-        fun provideFactory(id: String, roomName: String, roomDescription: String): ViewModelProvider.Factory = viewModelFactory {
+        fun provideFactory(
+            id: String,
+            roomName: String,
+            roomDescription: String,
+            roomImage: String
+        ): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 RoomsViewModel(
                     repo = RoomsRepo(),
                     roomId = id,
                     roomName = roomName,
-                    roomDescription = roomDescription
+                    roomDescription = roomDescription,
+                    roomImage = roomImage
                 )
             }
         }

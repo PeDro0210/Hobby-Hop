@@ -39,4 +39,5 @@ class RoomsRepo {
 
     }
 
+    //TODO: do a function for checking if the user is in the designated community, and change the state
 }
