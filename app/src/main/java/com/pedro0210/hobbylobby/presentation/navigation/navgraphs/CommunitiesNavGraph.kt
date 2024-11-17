@@ -1,5 +1,6 @@
 package com.pedro0210.hobbylobby.presentation.navigation.navgraphs
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -34,6 +35,10 @@ fun NavGraphBuilder.communitiesGraph(
             val homeViewModel : HomeViewModel = viewModel(
                 factory = HomeViewModel.provideFactory()
             )
+
+            LaunchedEffect(Unit) {
+                homeViewModel.loadCommunities()
+            }
 
             HomeRoute(
                 navController = navController,

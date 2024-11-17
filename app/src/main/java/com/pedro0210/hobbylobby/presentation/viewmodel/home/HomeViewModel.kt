@@ -19,8 +19,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 class HomeViewModel(
-    repo: HomeRepo,
-    userData: UserData
+    private val repo: HomeRepo,
+    private val userData: UserData
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
@@ -36,9 +36,9 @@ class HomeViewModel(
     private lateinit var countries: StateFlow<List<Community>>
     private lateinit var ownCommunities: StateFlow<List<Community>>
 
-    init {
-        viewModelScope.launch {
 
+    fun loadCommunities() {
+        viewModelScope.launch {
             userData.loggedIn()
             countries = repo.getCountries()
                 .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
@@ -58,8 +58,6 @@ class HomeViewModel(
                     _state.update { it.copy(ownCommunities = ownCommunitiesList, isLoading = false) }
                 }
             }
-
-
         }
     }
 

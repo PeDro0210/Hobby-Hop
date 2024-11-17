@@ -45,12 +45,9 @@ class AuthRepo {
 
     suspend fun attemptToSignUp(email: String, password: String): Result<String, NetworkError> {
         return try {
-            println("arriba como espana")
             val authResult = auth.createUserWithEmailAndPassword(email, password).await()
-            println("abajo como espana")
             val uid = authResult.user?.uid ?: return Result.Error(NetworkError.USER_NOT_FOUND)
             Result.Success(uid)
-
 
         } catch (e: FirebaseException) {
 
