@@ -9,5 +9,6 @@ data class RoomScreenState(
     val roomName: String = "",
     val roomDescription: String = "",
     val roomImage: String = "",
-    override var isLoading: Boolean = true
+    override var isLoading: Boolean = true,
+    var isRequestPending: Boolean = false
 ):IState

@@ -20,10 +20,10 @@ import kotlinx.coroutines.launch
 
 
 class RoomsViewModel(
-    roomId: String,
-    repo: RoomsRepo,
+    private val roomId: String,
+    private val repo: RoomsRepo,
     roomName: String,
-    roomImage:String,
+    roomImage: String,
     roomDescription: String
 ) : ViewModel() {
 
@@ -37,31 +37,69 @@ class RoomsViewModel(
     )
     val uiState = _uiState.asStateFlow()
 
+    private lateinit var users: StateFlow<List<RoomMember>>
 
-    private lateinit var users : StateFlow<List<RoomMember>>
-
-    init{
+    init {
         viewModelScope.launch {
-            println(roomId)
+
             users = repo.getUsers(roomId)
                 .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
             launch {
-                users.collect{ usersList ->
+                users.collect { usersList ->
                     _uiState.update {
-                        it.copy(
-                            users = usersList
-                        )
+                        it.copy(users = usersList)
                     }
                 }
             }
         }
     }
 
-    fun joinRoom() {
-        _uiState.update { currentState ->
-            currentState.copy(isJoined = true)
+    fun attemptJoinRoom(userId: String) {
+        viewModelScope.launch {
+            val success = repo.checkAndRequestJoin(roomId, userId)
+            if (success) {
+                _uiState.update {
+                    it.copy(isRequestPending = true)
+                }
+            }
         }
     }
+
+    fun checkRoomAcceptance(userId: String) {
+        viewModelScope.launch {
+
+            while (true) {
+                val currentUsers = users.value
+                val isAccepted = currentUsers.any { it.id == userId }
+
+                if (isAccepted) {
+                    _uiState.update {
+                        it.copy(
+                            isJoined = true,
+                            isRequestPending = false
+                        )
+                    }
+                    break
+                }
+
+                kotlinx.coroutines.delay(5000)
+            }
+        }
+    }
+
+    fun leaveRoom(userId: String) {
+        viewModelScope.launch {
+            val success = repo.removeUserFromRoom(roomId, userId)
+            if (success) {
+                _uiState.update {
+                    it.copy(isJoined = false)
+                }
+            }
+
+        }
+    }
+
 
     companion object {
         fun provideFactory(
@@ -80,7 +118,6 @@ class RoomsViewModel(
                 )
             }
         }
-
     }
 }
 

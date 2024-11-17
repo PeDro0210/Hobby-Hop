@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -40,13 +41,27 @@ import com.pedro0210.hobbylobby.presentation.viewmodel.rooms.RoomsViewModel
 @Composable
 fun RoomRoute(
     viewModel: RoomsViewModel,
-    navController: NavController
+    navController: NavController,
+    userId: String
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+
+    if (uiState.isRequestPending) {
+        LaunchedEffect(userId) {
+            viewModel.checkRoomAcceptance(userId)
+        }
+    }
+
     RoomScreen(
         uiState = uiState,
-        onJoinClick = { viewModel.joinRoom() },
+        onJoinClick = {
+            if (uiState.isJoined) {
+                viewModel.leaveRoom(userId)
+            } else {
+                viewModel.attemptJoinRoom(userId)
+            }
+        },
         onNavigateToProfile = { id, title, image ->
             navController.navigateToProfile(
                 Profile(
@@ -57,9 +72,9 @@ fun RoomRoute(
             )
         },
         navController = navController
-
     )
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,7 +82,7 @@ fun RoomScreen(
     navController: NavController,
     uiState: RoomScreenState,
     onJoinClick: () -> Unit,
-    onNavigateToProfile: (String,String,String) -> Unit
+    onNavigateToProfile: (String, String, String) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         TopBar(
@@ -98,15 +113,39 @@ fun RoomScreen(
                 )
             }
         }
+
         Spacer(modifier = Modifier.height(8.dp))
 
-        Button(
-            onClick = onJoinClick,
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .align(Alignment.End)
-        ) {
-            Text(if (uiState.isJoined) "Unido" else "Unirse")
+
+        when {
+            uiState.isRequestPending -> {
+                Text(
+                    text = "Esperando aprobación...",
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Gray
+                )
+            }
+            uiState.isJoined -> {
+                Button(
+                    onClick = onJoinClick,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .align(Alignment.End)
+                ) {
+                    Text("Salir")
+                }
+            }
+            else -> {
+                Button(
+                    onClick = onJoinClick,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .align(Alignment.End)
+                ) {
+                    Text("Unirse")
+                }
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -128,14 +167,15 @@ fun RoomScreen(
                             member.id,
                             member.name,
                             member.pfp
-                    )}
-
+                        )
+                    }
                 )
                 Divider(color = Color.Gray, thickness = 0.5.dp)
             }
         }
     }
 }
+
 
 @Composable
 fun MemberRow(
