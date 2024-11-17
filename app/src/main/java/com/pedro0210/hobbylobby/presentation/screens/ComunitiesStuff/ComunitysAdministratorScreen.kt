@@ -41,6 +41,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.pedro0210.hobbylobby.R
 import com.pedro0210.hobbylobby.presentation.state.AcceptanceScreenState
+import com.pedro0210.hobbylobby.presentation.view.screens.widgets.TopBar
 import com.pedro0210.hobbylobby.presentation.viewmodel.rooms.AceptacionesViewModel
 
 @Composable
@@ -51,34 +52,26 @@ fun AceptacionesScreenRoute(
     val uiState by viewModel.uiState.collectAsState()
 
     AceptacionesScreen(
+        navController = navController,
         state = uiState,
         onAcceptClick = { id -> viewModel.acceptRequest(id) },
         onRejectClick = { id -> viewModel.rejectRequest(id) },
-        onBackClick = { navController.popBackStack() },
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AceptacionesScreen(
+    navController: NavController,
     state: AcceptanceScreenState,
     onAcceptClick: (String) -> Unit = {},
     onRejectClick: (String) -> Unit = {},
-    onBackClick: () -> Unit = {}
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        TopAppBar(
-            title = { Text(text = "Aceptaciones") },
-            navigationIcon = {
-                IconButton(onClick = onBackClick) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                }
-            },
-            actions = {
-                IconButton(onClick = { /* Opciones adicionales */ }) {
-                    Icon(Icons.Default.MoreVert, contentDescription = "More options")
-                }
-            }
+        TopBar(
+            navController = navController,
+            homeScreen = false,
+            settingsScreen = false
         )
 
         Column(modifier = Modifier.padding(16.dp)) {

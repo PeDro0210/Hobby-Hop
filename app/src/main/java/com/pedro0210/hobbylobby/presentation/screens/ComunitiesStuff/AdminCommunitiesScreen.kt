@@ -64,6 +64,7 @@ fun AdminCommunitiesScreen(
             TopBar(
                 navController = navController ,
                 homeScreen = false,
+                settingsScreen = true,
             )
         },
         content = {innerPadding ->

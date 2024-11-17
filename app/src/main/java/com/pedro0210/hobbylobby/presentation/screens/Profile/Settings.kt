@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,6 +29,7 @@ import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToAdminC
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToCreateBigCommunity
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToModiyProfile
 import com.pedro0210.hobbylobby.presentation.state.SettingsState
+import com.pedro0210.hobbylobby.presentation.view.screens.widgets.TopBar
 import com.pedro0210.hobbylobby.presentation.viewmodel.profile.ProfileViewModel
 
 @Composable
@@ -38,6 +40,7 @@ fun SettingsRoute(
     val state: SettingsState by viewModel.settingsState.collectAsStateWithLifecycle()
 
     SettingsScreen(
+        navController = navController,
         userName = state.username,
         pfp = state.pfp,
         onCommunitiesClick = {navController.navigateToAdminCommunities()}, //change this
@@ -54,6 +57,7 @@ fun SettingsRoute(
 
 @Composable
 fun SettingsScreen(
+    navController: NavController,
     userName: String,
     pfp: String,
     onCommunitiesClick: () -> Unit = {},
@@ -61,71 +65,86 @@ fun SettingsScreen(
     onEditProfileClick: () -> Unit = {},
     onSignOutClick: () -> Unit = {}
 ) {
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        // Imagen y nombre de usuario
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            AsyncImage(
-                model = pfp,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(CircleShape)
+    Scaffold (
+        topBar = {
+            TopBar(
+                navController = navController ,
+                homeScreen = true,
+                settingsScreen = false
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = userName, style = MaterialTheme.typography.headlineLarge)
+        },
+        content = {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+            ) {
+                // Imagen y nombre de usuario
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    AsyncImage(
+                        model = pfp,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(CircleShape)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(text = userName, style = MaterialTheme.typography.headlineLarge)
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // Botones de navegación
+                Button(
+                    onClick = onCommunitiesClick,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = "My Communities")
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = onCreateCommunityClick,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = "Create Communities")
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = onEditProfileClick,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = "Modify Profile")
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // Botón de cerrar sesión
+                Button(
+                    onClick = onSignOutClick,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                ) {
+                    Text(text = "Sign Out")
+                }
+            }
         }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Botones de navegación
-        Button(
-            onClick = onCommunitiesClick,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "My Communities")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = onCreateCommunityClick,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Create Communities")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = onEditProfileClick,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Modify Profile")
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Botón de cerrar sesión
-        Button(
-            onClick = onSignOutClick,
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
-        ) {
-            Text(text = "Sign Out")
-        }
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewSettingsScreen() {
-    SettingsScreen(
-        userName = "Pedro",
-        onCommunitiesClick = {},
-        onCreateCommunityClick = {},
-        onEditProfileClick = {},
-        onSignOutClick = {},
-        pfp = "https://www.google.com/"
     )
 }
+
+
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewSettingsScreen() {
+//    SettingsScreen(
+//        userName = "Pedro",
+//        onCommunitiesClick = {},
+//        onCreateCommunityClick = {},
+//        onEditProfileClick = {},
+//        onSignOutClick = {},
+//        pfp = "https://www.google.com/"
+//    )
+//}

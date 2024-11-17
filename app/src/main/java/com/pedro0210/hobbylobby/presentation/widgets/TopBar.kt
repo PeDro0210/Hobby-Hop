@@ -19,6 +19,7 @@ import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToSettin
 fun TopBar(
     navController: NavController,
     homeScreen:Boolean,
+    settingsScreen:Boolean
 ) {
     TopAppBar(
         modifier = Modifier
@@ -43,13 +44,15 @@ fun TopBar(
 
        },
         actions = {
-            IconButton (
-                onClick = { navController.navigateToSettings()},
-            ){
-                Icon(
-                    imageVector = Icons.Default.MoreVert ,
-                    contentDescription =  "For going to settings"
-                )
+            if (!settingsScreen) {
+                IconButton(
+                    onClick = { navController.navigateToSettings() },
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = "For going to settings"
+                    )
+                }
             }
         }
     )

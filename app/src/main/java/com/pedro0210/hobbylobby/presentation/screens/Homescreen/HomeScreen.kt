@@ -45,6 +45,7 @@ fun Home(
             TopBar(
                 navController = navController ,
                 homeScreen = true,
+                settingsScreen = false
             )
         },
         content = {innerPadding ->
