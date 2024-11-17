@@ -77,24 +77,18 @@ fun CommunitiesCreatorRoute(
         navController = navController,
         onAddClick = {navController.navigateToCreateSmallCommunities()},
         state = state,
-        onPictureChange = {viewModel.onEvent(CreatorEvent.onPictureChange(it))}, //TODO:fix
+        onPictureChange = {viewModel.onEvent(CreatorEvent.onPictureChange(it))},
         onNameChange = {viewModel.onEvent(CreatorEvent.onNameChange(it))},
         ondescriptionChange = {viewModel.onEvent(CreatorEvent.onDescriptionChange(it))},
         ondoneClick = {viewModel.onEvent(CreatorEvent.onComunityCreate(state.title, state.description, state.image, state.rooms, state.bigCommunityName))
 
-            /*
-                        while(true){
-                            if (state.isLoading == false){
-                                navController.popBackStack()
-                                break
-                            }
-                        }
-
-             */
+            //TODO:Backstrack
         },
         onBigCommunityChange = {viewModel.onEvent(CreatorEvent.onBigCommunityChange(it))},
         onDeleteSubC = {viewModel.onEvent(CreatorEvent.onRoomDelete(it))},
-        onBackClick = {navController.popBackStack()}
+        onBackClick = {navController.popBackStack()},
+        onClearClick = {viewModel.onEvent(CreatorEvent.onNameChange(""))},
+        onBCClearClick = {viewModel.onEvent(CreatorEvent.onBigCommunityChange(""))}
 
     )
 
@@ -113,6 +107,8 @@ fun CommunitiesCreatorScreen(
     onAddClick: () -> Unit = {}, //For nav
     onBigCommunityChange: (String) -> Unit ={},
     navController: NavController,
+    onClearClick: () -> Unit = {},
+    onBCClearClick: () -> Unit = {},
     state: CreatorScreenState
 ){
     Scaffold (
@@ -135,7 +131,9 @@ fun CommunitiesCreatorScreen(
             onDeleteSubC = onDeleteSubC,
             onAddClick = onAddClick,
             state = state,
-            onBigCommunityChange = onBigCommunityChange
+            onBigCommunityChange = onBigCommunityChange,
+            onClearClick = onClearClick,
+            onBCClearClick = onBCClearClick
         )
     }
 }
@@ -225,6 +223,8 @@ fun CommunitiesCreator(
     ondescriptionChange: (String) -> Unit = {},//IDK
     onDeleteSubC: (String) -> Unit = {}, //IDK
     onAddClick: () -> Unit = {}, //For nav
+    onClearClick: () -> Unit = {},
+    onBCClearClick: () -> Unit = {},
     state: CreatorScreenState
 ) {
     val launcher = rememberLauncherForActivityResult(
@@ -289,11 +289,21 @@ fun CommunitiesCreator(
                     OutlinedTextField(
                         value = state.title,
                         onValueChange = onNameChange,
+                        trailingIcon = {
+                            IconButton(onClick = onClearClick) {
+                                Icon(Icons.Default.Clear, contentDescription = "Add")
+                            }
+                        }
                         )
                     Spacer(modifier = Modifier.height(16.dp))
                     OutlinedTextField(
                         value = state.bigCommunityName,
-                        onValueChange = onBigCommunityChange
+                        onValueChange = onBigCommunityChange,
+                        trailingIcon = {
+                            IconButton(onClick = onBCClearClick) {
+                                Icon(Icons.Default.Clear, contentDescription = "Add")
+                            }
+                        }
                     )
 
                 }

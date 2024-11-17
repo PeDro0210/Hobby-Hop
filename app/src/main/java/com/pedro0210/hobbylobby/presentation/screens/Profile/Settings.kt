@@ -39,13 +39,10 @@ fun SettingsRoute(
     viewModel: ProfileViewModel,
     navController: NavController
 ){
-    val state: ProfileState by viewModel.state.collectAsStateWithLifecycle()
-    LaunchedEffect(Unit) {
-        viewModel.onEvent(ProfileEvent.onLoadUser(1))
-    }
+
 
     SettingsScreen(
-        userName = state.user?.name ?: "Nombre",
+        userName = "Nombre",
         onRoomsClick = {navController.navigateFromLogin(Home)}, //change this
         onCreateCommunityClick = {navController.navigateToCreateBigCommunity()},
         onEditProfileClick = {navController.navigateToModityProfile()},

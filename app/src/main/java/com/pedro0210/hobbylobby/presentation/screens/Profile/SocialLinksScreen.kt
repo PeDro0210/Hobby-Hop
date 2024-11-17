@@ -1,5 +1,8 @@
 package com.pedro0210.hobbylobby.presentation.view.screens
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,22 +28,41 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import com.pedro0210.hobbylobby.presentation.event.ProfileEvent
+import com.pedro0210.hobbylobby.presentation.state.ProfileCreationState
+import com.pedro0210.hobbylobby.presentation.viewmodel.communities_stuff.GlobalRoom
+import com.pedro0210.hobbylobby.presentation.viewmodel.profile.GlobalSocial
+import com.pedro0210.hobbylobby.presentation.viewmodel.profile.ProfileViewModel
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 
 
 @Composable
 fun AddingLinksScreenRoute(
-    //TODO: add viewmodel when created,
+    viewModel: ProfileViewModel,
     navController: NavController
 ){
     //TODO: add state
+    val state: ProfileCreationState by viewModel.state.collectAsStateWithLifecycle()
 
     AddingLinksScreen(
-        navController = navController
+        navController = navController,
+        state = state,
+        onBackClick = {navController.popBackStack()},
+        ondoneClick = {
+            GlobalSocial.setSocial(state.socialName, state.socialUrl, state.socialImage)
+            navController.popBackStack()},
+        onSocialNameChange = {viewModel.onEvent(ProfileEvent.onSocialNameChange(it))},
+        onSocialLinkChange = {viewModel.onEvent(ProfileEvent.onSocialUrlChange(it))},
+        onClearNameClick = {viewModel.onEvent(ProfileEvent.onSocialNameChange(""))},
+        onClearLinkClick = {viewModel.onEvent(ProfileEvent.onSocialUrlChange(""))},
+        onPictureChange = {viewModel.onEvent(ProfileEvent.onSocialImageChange(it))}
     )
 }
 
@@ -48,15 +70,14 @@ fun AddingLinksScreenRoute(
 //TODO: need to manage states
 @Composable
 fun AddingLinksScreen(modifier: Modifier = Modifier,
-                        socialName: String = "",
+                      state: ProfileCreationState,
                         onSocialNameChange: (String) -> Unit = {},
-                        socialLink: String = "",
                         onSocialLinkChange: (String) -> Unit = {},
                         onBackClick: () -> Unit = {},
                         ondoneClick: () -> Unit = {},
                         onClearNameClick: () -> Unit = {},
                         onClearLinkClick: () -> Unit = {},
-                        onPictureChange: () -> Unit = {},
+                        onPictureChange: (Uri) -> Unit = {},
                       navController: NavController
 ){
     Scaffold (
@@ -72,10 +93,9 @@ fun AddingLinksScreen(modifier: Modifier = Modifier,
             modifier = modifier
                 .fillMaxSize()
                 .padding(it),
-            socialName = socialName,
+            state = state,
             onSocialNameChange = onSocialNameChange,
             onClearNameClick = onClearNameClick,
-            socialLink = socialLink,
             onSocialLinkChange = onSocialLinkChange,
             onClearLinkClick = onClearLinkClick,
             onBackClick = onBackClick,
@@ -87,10 +107,20 @@ fun AddingLinksScreen(modifier: Modifier = Modifier,
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddSocialLinksScreen(modifier: Modifier = Modifier, onBackClick: () -> Unit, onPictureChange: () -> Unit,
-                         socialName: String, onSocialNameChange: (String) -> Unit, onClearNameClick: () -> Unit,
-                         socialLink: String, onSocialLinkChange: (String) -> Unit, onClearLinkClick: () -> Unit
+fun AddSocialLinksScreen(modifier: Modifier = Modifier, onBackClick: () -> Unit, onPictureChange: (Uri) -> Unit,
+                          onSocialNameChange: (String) -> Unit, onClearNameClick: () -> Unit,
+                          onSocialLinkChange: (String) -> Unit, onClearLinkClick: () -> Unit,
+                            state: ProfileCreationState
 ) {
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            onPictureChange(uri)
+        }
+
+    }
+
     Column(modifier = Modifier.fillMaxSize()){
         TopAppBar(title = {
             Row (modifier = Modifier.fillMaxWidth(),
@@ -117,7 +147,8 @@ fun AddSocialLinksScreen(modifier: Modifier = Modifier, onBackClick: () -> Unit,
                 .background(color = MaterialTheme.colorScheme.primary),
                 contentAlignment = androidx.compose.ui.Alignment.Center
             ) {
-                IconButton(onClick = onPictureChange) {
+                AsyncImage(model = state.socialImage, contentDescription = "new social image", modifier = Modifier.size(150.dp))
+                IconButton(onClick = {launcher.launch("image/*")}) {
                     Icon(
                         Icons.Default.Add,
                         contentDescription = "Picture",
@@ -130,7 +161,7 @@ fun AddSocialLinksScreen(modifier: Modifier = Modifier, onBackClick: () -> Unit,
             }
             Spacer(modifier = Modifier.padding(16.dp))
             OutlinedTextField(
-                value = socialName,
+                value = state.socialName,
                 modifier = Modifier.fillMaxWidth(0.87f),
                 onValueChange = onSocialNameChange,
                 trailingIcon = {
@@ -141,7 +172,7 @@ fun AddSocialLinksScreen(modifier: Modifier = Modifier, onBackClick: () -> Unit,
             )
             Spacer(modifier = Modifier.padding(8.dp))
             OutlinedTextField(
-                value = socialLink,
+                value = state.socialUrl,
                 modifier = Modifier.fillMaxWidth(0.87f),
                 onValueChange = onSocialLinkChange,
                 trailingIcon = {

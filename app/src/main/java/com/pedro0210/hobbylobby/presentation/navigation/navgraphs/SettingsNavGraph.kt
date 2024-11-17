@@ -31,9 +31,8 @@ fun NavGraphBuilder.settingsGraph(
 
         composable<Settings> {
 
-            val viewModel : ProfileViewModel = viewModel(
-                factory = ProfileViewModel.provideFactory()
-            )
+
+            val viewModel : ProfileViewModel = viewModel(factory = ProfileViewModel.Factory)
 
             SettingsRoute(
                 viewModel = viewModel,
@@ -42,9 +41,7 @@ fun NavGraphBuilder.settingsGraph(
         }
 
         composable<ModifyProfile>{ navBackStackEntry ->
-            val viewModel : ProfileViewModel = viewModel(
-                factory = ProfileViewModel.provideFactory()
-            )
+            val viewModel : ProfileViewModel = viewModel(factory = ProfileViewModel.Factory)
 
             ChangingProfileScreenRoute(
                 viewModel = viewModel,
@@ -55,9 +52,11 @@ fun NavGraphBuilder.settingsGraph(
         }
 
         composable<AddSocial>{ navBackStackEntry ->
-
+            val viewModel : ProfileViewModel = viewModel(factory = ProfileViewModel.Factory)
             AddingLinksScreenRoute(
-                navController = navController
+                navController = navController,
+                viewModel = viewModel
+
             )
         }
 

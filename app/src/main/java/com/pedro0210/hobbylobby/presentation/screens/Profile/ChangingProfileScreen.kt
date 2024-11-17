@@ -1,5 +1,8 @@
 package com.pedro0210.hobbylobby.presentation.view.screens
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -32,9 +35,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.Camera
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.draw.clip
@@ -46,10 +51,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.pedro0210.hobbylobby.R
+import com.pedro0210.hobbylobby.presentation.event.CreatorEvent
 import com.pedro0210.hobbylobby.presentation.event.ProfileEvent
 import com.pedro0210.hobbylobby.presentation.model.SocialMedia
+import com.pedro0210.hobbylobby.presentation.model.SocialMediaCreation
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToAddSocial
+import com.pedro0210.hobbylobby.presentation.state.ProfileCreationState
 import com.pedro0210.hobbylobby.presentation.state.ProfileState
+import com.pedro0210.hobbylobby.presentation.viewmodel.communities_stuff.GlobalRoom
+import com.pedro0210.hobbylobby.presentation.viewmodel.profile.GlobalSocial
 import com.pedro0210.hobbylobby.presentation.viewmodel.profile.ProfileViewModel
 
 @Composable
@@ -57,15 +67,28 @@ fun ChangingProfileScreenRoute(
     viewModel: ProfileViewModel,
     navController: NavController
 ){
-    val state: ProfileState by viewModel.state.collectAsStateWithLifecycle()
-    LaunchedEffect(Unit) {
-        viewModel.onEvent(ProfileEvent.onLoadUser(1))
+    val state: ProfileCreationState by viewModel.state.collectAsStateWithLifecycle()
+    val globalsocial by GlobalSocial.newSocial
+    LaunchedEffect(Unit){
+        if (globalsocial.name != ""){
+            viewModel.onEvent(ProfileEvent.onSocialMediaCreate(globalsocial.name, globalsocial.url, globalsocial.image, globalsocial.new))
+        }
     }
 
     ChangingProfileScreen(
         state = state,
         navController = navController,
-        onAddClick = {navController.navigateToAddSocial()}
+        onAddClick = {navController.navigateToAddSocial()},
+        onBackClick = {navController.popBackStack()},
+        onClearClick = {viewModel.onEvent(ProfileEvent.onNameChange(""))},
+        ondescriptionChange = {viewModel.onEvent(ProfileEvent.onBioChange(it))},
+        ondoneClick = {
+            viewModel.onEvent(ProfileEvent.onDoneEditing(state.username, state.bio, state.image, state.socials))
+            //navController.popBackStack()
+        },
+        onNameChange = {viewModel.onEvent(ProfileEvent.onNameChange(it))},
+        onDeleteSocial = {viewModel.onEvent(ProfileEvent.onSocialMediaDelete(it))},
+        onPictureChange = {viewModel.onEvent(ProfileEvent.onPictureChange(it))}
     )
 }
 
@@ -75,14 +98,15 @@ fun ChangingProfileScreenRoute(
 @Composable
 fun ChangingProfileScreen(
     modifier: Modifier = Modifier,
-    state: ProfileState,
+    state: ProfileCreationState,
     ondescriptionChange: (String) -> Unit = {},
     onNameChange: (String) -> Unit = {},
     onBackClick: () -> Unit = {},
     ondoneClick: () -> Unit = {},
     onClearClick: () -> Unit = {},
-    onPictureChange: () -> Unit = {},
+    onPictureChange: (Uri) -> Unit = {},
     onAddClick: () -> Unit = {},
+    onDeleteSocial: (String) -> Unit = {},
     navController: NavController
 ){
     Scaffold (
@@ -105,6 +129,7 @@ fun ChangingProfileScreen(
             onClearClick = onClearClick,
             onPictureChange = onPictureChange,
             onAddClick = onAddClick,
+            onDeleteSocial = onDeleteSocial
         )
     }
 }
@@ -114,14 +139,24 @@ fun ChangingProfileScreen(
 
 @Composable
 fun ElementsScreen(modifier: Modifier = Modifier,
-                   state: ProfileState,
+                   state: ProfileCreationState,
                    ondescriptionChange: (String) -> Unit,
                    onNameChange: (String) -> Unit,
                    onBackClick: () -> Unit = {},
                    onClearClick: () -> Unit = {},
-                   onPictureChange: () -> Unit = {},
-                   onAddClick: () -> Unit = {}
+                   onPictureChange: (Uri) -> Unit = {},
+                   onAddClick: () -> Unit = {},
+                   onDeleteSocial: (String) -> Unit = {}
 ) {
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            onPictureChange(uri)
+        }
+
+    }
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(title = {
             Row (modifier = Modifier.fillMaxWidth(),
@@ -153,8 +188,15 @@ fun ElementsScreen(modifier: Modifier = Modifier,
                         .clip(CircleShape),
                     contentAlignment = androidx.compose.ui.Alignment.Center
                 ) {
-                    AsyncImage(model = state.user?.image, contentDescription = "PFP")
-                    IconButton(onClick = onPictureChange,
+                    if (state.imageUrl == "") {
+                        AsyncImage(model = state.image, contentDescription = "PFP", modifier = Modifier
+                            .size(150.dp))
+                    } else {
+                        AsyncImage(model = state.imageUrl, contentDescription = "PFP", modifier = Modifier
+                            .size(150.dp))
+                    }
+
+                    IconButton(onClick = {launcher.launch("image/*")},
                         modifier = Modifier.size(100.dp)
 
                     ) {
@@ -169,7 +211,7 @@ fun ElementsScreen(modifier: Modifier = Modifier,
                 }
                 Spacer(modifier = Modifier.padding(8.dp))
                 OutlinedTextField(
-                    value = state.user?.name ?: "Unknown",
+                    value = state.username,
                     onValueChange = onNameChange,
                     trailingIcon = {
                         IconButton(onClick = onClearClick) {
@@ -179,7 +221,7 @@ fun ElementsScreen(modifier: Modifier = Modifier,
                 )
             }
             Spacer(modifier = Modifier.height(32.dp))
-            TextField(value = state.user?.name ?: "Description", onValueChange = ondescriptionChange, modifier = Modifier
+            TextField(value = state.bio, onValueChange = ondescriptionChange, modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surface))
 
@@ -189,15 +231,20 @@ fun ElementsScreen(modifier: Modifier = Modifier,
 
             Column (modifier = Modifier.padding(4.dp, 0.dp)){
                 LazyColumn {
-                    items(items = state.user?.socialMedia ?: emptyList()) { socialmedia: SocialMedia ->
-                        SocialSquare(Text = socialmedia.name)
-                        Spacer(modifier = Modifier.height(16.dp))
-
-
+                    items(state.socials.size) { index ->
+                        SocialSquare(
+                            Text = state.socials[index].name,
+                            image = state.socials[index].image,
+                            imageUrl = state.socials[index].imageUrl,
+                            onDeleteSocial = { onDeleteSocial(state.socials[index].name) }
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                    item {
+                        AddSocial(Text = "Agregar", onAddClick = onAddClick)
                     }
 
                 }
-                AddSocial(Text = "Agregar", onAddClick = onAddClick)
 
             }
 
@@ -211,12 +258,19 @@ fun ElementsScreen(modifier: Modifier = Modifier,
 
 @Composable
 fun SocialSquare(
-    Text: String
+    Text: String,
+    image: Uri?,
+    imageUrl: String,
+    onDeleteSocial: () -> Unit = {}
 ){
     Row (modifier = Modifier
-            .fillMaxWidth(),
+        .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+    ){
+        Row(modifier = Modifier.fillMaxWidth(0.65f),
             verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-        ){
+        ) {
             Box(modifier = Modifier
                 .size(65.dp)
                 .background(
@@ -224,12 +278,21 @@ fun SocialSquare(
                 )
                 .fillMaxWidth(0.35f)
             ){
+                if (imageUrl == "") {
+                    AsyncImage(model = image, contentDescription = "Social", modifier = Modifier
+                        .size(75.dp))
+                } else {
+                    AsyncImage(model = imageUrl, contentDescription = "Social", modifier = Modifier
+                        .size(75.dp))
+                }
 
             }
             Spacer(modifier = Modifier.padding(8.dp))
             Text(text = Text)
-
-
+        }
+        IconButton(onClick = onDeleteSocial) {
+            Icon(Icons.Default.Close, contentDescription = "Delete")
+        }
     }
 }
 
@@ -271,21 +334,7 @@ fun AddSocial(
     }
 }
 
-@Preview
-@Composable
-fun ChangingProfileScreenPreview(){
-    ChangingProfileScreen(
-        state = ProfileState(),
-        onBackClick = {},
-        onClearClick = {},
-        ondoneClick = {},
-        onPictureChange = {},
-        onAddClick = {},
-        ondescriptionChange = {},
-        onNameChange = {},
-        navController = NavController(LocalContext.current)
-    )
-}
+
 
 
 
