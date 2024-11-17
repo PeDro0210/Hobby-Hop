@@ -23,8 +23,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
+
 class RoomsViewModel(
-    private val userData: UserData,
+    private val user: UserData,
     private val repo: RoomsRepo,
     private val roomId: String,
     roomName: String,
@@ -47,14 +48,18 @@ class RoomsViewModel(
 
     init {
         viewModelScope.launch {
-
+            val userID = user.getId().first()
+            val isJoined = repo.checkIfUserIsInRoom(roomId, userID)
+            val isRequestPending = repo.checkIfUserIsInRequest(roomId, userID)
             users = repo.getUsers(roomId)
                 .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
             launch {
                 users.collect { usersList ->
                     _uiState.update {
-                        it.copy(users = usersList)
+                        it.copy(users = usersList,
+                            isJoined = isJoined,
+                            isRequestPending = isRequestPending)
                     }
                 }
             }
@@ -63,7 +68,7 @@ class RoomsViewModel(
 
     fun attemptJoinRoom() {
         viewModelScope.launch {
-            val userId = userData.getId().first()
+            val userId = user.getId().first()
             val success = repo.checkAndRequestJoin(roomId, userId)
             if (success) {
                 _uiState.update {
@@ -76,7 +81,7 @@ class RoomsViewModel(
     fun checkRoomAcceptance() {
         viewModelScope.launch {
 
-            val userId = userData.getId().first()
+            val userId = user.getId().first()
             while (true) {
                 val currentUsers = users.value
                 val isAccepted = currentUsers.any { it.id == userId }
@@ -98,7 +103,7 @@ class RoomsViewModel(
 
     fun leaveRoom() {
         viewModelScope.launch {
-            val userId = userData.getId().first()
+            val userId = user.getId().first()
             val success = repo.removeUserFromRoom(roomId, userId)
             if (success) {
                 _uiState.update {
@@ -121,7 +126,7 @@ class RoomsViewModel(
                 val application = checkNotNull(this[APPLICATION_KEY])
                 val userData = UserData(application.dataStore)
                 RoomsViewModel(
-                    userData = userData,
+                    user = userData,
                     repo = RoomsRepo(),
                     roomId = id,
                     roomName = roomName,

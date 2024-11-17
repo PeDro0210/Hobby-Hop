@@ -80,14 +80,30 @@ class RoomsRepo {
 
     suspend fun removeUserFromRoom(roomId: String, userId: String): Boolean {
         return try {
-            val roomDoc = firestore.collection("rooms").document(roomId).get().await()
-            val usersRef = roomDoc.get("users") as? MutableList<DocumentReference> ?: mutableListOf()
+
+            val roomDoc = firestore.collectionGroup("rooms").get().await().find { it.id == roomId }
+            println("RoomDoc: $roomDoc")
 
 
-            val updatedUsers = usersRef.filterNot { it.id == userId }
-            firestore.collection("rooms").document(roomId).update("users", updatedUsers).await()
+            val membersRef = roomDoc?.get("users") as? MutableList<DocumentReference> ?: mutableListOf()
+            println("MembersRef: $membersRef")
 
-            true
+            val userRef = firestore.collection("users").document(userId)
+            val isUserInRoom = membersRef.contains(userRef)
+            println("isUserInRoom: $isUserInRoom")
+
+            if (isUserInRoom) {
+
+                membersRef.remove(userRef)
+
+
+                roomDoc?.reference?.update("users", membersRef)?.await()
+                println("User removed from the room")
+                return true
+            } else {
+                println("User not in the room")
+                return false
+            }
         } catch (e: Exception) {
             println("Error removing user from room: ${e.message}")
             false
@@ -95,4 +111,51 @@ class RoomsRepo {
     }
 
 
-}
+    suspend fun checkIfUserIsInRoom(
+        roomId: String,
+        userId: String
+    ): Boolean {
+        return try {
+            val roomDoc = firestore.collectionGroup("rooms").get().await().find { it.id == roomId }
+            println("RoomDoc: $roomDoc")
+
+            val membersRef = roomDoc?.get("users") as? List<DocumentReference> ?: emptyList()
+
+            println("MembersRef: $membersRef")
+
+            val isUserInRoom = membersRef.any { ref ->
+                val userDoc = ref.get().await()
+                userDoc.id == userId
+            }
+            isUserInRoom
+        } catch (e: Exception) {
+            println("Error: ${e.message}")
+            false
+        }
+    }
+
+    suspend fun checkIfUserIsInRequest(
+        roomId: String,
+        userId: String
+    ): Boolean {
+        return try {
+            val roomDoc = firestore.collectionGroup("rooms").get().await().find { it.id == roomId }
+            println("RoomDoc: $roomDoc")
+
+            val membersRef = roomDoc?.get("users_to_accept") as? List<DocumentReference> ?: emptyList()
+
+            println("MembersRef: $membersRef")
+
+            val isUserInRoom = membersRef.any { ref ->
+                val userDoc = ref.get().await()
+                userDoc.id == userId
+            }
+            isUserInRoom
+        } catch (e: Exception) {
+            println("Error: ${e.message}")
+            false
+        }
+    }
+
+        }
+
