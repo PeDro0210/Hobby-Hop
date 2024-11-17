@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">HobbyLobby</string>
+    <string name="getting_data">FetchingData\n</string>
 </resources>

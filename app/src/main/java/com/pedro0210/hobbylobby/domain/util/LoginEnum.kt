@@ -4,5 +4,7 @@ enum class LoginEnum {
     NormalAuth,
     GoogleAuth,
     MetaAuth,
-    XAuth
+    XAuth,
+    LOGIN,
+    SIGN_UP
 }

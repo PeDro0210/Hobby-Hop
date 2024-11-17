@@ -4,18 +4,22 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import com.google.api.Context
+import com.google.firebase.FirebaseException
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.pedro0210.hobbylobby.domain.util.AuthAction
+import com.pedro0210.hobbylobby.domain.util.NetworkError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import kotlin.coroutines.cancellation.CancellationException
-
+import com.pedro0210.hobbylobby.domain.util.Result
 
 class AuthRepo {
 
@@ -24,18 +28,36 @@ class AuthRepo {
     private val storage = FirebaseStorage.getInstance()
 
 
-    suspend fun manageAuth(email: String, password: String): String {
-        //TODO: manage the auth for checking if the user already exists, and pass it to the state of the login
+    suspend fun attemptLogin(email: String, password: String): Result<String, NetworkError> {
         return try {
+            // Attempt to sign in with email and password
             val authResult = auth.signInWithEmailAndPassword(email, password).await()
-            authResult.user?.uid ?: "Id Error" //returns the uid
+            val uid = authResult.user?.uid ?: return Result.Error(NetworkError.USER_NOT_FOUND)
+            Result.Success(uid)
         } catch (e: FirebaseAuthInvalidCredentialsException) {
-            val authResult = auth.createUserWithEmailAndPassword(email, password).await()
-            authResult.user?.uid ?: "Id Error"
-        } catch (e: Exception) {
-            "ERROR"
+            // Handle invalid credentials error
+            Result.Error(NetworkError.INVALID_CREDENTIAL)
+        } catch (e: FirebaseException) {
+            // Handle other Firebase exceptions
+            Result.Error(NetworkError.FIREBASE_GENERIC)
         }
     }
+
+    suspend fun attemptToSignUp(email: String, password: String): Result<String, NetworkError> {
+        return try {
+            // If login fails, attempt to create a new user
+            val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+            val uid = authResult.user?.uid ?: return Result.Error(NetworkError.USER_NOT_FOUND)
+            Result.Success(uid)
+        } catch (e: FirebaseAuthException) {
+            // Handle email already in use error
+            Result.Error(NetworkError.EMAIL_ALREADY_IN_USE)
+        } catch (e: FirebaseException) {
+            // Handle other Firebase exceptions
+            Result.Error(NetworkError.FIREBASE_GENERIC)
+        }
+    }
+
 
 
 

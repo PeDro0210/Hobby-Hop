@@ -34,6 +34,7 @@ import com.pedro0210.hobbylobby.presentation.navigation.Profile
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToProfile
 import com.pedro0210.hobbylobby.presentation.state.RoomScreenState
 import com.pedro0210.hobbylobby.presentation.util.NoRippleTheme
+import com.pedro0210.hobbylobby.presentation.view.screens.widgets.TopBar
 import com.pedro0210.hobbylobby.presentation.viewmodel.rooms.RoomsViewModel
 
 @Composable
@@ -54,20 +55,25 @@ fun RoomRoute(
                     image = image
                 )
             )
-        }
+        },
+        navController = navController
+
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RoomScreen(
+    navController: NavController,
     uiState: RoomScreenState,
     onJoinClick: () -> Unit,
     onNavigateToProfile: (String,String,String) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        TopAppBar(
-            title = { Text(text = uiState.roomName) }
+        TopBar(
+            navController = navController,
+            homeScreen = false,
+            settingsScreen = true
         )
 
         Spacer(modifier = Modifier.height(16.dp))
