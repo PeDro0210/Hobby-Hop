@@ -178,7 +178,6 @@ class ProfileViewModel(
 
     private fun onSocialMediaCreate(socialName: String, url: String, image: Uri?) {
         _state.update { it.copy(
-            isLoading = true,
             hasError = false
         )}
         viewModelScope.launch {

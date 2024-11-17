@@ -91,14 +91,6 @@ class CreatorViewModel(
                             )
                         }
                     }
-
-
-
-                    _state.update {
-                        it.copy(
-                            isLoading = false
-                        )
-                    }
                 } else {
                     _state.update {
                         it.copy(
@@ -164,7 +156,6 @@ class CreatorViewModel(
     private fun onCreateRoom(title: String, description: String, image: Uri?) {
 
         _state.update { it.copy(
-            isLoading = true,
             hasError = false
         )}
         viewModelScope.launch {
