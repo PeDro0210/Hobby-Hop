@@ -11,6 +11,7 @@ data class ProfileCreationState(
     val imageUrl: String = "",
     val hasError: Boolean = false,
     val isLoading: Boolean = false,
+    val isDoneUploading: Boolean = false,
     val hasChangedPfp: Boolean = false,
     val socials: List<SocialMediaCreation> = emptyList(),
     val socialName: String = "",

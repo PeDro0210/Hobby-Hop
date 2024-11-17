@@ -74,6 +74,12 @@ fun ChangingProfileScreenRoute(
             viewModel.onEvent(ProfileEvent.onSocialMediaCreate(globalsocial.name, globalsocial.url, globalsocial.image, globalsocial.new))
         }
     }
+    LaunchedEffect(state) {
+        if (state.isDoneUploading) {
+            navController.popBackStack()
+        }
+
+    }
 
     ChangingProfileScreen(
         state = state,

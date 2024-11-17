@@ -54,7 +54,8 @@ class CreatorViewModel(
             _state.update {
                 it.copy(
                     isLoading = true,
-                    hasError = false
+                    hasError = false,
+                    isDoneUploading = false
                 )
             }
 
@@ -74,6 +75,13 @@ class CreatorViewModel(
                         println("the status of the rooms is $statusRooms")
                         val statusAdminUser = repo.makeUserAdmin(userId, communityId, bigCommunityId )//TODO: FIX THIS
                         println("the status of the admin user is $statusAdminUser")
+
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                isDoneUploading = true
+                            )
+                        }
 
                     } else {
                         _state.update {

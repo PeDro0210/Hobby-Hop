@@ -90,7 +90,8 @@ class ProfileViewModel(
             _state.update {
                 it.copy(
                     isLoading = true,
-                    hasError = false
+                    hasError = false,
+                    isDoneUploading = false
                 )
             }
             try {
@@ -103,6 +104,12 @@ class ProfileViewModel(
                 val newSocials = social.filter { it.new == true }
                 if(newSocials.isNotEmpty()) {
                     repo.addSocialMedia(userID, newSocials)
+                }
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        isDoneUploading = true
+                    )
                 }
             } catch (e: Exception) {
                 _state.update {

@@ -57,7 +57,7 @@ class ProfileRepo {
                 val imageUrl = socialMediaRef.downloadUrl.await()
                 val socialMedia = mapOf(
                     "name" to it.name,
-                    "url" to it.url,
+                    "link" to it.url,
                     "pfp" to imageUrl
                 )
                 firestore.collection("users").document(userId).collection("socials").add(socialMedia)
@@ -85,7 +85,7 @@ class ProfileRepo {
                 socialMedia.add(
                     SocialMediaCreation(
                         name = it.get("name").toString(),
-                        url = it.get("url").toString(),
+                        url = it.get("link").toString(),
                         imageUrl = it.get("pfp").toString(),
                         image = null,
                         new = false

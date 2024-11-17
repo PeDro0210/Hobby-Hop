@@ -143,7 +143,7 @@ fun AddSocialLinksScreen(modifier: Modifier = Modifier, onBackClick: () -> Unit,
 
         ){
             Box(modifier = Modifier
-                .size(200.dp)
+                .size(150.dp)
                 .background(color = MaterialTheme.colorScheme.primary),
                 contentAlignment = androidx.compose.ui.Alignment.Center
             ) {

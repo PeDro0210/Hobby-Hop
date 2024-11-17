@@ -72,6 +72,12 @@ fun CommunitiesCreatorRoute(
             viewModel.onEvent(CreatorEvent.onRoomCreate(globalroom.title, globalroom.description, globalroom.image))
         }
     }
+    LaunchedEffect(state) {
+        if (state.isDoneUploading) {
+            navController.popBackStack()
+        }
+    }
+
 
     CommunitiesCreatorScreen(
         navController = navController,
