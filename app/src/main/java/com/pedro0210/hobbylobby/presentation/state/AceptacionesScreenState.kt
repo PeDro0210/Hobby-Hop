@@ -6,6 +6,6 @@ data class AcceptanceScreenState (
     val requests: List<RoomMember>,
     val name: String,
     val description: String,
-    val image: String
-){
-}
+    val image: String,
+    override var isLoading: Boolean = true
+):IState

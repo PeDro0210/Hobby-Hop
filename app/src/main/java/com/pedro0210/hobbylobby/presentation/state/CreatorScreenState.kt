@@ -15,8 +15,8 @@ data class CreatorScreenState(
     val roomTitle: String = "",
     val roomDescription: String = "",
     val hasError: Boolean = false,
-    val isLoading: Boolean = false,
+    override var isLoading: Boolean = false,
     val isDoneUploading: Boolean = false,
 
 
-)
+):IState

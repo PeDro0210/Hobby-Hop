@@ -10,7 +10,6 @@ data class ProfileCreationState(
     val image: Uri? = null,
     val imageUrl: String = "",
     val hasError: Boolean = false,
-    val isLoading: Boolean = false,
     val isDoneUploading: Boolean = false,
     val hasChangedPfp: Boolean = false,
     val socials: List<SocialMediaCreation> = emptyList(),
@@ -18,6 +17,5 @@ data class ProfileCreationState(
     val socialUrl: String = "",
     val socialImage: Uri? = null,
     val socualNew: Boolean = false,
-
-
-)
+    override var isLoading: Boolean = true
+):IState

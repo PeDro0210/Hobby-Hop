@@ -4,8 +4,8 @@ import com.pedro0210.hobbylobby.presentation.model.User
 
 data class UserState (
     val user: User,
-    val isLoading: Boolean = false,
+    override var isLoading: Boolean = false,
     val isSuccess: Boolean = false,
     val hasError: Boolean = false,
 
-)
+):IState

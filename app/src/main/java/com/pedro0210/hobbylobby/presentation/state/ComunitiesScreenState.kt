@@ -10,6 +10,7 @@ data class ComunitiesScreenState(
     val description: String,
     val partOfCommunity: Boolean,
     val bigCommunity: Boolean = true,
+    override var isLoading: Boolean = true,
 
     val communities: List<Community>,
-)
+):IState

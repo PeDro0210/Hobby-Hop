@@ -8,7 +8,6 @@ data class RoomScreenState(
     val isJoined: Boolean = false,
     val roomName: String = "",
     val roomDescription: String = "",
-    val roomImage: String = ""
-) {
-
-}
+    val roomImage: String = "",
+    override var isLoading: Boolean = true
+):IState
