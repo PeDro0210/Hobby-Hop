@@ -12,6 +12,7 @@ import com.pedro0210.hobbylobby.presentation.state.RoomScreenState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -32,7 +33,7 @@ class RoomsViewModel(
             users = emptyList()
         )
     )
-    val uiState: StateFlow<RoomScreenState> get() = _uiState
+    val uiState = _uiState.asStateFlow()
 
 
     private lateinit var users : StateFlow<List<RoomMember>>

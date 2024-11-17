@@ -59,6 +59,14 @@ data class AdminRoom(
     val image: String,
 )
 
+@Serializable
+data class Requests(
+    val id: String,
+    val title: String,
+    val description: String,
+    val image: String,
+)
+
 
 @Serializable
 data class Profile(

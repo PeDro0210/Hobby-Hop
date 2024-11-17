@@ -14,7 +14,6 @@ class CommunitiesRepo{
 
     private val firestore = FirebaseFirestore.getInstance()
 
-    private lateinit var actualCountry: CollectionReference
 
     /* double purpose, getting Rooms and getting communities */
     suspend fun getCommunities(
@@ -33,8 +32,8 @@ class CommunitiesRepo{
                      *
                      * as we know that, we'll be storing the information of the biggest actualCountry for getting the communities out of it
                      */
-                    actualCountry = firestore.collection("big_communities").document(id).collection("communities") //saves the document of communities from the country press
-                    val communitiesDoc  = actualCountry.get().await() // just calling it
+                    val country = firestore.collection("big_communities").document(id).collection("communities") //saves the document of communities from the country press
+                    val communitiesDoc  = country.get().await() // just calling it
                     //maps it
                     flowOf(
                         communitiesDoc.documents.map { doc ->
@@ -58,10 +57,14 @@ class CommunitiesRepo{
                      * TODO: see how to get the reference of rooms for managing the users display
                      */
 
-                    val roomsDoc = actualCountry.document(id).collection("rooms").get().await()
-                    println("ROOMS: ${roomsDoc.documents}")
+                    val community = firestore.collectionGroup("communities").get().await().find { it.id == id } //I guess most of the thing are possible null cause of the find function
+                    val roomsCollection = community?.reference?.collection("rooms") // Access rooms collection inside community
+
+                    val roomsDoc = roomsCollection?.get()?.await()
+
+                    println("ROOMS: ${roomsDoc?.documents}")
                     flowOf(
-                        roomsDoc.documents.map{ doc->
+                        roomsDoc?.documents?.map { doc ->
                             Community(
                                 title = doc.getString("name") ?: "",
                                 description = doc.getString("description") ?: "",
@@ -70,7 +73,7 @@ class CommunitiesRepo{
                                 type = CommunityType.rooms,
                                 partOfCommunity = true
                             )
-                        }
+                        } ?: emptyList()
                     )
                 }
 
@@ -121,7 +124,7 @@ class CommunitiesRepo{
                             title = doc.getString("name") ?: "",
                             description = doc.getString("description") ?: "",
                             image = doc.getString("pfp") ?: "",
-                            id = ref.path, // Use the reference path as ID or pass ref.id for the document's unique ID
+                            id = doc.id, // Use the reference path as ID or pass ref.id for the document's unique ID
                             type = CommunityType.communities,
                             partOfCommunity = true
                         )
@@ -139,11 +142,16 @@ class CommunitiesRepo{
                     * for getting the rooms, as in the normal get communities, we have the issue, of getting the information for the room for later things
                     * but yeah, you can handle it :D
                     * */
-                    val roomsDoc = firestore.document(id).collection("rooms").get().await()
-                    println("ROOMS: ${roomsDoc.documents}")
-                    println("ROOMS: ${roomsDoc.documents}")
-                    return flowOf(
-                        roomsDoc.documents.map{ doc->
+
+
+                    //dude, I repeated, code LMAO, but it's okay
+                    val community = firestore.collectionGroup("communities").get().await().find { it.id == id } //I guess most of the thing are possible null cause of the find function
+                    val roomsCollection = community?.reference?.collection("rooms") // Access rooms collection inside community
+
+                    val roomsDoc = roomsCollection?.get()?.await()
+
+                    flowOf(
+                        roomsDoc?.documents?.map { doc ->
                             Community(
                                 title = doc.getString("name") ?: "",
                                 description = doc.getString("description") ?: "",
@@ -152,7 +160,7 @@ class CommunitiesRepo{
                                 type = CommunityType.rooms,
                                 partOfCommunity = true
                             )
-                        }
+                        } ?: emptyList()
                     )
 
                 }

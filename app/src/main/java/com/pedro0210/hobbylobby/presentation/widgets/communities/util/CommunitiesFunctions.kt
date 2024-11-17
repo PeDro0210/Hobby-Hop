@@ -5,11 +5,13 @@ import com.pedro0210.hobbylobby.presentation.model.CommunityType
 import com.pedro0210.hobbylobby.presentation.navigation.AdminCommunity
 import com.pedro0210.hobbylobby.presentation.navigation.AdminRoom
 import com.pedro0210.hobbylobby.presentation.navigation.BigCommunity
+import com.pedro0210.hobbylobby.presentation.navigation.Requests
 import com.pedro0210.hobbylobby.presentation.navigation.Rooms
 import com.pedro0210.hobbylobby.presentation.navigation.SmallCommunity
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToAdminCommunities
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToAdminRooms
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToBigCommunities
+import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToRequests
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToRooms
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToSmallCommunities
 
@@ -75,8 +77,14 @@ fun routingSettingsCommunities(
 
     //TODO: it will just do the navigation for the rooms and communities
     when (type){
-        CommunityType.rooms ->{
-            //TODO:
+        CommunityType.rooms ->{ navController.navigateToRequests(
+                Requests(
+                    id = id,
+                    title = name,
+                    image = image,
+                    description = description
+                )
+            )
         }
 
         CommunityType.communities -> navController.navigateToAdminRooms(

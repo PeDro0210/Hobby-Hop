@@ -1,4 +1,4 @@
-package com.pedro0210.hobbylobby.presentation.screens.Rooms
+package com.pedro0210.hobbylobby.presentation.screens.ComunitiesStuff
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -38,36 +38,30 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.pedro0210.hobbylobby.R
+import com.pedro0210.hobbylobby.presentation.state.AcceptanceScreenState
 import com.pedro0210.hobbylobby.presentation.viewmodel.rooms.AceptacionesViewModel
 
 @Composable
 fun AceptacionesScreenRoute(
     navController: NavController,
-    viewModel: AceptacionesViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = AceptacionesViewModel.provideFactory())
+    viewModel: AceptacionesViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     AceptacionesScreen(
-        navController = navController,
-        communityName = uiState.roomName,
-        communityDescription = uiState.roomDescription,
-        requests = uiState.aceptaciones,
-        onAcceptClick = { userName -> viewModel.acceptRequest(userName) },
-        onRejectClick = { userName -> viewModel.rejectRequest(userName) },
+        state = uiState,
+        onAcceptClick = { id -> viewModel.acceptRequest(id) },
+        onRejectClick = { id -> viewModel.rejectRequest(id) },
         onBackClick = { navController.popBackStack() },
-        onEditClick = { /* Acción de edición */ }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AceptacionesScreen(
-    navController: NavController,
-    communityName: String,
-    communityDescription: String,
-    requests: List<String>,
-    onEditClick: () -> Unit = {},
+    state: AcceptanceScreenState,
     onAcceptClick: (String) -> Unit = {},
     onRejectClick: (String) -> Unit = {},
     onBackClick: () -> Unit = {}
@@ -92,33 +86,32 @@ fun AceptacionesScreen(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    painter = painterResource(R.drawable.street_fighter_logo), // Placeholder image
-                    contentDescription = null,
+                AsyncImage(
+                    model = state.image,
+                    contentDescription =  "Room image",
                     modifier = Modifier
                         .size(80.dp)
                         .clip(CircleShape)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
-                    Text(text = communityName, style = MaterialTheme.typography.headlineLarge)
-                    Text(text = communityDescription)
+                    Text(text = state.name, style = MaterialTheme.typography.headlineLarge)
+                    Text(text = state.description)
                 }
                 Spacer(modifier = Modifier.weight(1f))
-                IconButton(onClick = onEditClick) {
-                    Icon(Icons.Default.Edit, contentDescription = "Edit")
-                }
+
             }
 
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = "Solicitudes", style = MaterialTheme.typography.bodyLarge)
 
             LazyColumn {
-                items(requests) { request ->
+                items(state.requests) { item ->
                     RequestItem(
-                        userName = request,
-                        onAcceptClick = { onAcceptClick(request) },
-                        onRejectClick = { onRejectClick(request) }
+                        image = item.pfp,
+                        userName = item.name,
+                        onAcceptClick = { onAcceptClick(item.id) },
+                        onRejectClick = { onRejectClick(item.id) }
                     )
                 }
             }
@@ -127,14 +120,23 @@ fun AceptacionesScreen(
 }
 
 @Composable
-fun RequestItem(userName: String, onAcceptClick: () -> Unit, onRejectClick: () -> Unit) {
+fun RequestItem(
+    userName: String,
+    onAcceptClick: () -> Unit,
+    onRejectClick: () -> Unit,
+    image:String
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(Icons.Default.Person, contentDescription = null, modifier = Modifier.size(40.dp))
+        AsyncImage(
+            model = image,
+            contentDescription = null,
+            modifier = Modifier.size(40.dp)
+        )
         Spacer(modifier = Modifier.width(16.dp))
         Text(text = userName, modifier = Modifier.weight(1f))
         IconButton(onClick = onAcceptClick) {
@@ -146,17 +148,3 @@ fun RequestItem(userName: String, onAcceptClick: () -> Unit, onRejectClick: () -
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewAceptacionesScreen() {
-    AceptacionesScreen(
-        communityName = "Street Fighter 3 Guatemala",
-        communityDescription = "Comunidad de juego de peleas",
-        requests = listOf("Juan", "Anna", "Marcos", "Luis", "Carlos"),
-        onAcceptClick = {},
-        onRejectClick = {},
-        onBackClick = {},
-        onEditClick = {},
-        navController = rememberNavController()
-    )
-}

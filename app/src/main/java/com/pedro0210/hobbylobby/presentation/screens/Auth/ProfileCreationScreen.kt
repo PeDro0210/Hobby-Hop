@@ -85,6 +85,7 @@ fun ProfileCreationScreen(
     onRegisterClick: () -> Unit
 ){
 
+    // fuck good design, I just want something that works
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->

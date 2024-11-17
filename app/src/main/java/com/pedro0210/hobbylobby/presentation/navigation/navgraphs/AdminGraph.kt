@@ -15,8 +15,10 @@ import com.pedro0210.hobbylobby.presentation.navigation.BigCommunity
 import com.pedro0210.hobbylobby.presentation.navigation.CommunitiesGraph
 import com.pedro0210.hobbylobby.presentation.navigation.Home
 import com.pedro0210.hobbylobby.presentation.navigation.Profile
+import com.pedro0210.hobbylobby.presentation.navigation.Requests
 import com.pedro0210.hobbylobby.presentation.navigation.Rooms
 import com.pedro0210.hobbylobby.presentation.navigation.SmallCommunity
+import com.pedro0210.hobbylobby.presentation.screens.ComunitiesStuff.AceptacionesScreenRoute
 import com.pedro0210.hobbylobby.presentation.screens.ComunitiesStuff.AdminCommunitiesRoute
 import com.pedro0210.hobbylobby.presentation.screens.ComunitiesStuff.CommunitiesRoute
 import com.pedro0210.hobbylobby.presentation.screens.Homescreen.HomeRoute
@@ -26,6 +28,7 @@ import com.pedro0210.hobbylobby.presentation.viewmodel.communities_stuff.AdminVi
 import com.pedro0210.hobbylobby.presentation.viewmodel.communities_stuff.CommunitiesViewModel
 import com.pedro0210.hobbylobby.presentation.viewmodel.home.HomeViewModel
 import com.pedro0210.hobbylobby.presentation.viewmodel.profile.UserViewModel
+import com.pedro0210.hobbylobby.presentation.viewmodel.rooms.AceptacionesViewModel
 import com.pedro0210.hobbylobby.presentation.viewmodel.rooms.RoomsViewModel
 
 fun NavGraphBuilder.adminGraph(
@@ -67,6 +70,27 @@ fun NavGraphBuilder.adminGraph(
 
             AdminCommunitiesRoute(
                 viewModel = adminCommunitiesViewModel,
+                navController = navController
+            )
+
+        }
+
+
+        composable<Requests>{navBackStackEntry ->
+            val requests = navBackStackEntry.toRoute<Requests>()
+
+            val requestsViewModel: AceptacionesViewModel = viewModel(
+                factory = AceptacionesViewModel.provideFactory(
+                    id = requests.id,
+                    name = requests.title,
+                    image = requests.image,
+                    description = requests.description
+                )
+            )
+
+
+            AceptacionesScreenRoute(
+                viewModel = requestsViewModel,
                 navController = navController
             )
 
