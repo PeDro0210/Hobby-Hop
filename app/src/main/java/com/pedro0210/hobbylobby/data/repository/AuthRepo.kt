@@ -30,30 +30,34 @@ class AuthRepo {
 
     suspend fun attemptLogin(email: String, password: String): Result<String, NetworkError> {
         return try {
-            // Attempt to sign in with email and password
+
             val authResult = auth.signInWithEmailAndPassword(email, password).await()
             val uid = authResult.user?.uid ?: return Result.Error(NetworkError.USER_NOT_FOUND)
             Result.Success(uid)
         } catch (e: FirebaseAuthInvalidCredentialsException) {
-            // Handle invalid credentials error
+
             Result.Error(NetworkError.INVALID_CREDENTIAL)
         } catch (e: FirebaseException) {
-            // Handle other Firebase exceptions
+
             Result.Error(NetworkError.FIREBASE_GENERIC)
         }
     }
 
     suspend fun attemptToSignUp(email: String, password: String): Result<String, NetworkError> {
         return try {
-            // If login fails, attempt to create a new user
+            println("arriba como espana")
             val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+            println("abajo como espana")
             val uid = authResult.user?.uid ?: return Result.Error(NetworkError.USER_NOT_FOUND)
             Result.Success(uid)
-        } catch (e: FirebaseAuthException) {
-            // Handle email already in use error
+
             Result.Error(NetworkError.EMAIL_ALREADY_IN_USE)
         } catch (e: FirebaseException) {
-            // Handle other Firebase exceptions
+
+            Result.Error(NetworkError.FIREBASE_GENERIC)
+        }
+        catch (e: Exception) {
+            println("Error: $e")
             Result.Error(NetworkError.FIREBASE_GENERIC)
         }
     }

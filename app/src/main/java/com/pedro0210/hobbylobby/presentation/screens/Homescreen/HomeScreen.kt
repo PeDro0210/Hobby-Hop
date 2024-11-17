@@ -12,6 +12,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.pedro0210.hobbylobby.presentation.model.CommunityType
+import com.pedro0210.hobbylobby.presentation.screens.Util.LoadingLayout
 import com.pedro0210.hobbylobby.presentation.state.HomeScreenState
 import com.pedro0210.hobbylobby.presentation.util.generateRandomCommunities
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
@@ -43,54 +44,57 @@ fun Home(
     Scaffold(
         topBar = {
             TopBar(
-                navController = navController ,
+                navController = navController,
                 homeScreen = true,
                 settingsScreen = false
             )
         },
-        content = {innerPadding ->
+        content = { innerPadding ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                CommunitiesColumns(
-                    modifier = Modifier.weight(0.5f),
-                    communities = state.countries,
-                    title = "Countries",
-                    partOfCommunity = true,
-                    navController = navController,
-                    onClickNavigation = { image, name, description, id, partOfCommunity, navController, type ->
-                        routingNormalCommunities(
-                            image = image,
-                            name = name,
-                            description = description,
-                            id = id,
-                            partOfCommunity = partOfCommunity,
-                            navController = navController,
-                            type = type
-                        )
-                    }
-                )
-                CommunitiesColumns(
-                    modifier = Modifier.weight(0.5f),
-                    communities = state.ownCommunities,
-                    title = "My Rooms",
-                    partOfCommunity = true,
-                    navController = navController,
-                    onClickNavigation = { image, name, description, id, partOfCommunity, navController, type ->
-                        routingNormalCommunities(
-                            image = image,
-                            name = name,
-                            description = description,
-                            id = id,
-                            partOfCommunity = partOfCommunity,
-                            navController = navController,
-                            type = type
-                        )
-                    }
-                )
-
+                if (state.isLoading) {
+                    LoadingLayout(modifier = Modifier.fillMaxSize())
+                } else {
+                    CommunitiesColumns(
+                        modifier = Modifier.weight(0.5f),
+                        communities = state.countries,
+                        title = "Countries",
+                        partOfCommunity = true,
+                        navController = navController,
+                        onClickNavigation = { image, name, description, id, partOfCommunity, navController, type ->
+                            routingNormalCommunities(
+                                image = image,
+                                name = name,
+                                description = description,
+                                id = id,
+                                partOfCommunity = partOfCommunity,
+                                navController = navController,
+                                type = type
+                            )
+                        }
+                    )
+                    CommunitiesColumns(
+                        modifier = Modifier.weight(0.5f),
+                        communities = state.ownCommunities,
+                        title = "My Rooms",
+                        partOfCommunity = true,
+                        navController = navController,
+                        onClickNavigation = { image, name, description, id, partOfCommunity, navController, type ->
+                            routingNormalCommunities(
+                                image = image,
+                                name = name,
+                                description = description,
+                                id = id,
+                                partOfCommunity = partOfCommunity,
+                                navController = navController,
+                                type = type
+                            )
+                        }
+                    )
+                }
             }
         }
     )

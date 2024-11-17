@@ -40,6 +40,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.pedro0210.hobbylobby.R
+import com.pedro0210.hobbylobby.presentation.screens.Util.LoadingLayout
 import com.pedro0210.hobbylobby.presentation.state.AcceptanceScreenState
 import com.pedro0210.hobbylobby.presentation.view.screens.widgets.TopBar
 import com.pedro0210.hobbylobby.presentation.viewmodel.rooms.AceptacionesViewModel
@@ -67,6 +68,9 @@ fun AceptacionesScreen(
     onAcceptClick: (String) -> Unit = {},
     onRejectClick: (String) -> Unit = {},
 ) {
+   if (state.isLoading) {
+    LoadingLayout(modifier = Modifier.fillMaxSize())
+} else {
     Column(modifier = Modifier.fillMaxSize()) {
         TopBar(
             navController = navController,
@@ -81,7 +85,7 @@ fun AceptacionesScreen(
             ) {
                 AsyncImage(
                     model = state.image,
-                    contentDescription =  "Room image",
+                    contentDescription = "Room image",
                     modifier = Modifier
                         .size(80.dp)
                         .clip(CircleShape)
@@ -92,7 +96,6 @@ fun AceptacionesScreen(
                     Text(text = state.description)
                 }
                 Spacer(modifier = Modifier.weight(1f))
-
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -110,6 +113,7 @@ fun AceptacionesScreen(
             }
         }
     }
+}
 }
 
 @Composable

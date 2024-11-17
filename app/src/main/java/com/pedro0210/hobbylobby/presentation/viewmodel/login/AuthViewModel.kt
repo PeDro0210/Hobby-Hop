@@ -128,12 +128,15 @@ class AuthViewModel(
                     AuthAction.LOGIN -> {
 
                         responseToResult {
+                            println("login")
                             repo.attemptLogin(loginState.value.email, loginState.value.password)
+
                         }
                     }
                     AuthAction.SIGN_UP -> {
 
                         responseToResult {
+                            println("sign up")
                             repo.attemptToSignUp(loginState.value.email, loginState.value.password)
                         }
                     }

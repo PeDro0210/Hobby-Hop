@@ -48,7 +48,8 @@ class AceptacionesViewModel(
                 users.collect{requests ->
                     _uiState.update {
                         it.copy(
-                            requests = requests
+                            requests = requests,
+                            isLoading = false
                         )
                     }
 

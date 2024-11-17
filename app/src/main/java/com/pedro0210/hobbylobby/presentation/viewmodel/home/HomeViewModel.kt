@@ -55,9 +55,11 @@ class HomeViewModel(
 
             launch {
                 ownCommunities.collect { ownCommunitiesList ->
-                    _state.update { it.copy(ownCommunities = ownCommunitiesList) }
+                    _state.update { it.copy(ownCommunities = ownCommunitiesList, isLoading = false) }
                 }
             }
+
+
         }
     }
 

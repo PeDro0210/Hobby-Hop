@@ -56,6 +56,7 @@ class CommunitiesViewModel(
                     _state.update {
                         it.copy(
                             communities = communitiesList,
+                            isLoading = false
                         )
                     }
                 }
