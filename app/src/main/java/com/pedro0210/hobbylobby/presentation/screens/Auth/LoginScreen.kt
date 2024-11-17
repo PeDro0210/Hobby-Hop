@@ -36,6 +36,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.pedro0210.hobbylobby.R
+import com.pedro0210.hobbylobby.domain.util.AuthAction
 import com.pedro0210.hobbylobby.domain.util.LoginEnum
 import com.pedro0210.hobbylobby.presentation.navigation.AuthDestionation
 import com.pedro0210.hobbylobby.presentation.navigation.Home
@@ -46,6 +47,7 @@ import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 import com.pedro0210.hobbylobby.presentation.view.screens.widgets.buttons.LoginButton
 import com.pedro0210.hobbylobby.presentation.viewmodel.login.AuthViewModel
 
+
 @Composable
 fun LoginRoute(
     viewModel: AuthViewModel,
@@ -53,13 +55,12 @@ fun LoginRoute(
 ){
     val state: LoginScreenState by viewModel.loginState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(state) {//you saved my life
+    LaunchedEffect(state) {
         if (!state.hasError) {
             navController.navigateFromLogin(state.navDestination)
         }
     }
 
-    //TODO: manage signup and login depending if the account is already logged in
     Login(
         navController = navController,
         state = state,
@@ -72,18 +73,17 @@ fun LoginRoute(
     )
 }
 
-
 @Composable
 fun Login(
     navController: NavController,
     state: LoginScreenState,
     onPasswordChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
-    onLoginClick: (LoginEnum) -> Unit,
+    onLoginClick: (AuthAction) -> Unit,
     onBoxChecked: (Boolean) -> Unit,
     onChangeButtonText: (String) -> Unit,
     onChangeNavDestination: (AuthDestionation) -> Unit
-){ //TODO: add all states from the loginState somehow
+){
     Scaffold (
         content = { paddingValues ->
 
@@ -133,16 +133,15 @@ fun Login(
                         ) {
                             Checkbox(
                                 checked = state.boxChecked,
-                                onCheckedChange = { checked -> //TODO: also make that the view modle takes care of this
+                                onCheckedChange = { checked ->
                                     onBoxChecked(checked)
                                     if (checked) {
                                         onChangeButtonText("Welcome back")
-                                        onChangeNavDestination(Home) // TODO: add the nav for the new screen
+                                        onChangeNavDestination(Home)
                                     } else {
                                         onChangeButtonText("Join Us")
                                         onChangeNavDestination(SignUp)
                                     }
-
                                 }
                             )
                             Text("Login")
@@ -150,15 +149,23 @@ fun Login(
                             Spacer(modifier = Modifier.weight(1f))
 
                             Button(onClick = {
-                                onLoginClick(LoginEnum.NormalAuth)
+                                onLoginClick(state.authAction)
                             }) {
                                 Text(state.buttonText)
                             }
                         }
-                    }
-                    Spacer(modifier = Modifier.height(24.dp))
 
-                    // Join Using Section
+                        if (state.hasError) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = state.errorMessage,
+                                color = Color.Red,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -167,11 +174,9 @@ fun Login(
                         HorizontalDivider(
                             color = Color.Red,
                             thickness = 2.dp,
-                            modifier = Modifier
-                                .weight(0.75f)
+                            modifier = Modifier.weight(0.75f)
                         )
 
-                        // "Join Using" text
                         Text(
                             text = "Join Using",
                             color = Color.Red,
@@ -179,19 +184,14 @@ fun Login(
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
 
-                        // Second red line
                         HorizontalDivider(
                             color = Color.Red,
                             thickness = 2.dp,
-                            modifier = Modifier
-                                .weight(0.75f)
+                            modifier = Modifier.weight(0.75f)
                         )
                     }
 
-
-
                     Spacer(modifier = Modifier.height(24.dp))
-
 
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(32.dp),
@@ -199,50 +199,24 @@ fun Login(
                             .background(
                                 MaterialTheme.colorScheme.onPrimaryContainer,
                                 shape = RoundedCornerShape(30.dp)
-                            ) // light blue background with rounded corners
+                            )
                             .padding(16.dp)
                     ) {
 
-                        val logos: List<Int> = listOf(
-                            R.drawable.google,
-                            R.drawable.meta,
-                            R.drawable.x
-                        )
-
-                        val loginEnums: List<LoginEnum> = listOf(
-                            LoginEnum.GoogleAuth,
-                            LoginEnum.MetaAuth,
-                            LoginEnum.XAuth
-                        )
-
-                        for (i in 0..2) {
-                            LoginButton(description = "Auth Button", image = logos[i]) {
-                                //TODO: add the login, with the viewmodel
-                                onLoginClick(loginEnums[i]) // see in this where to render
-
-                            }
-                        }
 
                     }
                 }
-            }
-            else{
-                //Just do this, if app opens
+            } else {
                 LaunchedEffect(true) {
-                    //done what's happening in here, but this is doing a good job
                     if (state.isLogged) {
                         navController.navigateFromLogin(Home)
                     }
-
                 }
-
-
             }
         }
-
     )
-
 }
+
 
 
 @Preview(showBackground = true)

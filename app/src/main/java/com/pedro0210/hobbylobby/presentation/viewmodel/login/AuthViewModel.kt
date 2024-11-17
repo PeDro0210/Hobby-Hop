@@ -1,7 +1,5 @@
 package com.pedro0210.hobbylobby.presentation.viewmodel.login
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -9,22 +7,22 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.google.api.Context
 import com.pedro0210.hobbylobby.data.datastore.UserData
+import com.pedro0210.hobbylobby.data.network.responseToResult
 import com.pedro0210.hobbylobby.data.repository.AuthRepo
 import com.pedro0210.hobbylobby.dataStore
+import com.pedro0210.hobbylobby.domain.util.AuthAction
 import com.pedro0210.hobbylobby.domain.util.LoginEnum
+import com.pedro0210.hobbylobby.domain.util.NetworkError
 import com.pedro0210.hobbylobby.presentation.navigation.AuthDestionation
 import com.pedro0210.hobbylobby.presentation.state.LoginScreenState
 import com.pedro0210.hobbylobby.presentation.state.ProfileCreationState
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.IOException
+import com.pedro0210.hobbylobby.domain.util.Result
 
 class AuthViewModel(
     private val user: UserData,
@@ -72,14 +70,18 @@ class AuthViewModel(
         if (value) {
             _loginState.update {
                 it.copy(
-                    boxChecked = true
+                    boxChecked = true,
+                    authAction = AuthAction.LOGIN
                 )
             }
+
+
         }
         else{
             _loginState.update {
                 it.copy(
-                    boxChecked = false
+                    boxChecked = false,
+                    authAction = AuthAction.SIGN_UP
                 )
             }
         }
@@ -88,7 +90,8 @@ class AuthViewModel(
     fun changeButtonText(buttonTittle: String){
         _loginState.update{
             it.copy(
-                buttonText = buttonTittle
+                buttonText = buttonTittle,
+
             )
         }
     }
@@ -101,10 +104,11 @@ class AuthViewModel(
         }
     }
 
-    private fun changeError(error: Boolean){
+    private fun changeError(error: Boolean, message: String){
             _loginState.update {
                 it.copy(
-                    hasError = error
+                    hasError = error,
+                    errorMessage = message
                 )
             }
 
@@ -114,30 +118,58 @@ class AuthViewModel(
     //123
     //TODO: set login enum to the type of login
     //TODO: set diferent types of loging depending on the enum
-    fun login(type: LoginEnum) {
+    fun login(type: AuthAction) {
         viewModelScope.launch {
             try {
-                val id = repo.manageAuth(loginState.value.email, loginState.value.password)
-                val username = repo.getUsername(id)
-                val pfp = repo.getPfp(id)
-                if (id != "ERROR") {
-                    user.setUserKeys(
-                        id = id,
-                        username = username,
-                        pfp = pfp
-                    )
-                    changeError(false)
+                val result = when (type) {
+                    AuthAction.LOGIN -> {
 
-                } else {
-                    println("not logged in")
-                    changeError(true)
+                        responseToResult {
+                            repo.attemptLogin(loginState.value.email, loginState.value.password)
+                        }
+                    }
+                    AuthAction.SIGN_UP -> {
+
+                        responseToResult {
+                            repo.attemptToSignUp(loginState.value.email, loginState.value.password)
+                        }
+                    }
                 }
-                println(loginState.value.hasError)
+
+                when (result) {
+                    is Result.Success -> {
+                        val id = result.data
+                        val username = repo.getUsername(id)
+                        val pfp = repo.getPfp(id)
+
+                        user.setUserKeys(
+                            id = id,
+                            username = username,
+                            pfp = pfp
+                        )
+
+                        val message = when (type) {
+                            AuthAction.LOGIN -> "Successfully logged in"
+                            AuthAction.SIGN_UP -> "Successfully signed up"
+                        }
+                        changeError(false, message)
+                    }
+                    is Result.Error -> {
+                        val errorMessage = when (result.error) {
+                            NetworkError.INVALID_CREDENTIAL -> "Invalid credentials"
+                            NetworkError.USER_NOT_FOUND -> "User not found"
+                            NetworkError.EMAIL_ALREADY_IN_USE -> "Email already in use"
+                            NetworkError.FIREBASE_GENERIC -> "An unknown error occurred"
+                        }
+                        changeError(true, errorMessage)
+                    }
+                }
             } catch (e: Exception) {
-                println("Error logging in: $e")
+                changeError(true, "Error during operation")
             }
         }
     }
+
 
 
     //For Logging Screen
@@ -206,10 +238,11 @@ class AuthViewModel(
 
             else {
                 println("not error signing")
-                changeError(true)
+                changeError(true, "Error logging in")
             }
         }
     }
+
 
 
     companion object {
