@@ -2,17 +2,11 @@ package com.pedro0210.hobbylobby.presentation.viewmodel.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.pedro0210.hobbylobby.data.datastore.UserPreferences
 import com.pedro0210.hobbylobby.data.repository.ProfileRepository
-import com.pedro0210.hobbylobby.dataStore
-import com.pedro0210.hobbylobby.presentation.event.ProfileEvent
 import com.pedro0210.hobbylobby.presentation.event.UserEvent
-import com.pedro0210.hobbylobby.presentation.model.SocialMedia
-import com.pedro0210.hobbylobby.presentation.state.ProfileState
 import com.pedro0210.hobbylobby.presentation.state.UserState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

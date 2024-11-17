@@ -6,22 +6,20 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.pedro0210.hobbylobby.data.datastore.UserPreferences
+import com.pedro0210.hobbylobby.data.datastore.UserData
 import com.pedro0210.hobbylobby.data.repository.AuthRepo
 import com.pedro0210.hobbylobby.dataStore
 import com.pedro0210.hobbylobby.domain.util.LoginEnum
 import com.pedro0210.hobbylobby.presentation.navigation.AuthDestionation
 import com.pedro0210.hobbylobby.presentation.state.LoginScreenState
 import com.pedro0210.hobbylobby.presentation.state.ProfileCreationState
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 class AuthViewModel(
-    private val preferences: UserPreferences,
+    private val preferences: UserData,
     private val loginRepo: AuthRepo
 ): ViewModel() {
     private val _loginState = MutableStateFlow(LoginScreenState())
@@ -141,7 +139,7 @@ class AuthViewModel(
                 val application = checkNotNull(this[APPLICATION_KEY])
 
                 AuthViewModel(
-                    preferences = UserPreferences(application.dataStore),
+                    preferences = UserData(application.dataStore),
                     loginRepo = AuthRepo()
                 )
             }

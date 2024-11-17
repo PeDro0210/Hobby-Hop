@@ -1,5 +1,6 @@
 package com.pedro0210.hobbylobby.presentation.navigation.navgraphs
 
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -16,14 +17,18 @@ import com.pedro0210.hobbylobby.presentation.view.screens.AddingLinksScreenRoute
 import com.pedro0210.hobbylobby.presentation.view.screens.ChangingProfileScreenRoute
 import com.pedro0210.hobbylobby.presentation.view.screens.CommunitiesCreatorRoute
 import com.pedro0210.hobbylobby.presentation.view.screens.SubcommunitiesCreatorRoute
+import com.pedro0210.hobbylobby.presentation.viewmodel.communities_stuff.CreatorViewModel
 import com.pedro0210.hobbylobby.presentation.viewmodel.profile.ProfileViewModel
+
 
 fun NavGraphBuilder.settingsGraph(
     navController: NavController,
 ){
+
     navigation<SettingsGraph>(
         startDestination =  Settings
     ){
+
         composable<Settings> {
 
             val viewModel : ProfileViewModel = viewModel(
@@ -60,19 +65,19 @@ fun NavGraphBuilder.settingsGraph(
     }
 
     composable<CreateBigCommunity>{ navBackStackEntry ->
-        val viewModel : ProfileViewModel = viewModel(
-            factory = ProfileViewModel.provideFactory()
-        )
+        val viewModelCreator : CreatorViewModel = viewModel(factory = CreatorViewModel.Factory)
         CommunitiesCreatorRoute(
-            viewModel = viewModel,
-            navController = navController
+            viewModel = viewModelCreator,
+            navController = navController,
+
         )
     }
 
     composable<CreateSmallCommunity> { navBackStackEntry ->
-
-       SubcommunitiesCreatorRoute(
-           navController = navController
+        val viewModelCreator : CreatorViewModel = viewModel(factory = CreatorViewModel.Factory)
+        SubcommunitiesCreatorRoute(
+           navController = navController,
+              viewModel = viewModelCreator
        )
 
     }

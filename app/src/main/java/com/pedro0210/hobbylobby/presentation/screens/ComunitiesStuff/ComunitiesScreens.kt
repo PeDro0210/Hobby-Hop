@@ -137,7 +137,7 @@ fun CommunitiesScreen(
 @Composable
 fun CommRedirectCommPreview() {
     HobbyLobbyTheme {
-        val item = generateRandomCommunities(1, CommunityType.bigCommunity)[0]
+        val item = generateRandomCommunities(1, CommunityType.country)[0]
         CommunitiesScreen(
             navController = rememberNavController(),
             state = ComunitiesScreenState(
@@ -148,7 +148,7 @@ fun CommRedirectCommPreview() {
                 partOfCommunity = item.partOfCommunity,
                 communities = generateRandomCommunities(
                         n = 10,
-                        type = CommunityType.bigCommunity
+                        type = CommunityType.country
                     ),
             )
         )

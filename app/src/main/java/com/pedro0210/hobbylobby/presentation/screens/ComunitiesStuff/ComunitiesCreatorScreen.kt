@@ -1,5 +1,8 @@
 package com.pedro0210.hobbylobby.presentation.view.screens
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +37,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,29 +45,53 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.pedro0210.hobbylobby.presentation.event.CreatorEvent
+import com.pedro0210.hobbylobby.presentation.model.CommunityCreation
 import com.pedro0210.hobbylobby.presentation.navigation.routers.navigateToCreateSmallCommunities
 import com.pedro0210.hobbylobby.presentation.state.CreatorScreenState
 import com.pedro0210.hobbylobby.presentation.viewmodel.communities_stuff.CreatorViewModel
+import com.pedro0210.hobbylobby.presentation.viewmodel.communities_stuff.GlobalRoom
 import com.pedro0210.hobbylobby.ui.theme.HobbyLobbyTheme
 
 
 @Composable
 fun CommunitiesCreatorRoute(
 
-    viewModel: CreatorViewModel,
-    //TODO: create another viewmodel for this
+    viewModel: CreatorViewModel = viewModel(factory = CreatorViewModel.Factory),
     navController: NavController
 ){
 
     val state: CreatorScreenState by viewModel.state.collectAsStateWithLifecycle()
-
+    val globalroom by GlobalRoom.newRoom
+    //var globalroom by remember { mutableStateOf(GlobalRoom.newRoom) }
+    LaunchedEffect(Unit){
+        if (globalroom.title != ""){
+            viewModel.onEvent(CreatorEvent.onRoomCreate(globalroom.title, globalroom.description, globalroom.image))
+        }
+    }
 
     CommunitiesCreatorScreen(
         navController = navController,
         onAddClick = {navController.navigateToCreateSmallCommunities()},
-        state = state
+        state = state,
+        onPictureChange = {viewModel.onEvent(CreatorEvent.onPictureChange(it))}, //TODO:fix
+        onNameChange = {viewModel.onEvent(CreatorEvent.onNameChange(it))},
+        ondescriptionChange = {viewModel.onEvent(CreatorEvent.onDescriptionChange(it))},
+        ondoneClick = {viewModel.onEvent(CreatorEvent.onComunityCreate(state.title, state.description, state.image, state.rooms, state.bigCommunityName))
+                        while(true){
+                            if (state.isLoading == false){
+                                navController.popBackStack()
+                                break
+                            }
+                        }
+        },
+        onBigCommunityChange = {viewModel.onEvent(CreatorEvent.onBigCommunityChange(it))},
+        onDeleteSubC = {viewModel.onEvent(CreatorEvent.onRoomDelete(it))},
+        onBackClick = {navController.popBackStack()}
+
     )
 
 }
@@ -73,13 +101,13 @@ fun CommunitiesCreatorRoute(
 @Composable
 fun CommunitiesCreatorScreen(
     onBackClick: () -> Unit = {}, //for nav
-    onPictureChange: () -> Unit = {}, //IDK
+    onPictureChange: (Uri) -> Unit = {}, //IDK
     onNameChange: (String) -> Unit = {}, //IDK
-    onClearClick: () -> Unit = {},
     ondescriptionChange: (String) -> Unit = {},//IDK
     ondoneClick: () -> Unit = {}, //For nav
-    onDeleteSubC: () -> Unit = {}, //IDK
+    onDeleteSubC: (String) -> Unit = {}, //IDK
     onAddClick: () -> Unit = {}, //For nav
+    onBigCommunityChange: (String) -> Unit ={},
     navController: NavController,
     state: CreatorScreenState
 ){
@@ -99,118 +127,18 @@ fun CommunitiesCreatorScreen(
             onBackClick = onBackClick,
             onPictureChange = onPictureChange,
             onNameChange = onNameChange,
-            onClearClick = onClearClick,
             ondescriptionChange = ondescriptionChange,
             onDeleteSubC = onDeleteSubC,
             onAddClick = onAddClick,
-            state = state
+            state = state,
+            onBigCommunityChange = onBigCommunityChange
         )
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CommunitiesCreator(
-    modifier: Modifier = Modifier,
-    onBackClick: () -> Unit = {}, //for nav
-    onPictureChange: () -> Unit = {}, //IDK
-    onNameChange: (String) -> Unit = {}, //IDK
-    onClearClick: () -> Unit = {},
-    ondescriptionChange: (String) -> Unit = {},//IDK
-    onDeleteSubC: () -> Unit = {}, //IDK
-    onAddClick: () -> Unit = {}, //For nav
-    state: CreatorScreenState
-) {
-    Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
-        TopAppBar(title = {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-            ) {
-                IconButton(onClick = { onBackClick() }) {
-                    Icon(
-                        Icons.Default.ArrowBack,
-                        contentDescription = "Back"
-                    )
-                }
-                Spacer(modifier = Modifier.padding(8.dp))
-                Text(text = "Menu")
-            }
-        })
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp, 0.dp)
-        ) {
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Box(
-                    modifier = Modifier
-                        .background(
-                            color = MaterialTheme.colorScheme.secondary
-                        )
-                        .size(150.dp)
-                        .clip(CircleShape),
-                    contentAlignment = androidx.compose.ui.Alignment.Center
-                ) {
-                    AsyncImage(
-                        model = state.image,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(150.dp)
-                            .clip(
-                                RoundedCornerShape(16.dp)
-
-                            )
-                    )
-                    IconButton(onClick = onPictureChange) {
-                        Icon(
-                            Icons.Default.Add,
-                            contentDescription = "Picture",
-                            modifier = Modifier.size(200.dp)
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.padding(8.dp))
-                OutlinedTextField(
-                    value = state.title,
-                    onValueChange = onNameChange,
-
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            TextField(
-                value = state.description,
-                onValueChange = ondescriptionChange,
-                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface),
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            HorizontalDivider(thickness = 2.dp)
-
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Administrar Subcomunidades:")
-
-            Spacer(modifier = Modifier.height(8.dp))
-            Column (modifier = Modifier.padding(4.dp, 0.dp)){
-                LazyColumn {
-                    items(2) {
-                        SubcommunitySquare("Room", onDeleteSubC = onDeleteSubC)
-                        Spacer(modifier = Modifier.height(16.dp))
-                    }
-
-                }
-                AddSubcommuinity(Text = "Agregar", onAddClick = onAddClick)
-
-            }
-
-        }
-    }
-}
 
 @Composable
-fun SubcommunitySquare(
-    Text: String,
-    onDeleteSubC: () -> Unit = {}
-){
+fun SubcommunitySquare(Text: String, image: Uri?, onDeleteSubC: () -> Unit) {
     Row (modifier = Modifier
         .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -228,7 +156,10 @@ fun SubcommunitySquare(
                     .fillMaxWidth(0.35f),
                 contentAlignment = androidx.compose.ui.Alignment.Center
             ) {
-
+                AsyncImage(model = image,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(50.dp))
             }
             Spacer(modifier = Modifier.padding(8.dp))
             Text(text = Text)
@@ -240,13 +171,12 @@ fun SubcommunitySquare(
 
 
     }
+
+
 }
 
 @Composable
-fun AddSubcommuinity(
-    Text: String,
-    onAddClick: () -> Unit = {}
-){
+fun AddSubcommuinity(Text: String, onAddClick: () -> Unit) {
     Row (modifier = Modifier
         .fillMaxWidth()
         .clickable { onAddClick() },
@@ -277,24 +207,133 @@ fun AddSubcommuinity(
         Icon(Icons.Default.KeyboardArrowRight, contentDescription = "Next")
 
     }
+
 }
 
-
-@Preview
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PreviewCommunitiesCreatorScreen(){
-    HobbyLobbyTheme {
-        CommunitiesCreatorScreen(
-            onBackClick = {},
-            onPictureChange = {},
-            onNameChange = {},
-            onClearClick = {},
-            ondescriptionChange = {},
-            ondoneClick = {},
-            onDeleteSubC = {},
-            onAddClick = {},
-            navController = NavController(LocalContext.current),
-            state = CreatorScreenState()
-        )
+fun CommunitiesCreator(
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit = {}, //for nav
+    onPictureChange: (Uri) -> Unit = {}, //IDK
+    onNameChange: (String) -> Unit = {}, //IDK
+    onBigCommunityChange: (String) -> Unit = {},
+    ondescriptionChange: (String) -> Unit = {},//IDK
+    onDeleteSubC: (String) -> Unit = {}, //IDK
+    onAddClick: () -> Unit = {}, //For nav
+    state: CreatorScreenState
+) {
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            onPictureChange(uri)
+        }
+
+    }
+
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .background(MaterialTheme.colorScheme.background)) {
+        TopAppBar(title = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+            ) {
+                IconButton(onClick = { onBackClick() }) {
+                    Icon(
+                        Icons.Default.ArrowBack,
+                        contentDescription = "Back"
+                    )
+                }
+                Spacer(modifier = Modifier.padding(8.dp))
+                Text(text = "Menu")
+            }
+        })
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp, 0.dp)
+        ) {
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Box(
+                    modifier = Modifier
+                        .background(
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+                        .size(150.dp),
+                    contentAlignment = androidx.compose.ui.Alignment.Center
+                ) {
+                    AsyncImage(
+                        model = state.image,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(150.dp)
+
+                    )
+                    IconButton(onClick = {launcher.launch("image/*")}
+                    ) {
+                        Icon(
+                            Icons.Default.Add,
+                            contentDescription = "Picture",
+                            modifier = Modifier.size(200.dp)
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.padding(8.dp))
+                Column (modifier = Modifier.fillMaxWidth()){
+                    OutlinedTextField(
+                        value = state.title,
+                        onValueChange = onNameChange,
+                        )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    OutlinedTextField(
+                        value = state.bigCommunityName,
+                        onValueChange = onBigCommunityChange
+                    )
+
+                }
+
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            TextField(
+                value = state.description,
+                onValueChange = ondescriptionChange,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface),
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            HorizontalDivider(thickness = 2.dp)
+
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = "Administrar Subcomunidades:")
+
+            Spacer(modifier = Modifier.height(8.dp))
+            Column (modifier = Modifier.padding(4.dp, 0.dp)){
+                LazyColumn {
+                    items(state.rooms.size) { index ->
+                        SubcommunitySquare(
+                            Text = state.rooms[index].title,
+                            image = state.rooms[index].image,
+                            onDeleteSubC = { onDeleteSubC(state.rooms[index].title) }
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                    item {
+                        AddSubcommuinity(Text = "Agregar Subcomunidad", onAddClick = onAddClick)
+                    }
+                }
+
+
+
+            }
+
+        }
     }
 }
+
+
+
+
+

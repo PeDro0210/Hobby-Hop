@@ -51,7 +51,7 @@ fun NavGraphBuilder.communitiesGraph(
                     description = community.description,
                     image = community.image,
                     partOfCommunity = community.partOfCommunity,
-                    communityType = CommunityType.bigCommunity
+                    communityType = CommunityType.country
                )
            )
 

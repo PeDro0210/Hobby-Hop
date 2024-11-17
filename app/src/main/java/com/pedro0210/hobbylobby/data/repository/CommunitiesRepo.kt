@@ -18,7 +18,7 @@ class CommunitiesRepo {
         when (type) {
             //TODO: call the repo with the firebase implementation
             //This is pure dummy data
-            CommunityType.bigCommunity -> {
+            CommunityType.country -> {
                 return flowOf(
                     listOf(
                         Community(

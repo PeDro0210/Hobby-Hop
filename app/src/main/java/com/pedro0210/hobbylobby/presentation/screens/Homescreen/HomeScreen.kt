@@ -78,7 +78,7 @@ fun HomePreview() {
         Home(
             navController = rememberNavController(),
             state = HomeScreenState(
-                countries = generateRandomCommunities(10, CommunityType.bigCommunity),
+                countries = generateRandomCommunities(10, CommunityType.country),
                 ownCommunities = generateRandomCommunities(10, CommunityType.smallCommunity)
             )
         )
