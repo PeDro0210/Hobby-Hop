@@ -53,9 +53,9 @@ class CreatorRepo (
         BigCommunityId: String
     ): String {
         return try {
-            val bigCommunityName = firestore.collection("big_communities").document(BigCommunityId).get().await().get("name")
-
-            val communityImageRef = storage.reference.child("big_communities/$bigCommunityName/communities/$title/pfp.png")
+            val bigCommunityName = firestore.collection("big_communities").document(BigCommunityId).get().await().get("name")?.toString()?.lowercase()
+            val savableTitle = title.lowercase()
+            val communityImageRef = storage.reference.child("big_communities/$bigCommunityName/communities/$savableTitle/pfp.png")
             communityImageRef.putFile(image!!).await()
             val imageUrl = communityImageRef.downloadUrl.await()
             val community = mapOf(
@@ -116,8 +116,8 @@ class CreatorRepo (
     ): String {
         return try {
             firestore.collection("big_communities").document(BigCommunityId).collection("communities").document(cummunityId).collection("rooms").get().await()
-            val communityName = firestore.collection("big_communities").document(BigCommunityId).collection("communities").document(cummunityId).get().await().get("name")
-            val bigCommunityName = firestore.collection("big_communities").document(BigCommunityId).get().await().get("name")
+            val communityName = firestore.collection("big_communities").document(BigCommunityId).collection("communities").document(cummunityId).get().await().get("name")?.toString()?.lowercase()
+            val bigCommunityName = firestore.collection("big_communities").document(BigCommunityId).get().await().get("name")?.toString()?.lowercase()
             rooms.forEach {
                 val userReference = firestore.collection("users").document(userId)
                 val users = listOf<DocumentReference>(userReference)

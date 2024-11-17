@@ -81,12 +81,16 @@ fun CommunitiesCreatorRoute(
         onNameChange = {viewModel.onEvent(CreatorEvent.onNameChange(it))},
         ondescriptionChange = {viewModel.onEvent(CreatorEvent.onDescriptionChange(it))},
         ondoneClick = {viewModel.onEvent(CreatorEvent.onComunityCreate(state.title, state.description, state.image, state.rooms, state.bigCommunityName))
+
+            /*
                         while(true){
                             if (state.isLoading == false){
                                 navController.popBackStack()
                                 break
                             }
                         }
+
+             */
         },
         onBigCommunityChange = {viewModel.onEvent(CreatorEvent.onBigCommunityChange(it))},
         onDeleteSubC = {viewModel.onEvent(CreatorEvent.onRoomDelete(it))},
