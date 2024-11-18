@@ -74,7 +74,7 @@ fun SettingsScreen(
             TopBar(
                 navController = navController ,
                 homeScreen = false,
-                settingsScreen = false
+                settingsScreen = true
             )
         },
         content = {

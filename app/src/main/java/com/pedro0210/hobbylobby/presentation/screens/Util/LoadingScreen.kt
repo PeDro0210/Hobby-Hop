@@ -36,7 +36,7 @@ fun LoadingLayout(
     ) {
 
         Image(
-            painter = painterResource(id = R.drawable.logo),
+            painter = painterResource(id = R.drawable.logo_image),
             contentDescription = stringResource(R.string.app_logo),
             modifier = Modifier
                 .size(100.dp)
