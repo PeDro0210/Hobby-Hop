@@ -36,24 +36,11 @@ fun LoadingLayout(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (isDarkTheme) {
-            Image(
-                painter = painterResource(id = R.drawable.dm_logo),
-                contentDescription = stringResource(R.string.app_logo),
-                modifier = Modifier
-                    .size(100.dp)
-
-            )
-        }else {
-            Image(
-                painter = painterResource(id = R.drawable.lm_logo),
-                contentDescription = stringResource(R.string.app_logo),
-                modifier = Modifier
-                    .size(100.dp)
-
-            )
-
-        }
+        Image(
+            painter = painterResource(id = R.drawable.tlogo),
+            contentDescription = stringResource(R.string.app_logo),
+            modifier = Modifier.size(100.dp)
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 

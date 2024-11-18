@@ -118,20 +118,12 @@ fun Login(
                             ),
                         contentAlignment = Alignment.Center
                     ) {
-                        if (isDarkTheme) {
-                            Image(
-                                painter = painterResource(id = R.drawable.dm_logo),
-                                contentDescription = null,
-                                modifier = Modifier.size(256.dp)
-                            )
-                        }else {
-                            Image(
-                                painter = painterResource(id = R.drawable.lm_logo),
-                                contentDescription = null,
-                                modifier = Modifier.size(256.dp)
-                            )
+                       Image(
+                           painter = painterResource(id = R.drawable.tlogo),
+                           contentDescription = null,
+                           modifier = Modifier.size(256.dp)
+                       )
 
-                        }
 
                     }
 
@@ -143,7 +135,7 @@ fun Login(
                         Column(
                             modifier = Modifier
                                 .border(1.dp, Color.Gray, shape = RoundedCornerShape(8.dp))
-                                .padding(16.dp).background(MaterialTheme.colorScheme.surface)
+                                .padding(16.dp)
                         ) {
                             OutlinedTextField(
                                 value = state.email,
