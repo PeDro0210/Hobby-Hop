@@ -2,6 +2,7 @@ package com.pedro0210.hobbylobby.presentation.screens.Util
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +27,7 @@ import com.pedro0210.hobbylobby.R
 fun LoadingLayout(
     modifier: Modifier = Modifier
 ) {
+    val isDarkTheme = isSystemInDarkTheme()
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -34,14 +36,25 @@ fun LoadingLayout(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        if (isDarkTheme) {
+            Image(
+                painter = painterResource(id = R.drawable.dm_logo),
+                contentDescription = stringResource(R.string.app_logo),
+                modifier = Modifier
+                    .size(100.dp)
 
-        Image(
-            painter = painterResource(id = R.drawable.logo_image),
-            contentDescription = stringResource(R.string.app_logo),
-            modifier = Modifier
-                .size(100.dp)
+            )
+        }else {
+            Image(
+                painter = painterResource(id = R.drawable.lm_logo),
+                contentDescription = stringResource(R.string.app_logo),
+                modifier = Modifier
+                    .size(100.dp)
 
-        )
+            )
+
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
 
         // Indicador de carga
